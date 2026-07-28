@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Revisão — Amor de Cão</title>
+<style>
+  :root{ --verde:#7CB342; --verde-esc:#33691E; --pink:#C2185B; --amarelo:#F9A825; --azul:#1976D2; --laranja:#E65100; --cinza:#5F6368; --fundo:#FAFAF7; --card:#FFFFFF; --borda:#E4E4DE; }
+  *{box-sizing:border-box;} body{margin:0;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:var(--fundo);color:#1A1A1A;}
+  header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:2px solid var(--verde);padding:10px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+  header h1{font-size:17px;margin:0;flex:1;min-width:200px;} header h1 small{color:var(--cinza);font-weight:400;display:block;font-size:11px;}
+  .conex{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;background:#EEE;color:var(--cinza);}
+  .conex.on{background:#E6F4D9;color:var(--verde-esc);}
+  .prog{font-size:13px;font-weight:700;color:var(--verde-esc);white-space:nowrap;}
+  .bar{height:6px;background:#eee;border-radius:3px;width:140px;overflow:hidden;} .bar i{display:block;height:100%;background:var(--verde);width:0%;transition:width .3s;}
+  .filtros{display:flex;gap:6px;flex-wrap:wrap;}
+  .filtros button{border:1px solid var(--borda);background:#fff;border-radius:20px;padding:4px 12px;font-size:12px;cursor:pointer;}
+  .filtros button.on{background:#1A1A1A;color:#fff;border-color:#1A1A1A;}
+  main{max-width:980px;margin:0 auto;padding:16px 20px 130px;}
+  .fluxo{margin-top:26px;} .fluxo>h2{font-size:20px;border-left:5px solid var(--verde);padding-left:10px;margin:0 0 4px;}
+  .fluxo.f-design>h2{border-color:var(--azul);}
+  .fluxo>p{margin:0 0 12px 15px;color:var(--cinza);font-size:13px;}
+  .tela{background:var(--card);border:1px solid var(--borda);border-radius:12px;margin-bottom:14px;overflow:hidden;}
+  .tela-h{display:flex;align-items:center;gap:8px;padding:12px 14px;cursor:pointer;user-select:none;flex-wrap:wrap;}
+  .tela-h:hover{background:#F5F5F0;}
+  .tela-h .tid{background:var(--verde-esc);color:#fff;font-size:11px;font-weight:700;border-radius:6px;padding:3px 8px;white-space:nowrap;}
+  .tela-h .tnome{font-weight:700;font-size:14px;flex:1;min-width:140px;}
+  .tela-h .tstat{font-size:11px;color:var(--cinza);white-space:nowrap;}
+  .tela-h .seta{transition:transform .2s;color:var(--cinza);} .tela.aberta .seta{transform:rotate(90deg);}
+  .lk{font-size:11px;font-weight:700;color:var(--azul);text-decoration:none;border:1px solid #BBDEFB;border-radius:6px;padding:3px 8px;white-space:nowrap;}
+  .lk:hover{background:#E3F2FD;}
+  .bt-notas{font-size:11px;font-weight:700;color:#fff;background:var(--azul);border:none;border-radius:6px;padding:4px 8px;cursor:pointer;white-space:nowrap;}
+  .tela-corpo{display:none;border-top:1px solid var(--borda);} .tela.aberta .tela-corpo{display:block;}
+  .notas-tela{display:none;background:#F2F7FD;border-bottom:1px solid var(--borda);padding:10px 16px;}
+  .notas-tela.aberta{display:block;}
+  .notas-tela h4{margin:0 0 6px;font-size:12px;color:var(--azul);}
+  .item{display:flex;gap:12px;padding:10px 16px;border-bottom:1px solid #F0F0EA;align-items:flex-start;}
+  .item:last-child{border-bottom:none;}
+  .item.ap{background:#F3FAEC;} .item.aj{background:#FFF8E8;}
+  .el{width:145px;flex-shrink:0;font-size:11px;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.02em;padding-top:4px;}
+  .meio{flex:1;min-width:0;}
+  .copy{font-size:14px;line-height:1.45;background:#F7F7F2;border:1px solid #ECECE4;border-radius:8px;padding:8px 12px;white-space:pre-wrap;}
+  .item.jur .copy{border-left:4px solid var(--pink);}
+  .item.gap .copy{border-style:dashed;color:var(--cinza);font-style:italic;}
+  .badge{display:inline-block;font-size:10px;font-weight:800;border-radius:4px;padding:2px 6px;margin-bottom:4px;letter-spacing:.03em;}
+  .bd-jur{background:var(--pink);color:#fff;} .bd-gap{background:var(--amarelo);color:#fff;} .bd-obs{background:#E8EAF6;color:#3949AB;}
+  .bd-quem{background:#ECEFF1;color:#37474F;font-weight:700;}
+  .nota{font-size:11.5px;color:var(--cinza);margin-top:4px;}
+  .edit{display:none;margin-top:8px;}
+  .item.editando .edit{display:block;}
+  .edit textarea{width:100%;min-height:60px;font:inherit;font-size:14px;padding:8px 10px;border:2px solid var(--amarelo);border-radius:8px;background:#fff;}
+  .thread{margin-top:8px;}
+  .cmt{font-size:12.5px;background:#fff;border:1px solid var(--borda);border-radius:8px;padding:6px 10px;margin-bottom:4px;}
+  .cmt b{font-size:11px;} .cmt .hora{color:var(--cinza);font-size:10px;margin-left:6px;}
+  .cmt-form{display:flex;gap:6px;margin-top:4px;}
+  .cmt-form input{flex:1;font:inherit;font-size:12.5px;padding:6px 10px;border:1px solid var(--borda);border-radius:8px;background:#fff;}
+  .cmt-form button{border:none;background:#1A1A1A;color:#fff;border-radius:8px;padding:0 12px;font-size:12px;font-weight:700;cursor:pointer;}
+  .btns{display:flex;flex-direction:column;gap:6px;flex-shrink:0;padding-top:2px;}
+  .btns button{width:96px;border-radius:8px;border:1px solid var(--borda);background:#fff;padding:7px 0;font-size:12px;font-weight:700;cursor:pointer;}
+  .btns .b-ap.on{background:var(--verde);border-color:var(--verde);color:#fff;}
+  .btns .b-aj.on{background:var(--amarelo);border-color:var(--amarelo);color:#fff;}
+  .btns .b-x{color:var(--cinza);font-weight:400;}
+  .lock{font-size:11px;color:var(--pink);font-weight:700;width:96px;text-align:center;padding-top:6px;}
+  .p-CEO{color:var(--pink);} .p-Copy{color:var(--verde-esc);} .p-Design{color:var(--azul);} .p-Dev{color:var(--laranja);}
+  footer{position:fixed;bottom:0;left:0;right:0;background:#1A1A1A;color:#fff;padding:10px 20px;display:flex;gap:12px;align-items:center;font-size:13px;z-index:60;flex-wrap:wrap;}
+  footer .f-n{font-weight:800;} footer .sp{flex:1;}
+  footer button{border:none;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer;font-size:12px;}
+  dialog{border:none;border-radius:12px;max-width:780px;width:92%;padding:0;}
+  dialog .d-h{background:#1A1A1A;color:#fff;padding:12px 18px;display:flex;align-items:center;}
+  dialog .d-h b{flex:1;} dialog .d-h button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;}
+  dialog pre{margin:0;padding:16px;font-size:12px;max-height:58vh;overflow:auto;white-space:pre-wrap;background:#FAFAF7;}
+  dialog .d-f{padding:10px 16px;display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--borda);}
+  dialog .d-f button{border-radius:8px;border:none;padding:8px 14px;font-weight:700;cursor:pointer;}
+  #login{border-radius:14px;padding:0;max-width:380px;}
+  #login .l-c{padding:22px;}
+  #login h2{margin:0 0 4px;font-size:18px;} #login p{margin:0 0 14px;color:var(--cinza);font-size:13px;}
+  #login input,#login select{width:100%;font:inherit;font-size:14px;padding:10px;border:1px solid var(--borda);border-radius:8px;margin-bottom:10px;}
+  #login button{width:100%;background:var(--verde);color:#fff;border:none;border-radius:8px;padding:11px;font-size:14px;font-weight:800;cursor:pointer;}
+  @media(max-width:640px){ .item{flex-direction:column;gap:6px;} .el{width:auto;} .btns{flex-direction:row;} }
+</style>
+</head>
+<body>
+<header>
+  <h1>Painel de Revisão — Amor de Cão<small>Copy + tarefas de design · sincronizado ao vivo para todo o time</small></h1>
+  <span class="conex" id="conex">conectando…</span>
+  <div><div class="prog" id="prog">0 / 0</div><div class="bar"><i id="barra"></i></div></div>
+  <div class="filtros" id="filtros">
+    <button data-f="todas" class="on">Todas</button>
+    <button data-f="pend">Pendentes</button>
+    <button data-f="ap">Aprovadas</button>
+    <button data-f="aj">Ajustadas</button>
+    <button data-f="gap">Faltando copy</button>
+  </div>
+</header>
+<main id="app"><p style="color:#5F6368">Carregando revisão…</p></main>
+<footer>
+  <span>✅ <span class="f-n" id="nAp">0</span></span>
+  <span>✏️ <span class="f-n" id="nAj">0</span></span>
+  <span>⏳ <span class="f-n" id="nPe">0</span></span>
+  <span id="quem" style="color:#BBB;font-size:12px"></span>
+  <span class="sp"></span>
+  <button style="background:var(--laranja);color:#fff" onclick="exportar('dev')">📋 DEV</button>
+  <button style="background:var(--azul);color:#fff" onclick="exportar('design')">🎨 DESIGN</button>
+  <button style="background:var(--pink);color:#fff" onclick="exportar('juridico')">⚖️ JURÍDICO</button>
+</footer>
+<dialog id="dlg">
+  <div class="d-h"><b id="dlgT">Relatório</b><button onclick="document.getElementById('dlg').close()">✕</button></div>
+  <pre id="dlgPre"></pre>
+  <div class="d-f">
+    <button style="background:#EEE" onclick="baixarTxt()">Baixar .md</button>
+    <button style="background:#7CB342;color:#fff" onclick="copiarTxt()">Copiar tudo</button>
+  </div>
+</dialog>
+<dialog id="login">
+  <div class="l-c">
+    <h2>Quem está revisando?</h2>
+    <p>Seu nome e papel aparecem junto de cada veredito e comentário.</p>
+    <input id="loginNome" placeholder="Seu nome" maxlength="30">
+    <select id="loginPapel">
+      <option value="CEO">CEO / Estratégia</option>
+      <option value="Copy">Copy / Conteúdo</option>
+      <option value="Design">Design</option>
+      <option value="Dev">Desenvolvimento</option>
+    </select>
+    <button onclick="entrar()">Começar a revisar</button>
+  </div>
+</dialog>
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+const SB_URL = "https://xfowniiysosjyhyagvwl.supabase.co";
+const SB_KEY = "sb_publishable_D3R4gKQdL7219G4_Bbqz_Q_7wtTy0-g";
+const sb = createClient(SB_URL, SB_KEY);
+const FIGMA = "https://www.figma.com/design/V0Ol2lDC5Xp1ibGmdj9xNT/Aplicativo?node-id=";
+
+// tipo: "" normal | "jur" travada | "gap" falta copy | "prop" proposta nova | "tar" tarefa de design
+const DATA = [
+{fluxo:"Tarefas do Design", cls:"f-design", desc:"Correções e criações pendentes no Figma. Marque ✓ Feito ao concluir; use os comentários para dúvidas.", telas:[
+ {id:"FIGMA", nome:"Telas e elementos a criar", itens:[
+  ["T-035-D","Criar tela “Precisa de ajustes” do ciclo de solicitação de comunidade","tar"],
+  ["ReportModal","Criar modal de denúncia de perfil (aguardar copy do jurídico — sem opção de maus-tratos)","tar"],
+  ["T-020","Adicionar campos de localização e contato (aguardar copy)","tar"],
+  ["T-014 / G-001","Adicionar categoria “Diário” nas notificações e renomear seção “Privacidade”→“Notificações”","tar"],
+  ["T-016","Badge “Adotado” e estado vazio da prateleira","tar"],
+  ["T-028","Adicionar legenda ok/atenção/grave e estado de dia sem registro","tar"]]}
+]},
+{fluxo:"Fluxo 1 — Entrada e cadastro", desc:"Do splash à escolha de comunidades. Primeira impressão da marca.", telas:[
+ {id:"T-000", nome:"Splash Screen", node:"1-434", itens:[
+   ["Wordmark","amor de cão",""],
+   ["Tagline","A vida com cão precisa de gente.","","Frase-mãe do projeto."]]},
+ {id:"T-001", nome:"Login", node:"226-350", itens:[
+   ["Título","Entre na sua conta",""],
+   ["Subtítulo","Escolha uma forma de entrar.",""],
+   ["Botão conta detectada","Continuar como {tutor}",""],
+   ["Botões de método","Continuar com Apple\nEntrar com e-mail\nEntrar com celular","","Inconsistência: cadastro usa “Continuar com”. Padronizar?"],
+   ["Rodapé","Não tem conta? Cadastrar",""]]},
+ {id:"T-003-A", nome:"Cadastro — escolha de método", node:"1-256", itens:[
+   ["Título","Crie sua conta e entre na comunidade",""],
+   ["Subtítulo","Escolha uma forma de cadastro.",""],
+   ["Botões","Continuar com Apple\nContinuar com e-mail\nContinuar com celular",""],
+   ["Rodapé","Já tem conta? Entrar",""],
+   ["Texto legal","Ao criar conta, você aceita os Termos de Uso e Política de Privacidade","","Termos e Política ainda serão produzidos (pendência jurídica)."]]},
+ {id:"T-003-B", nome:"Cadastro por e-mail (formulário)", node:"309-316", itens:[
+   ["Título","Crie sua conta e entre na comunidade",""],
+   ["Subtítulo","Preencha seus dados para continuar.","prop","No Figma está “Escolha uma forma de cadastro”, herdado por engano. Proposta de substituição."],
+   ["Campo e-mail","E-mail — placeholder: seuemail@email.com",""],
+   ["Campo senha","Senha",""],
+   ["CTA","Continuar",""]]},
+ {id:"T-003.1 / .2", nome:"Verificação por SMS (OTP)", node:"228-306", itens:[
+   ["Título","Digite o código",""],
+   ["Apoio","Enviamos um código para {telefone}",""],
+   ["Timer","Reenviar em {mm:ss}",""],
+   ["Erro","Código inválido. Tente novamente.",""],
+   ["Link pós-timer","Reenviar código","gap","Não existe no Figma. Escrever/aprovar."],
+   ["Botão de confirmação","Confirmar","gap","Não existe no Figma. Escrever/aprovar."]]},
+ {id:"T-004", nome:"Identificação de perfil", node:"1-300", itens:[
+   ["Título","Me conta uma coisa",""],
+   ["Subtítulo","O que te trouxe até aqui?",""],
+   ["Opção 1","Tenho um cão\nQuero me conectar com outros tutores e comunidades.",""],
+   ["Opção 2","Quero adotar\nAinda não tenho um cão e quero encontrar o certo para minha vida.",""],
+   ["Opção 3","Profissional da área\nSou veterinário, dog walker ou trabalho com cães.",""],
+   ["Opção 4","Sou uma ONG ou protetor\nTenho cães para adoção e quero encontrar o lar certo.",""],
+   ["Opção 5","Só amo cachorro\nAinda não tenho um cão, mas quero fazer parte da comunidade.","","Tom informal proposital — a cara da marca no onboarding."]]},
+ {id:"T-005", nome:"Mini cadastro (tutor + cães)", node:"1-344", itens:[
+   ["Título","Fala pra gente sobre vocês",""],
+   ["Subtítulo","Leva menos de 1 minuto.",""],
+   ["Campo nome","Qual seu nome — placeholder: Como quer ser chamado",""],
+   ["Campo cidade","Onde você mora? — placeholder: Cidade",""],
+   ["Seção cães","Seus cães — Adicione um ou mais",""],
+   ["Campo nome do cão","Nome — placeholder: Como ele chama?",""],
+   ["Campo raça","Raça — placeholder: Ex: Golden Retriever, SRD, Labrador...",""],
+   ["Sexo","Macho ou fêmea? — Macho / Fêmea",""],
+   ["Adicionar","Tenho outro cão",""],
+   ["Reasseguro","Você pode cadastrar outro cão a qualquer momento",""]]},
+ {id:"T-006", nome:"Seleção de comunidades", node:"1-461", itens:[
+   ["Título","Selecione suas comunidades","","Doc-mãe dizia “Escolha suas comunidades” — bater o martelo aqui."],
+   ["Subtítulo","Com base no que você nos contou, separamos essas comunidades pra você.",""],
+   ["Seções","Comunidade oficial / Comunidades pra você",""],
+   ["Descrições das comunidades","(vêm do backoffice — as do mockup são só representação)","gap","D10: criar campo “descrição curta” no backoffice e redigir as das 7 comunidades-semente."]]}
+]},
+{fluxo:"Fluxo 2 — Home e perfis", desc:"Home pública e logada, perfis de tutor e cão, notificações, configurações.", telas:[
+ {id:"T-002", nome:"Home pública (visitante)", node:"1-75", itens:[
+   ["Tagline do header","Conexões reais entre tutores, comunidades e adoção responsável.",""],
+   ["Seções","Comunidades em destaque · Ver todas ({n}) · Acontecendo agora",""],
+   ["Card de adoção","Adote um cão\nEncontre seu próximo melhor amigo.\n[Ver cães]",""],
+   ["Guest gate","(sem copy: visitante que toca em qualquer ação vai direto para o login)","","D14: redirect direto, sem modal."]]},
+ {id:"T-007", nome:"Home logada — Comunidades", node:"731-1088", itens:[
+   ["Saudação","Olá {tutor}, hoje tem {n} novas conversas nas suas comunidades",""],
+   ["Card Diário — resumo","Ontem o {nome} teve um dia tranquilo.",""],
+   ["Card Diário — convite","E hoje, como ele tá?","","Tom informal “tá” fixado no Compêndio."],
+   ["Card Diário — CTA","Abrir o Diário",""],
+   ["Seletor","Diário do {nome} · Alterar o cão",""],
+   ["Seções","Suas comunidades · Comunidades que você pode gostar",""],
+   ["Ação nos cards","Participar","","D9: verbo único no app."],
+   ["Link","Descobrir mais comunidades →",""],
+   ["Seção construção","Comunidades aguardando ativação","","D8: nome único."],
+   ["Contador","{n}/30 membros para ativação",""]]},
+ {id:"T-010", nome:"Seletor de cão ativo", node:"5-33", itens:[
+   ["Título","Selecione seu cão",""]]},
+ {id:"T-012-A", nome:"Meu perfil", node:"5-440", itens:[
+   ["Stats","Cães · Comunidades · Posts",""],
+   ["Meta","{cidade}/{UF} · Membro desde {ano}",""],
+   ["Ações","Editar perfil · Compartilhar",""],
+   ["Seções","Meus cães · Suas comunidades · Ver todas ({n})",""],
+   ["Metadado de comunidade","{n} membros · {n} posts hoje",""],
+   ["CTA","Encontrar novas comunidades",""]]},
+ {id:"T-012-B", nome:"Perfil de outro tutor", node:"5-795", itens:[
+   ["Seção cães","Cães da {tutor}","prop","No Figma está “Meus cães” (errado em perfil alheio)."],
+   ["Seção comunidades","Comunidades da {tutor}","prop","No Figma está “Suas comunidades”."],
+   ["Badge","Em comum","","Copy nova do design — precisa só de aprovação."],
+   ["Botão social","Seguir","gap","Doc-mãe prevê; não existe no Figma. Aprovar rótulo (ou decidir não ter)."]]},
+ {id:"T-013", nome:"Perfil do cão", node:"5-925", itens:[
+   ["Nudge de perfil","Perfil incompleto. Adicionar mais dados ajuda a encontrar melhor suas comunidades.\n[Completar perfil]",""],
+   ["Seções","Temperamento · Tutor · Ver perfil do tutor · Comunidades para o {nome}",""]]},
+ {id:"T-013.1", nome:"Adicionar cão", node:"13-60", itens:[
+   ["Título","Cadastre os dados do cão para completar seu perfil.\nLeva menos de 1 minuto.",""],
+   ["Fotos","Fotos do cão — Adicionar fotos",""],
+   ["Porte","Pequeno (Até 10kg) · Médio (10 a 25kg) · Grande (Acima de 25kg)",""],
+   ["Idade","Filhote (Até 1 ano) · Adulto (1 a 7 anos) · Idoso (Acima de 7 anos)",""],
+   ["Temperamento","Calmo · Tímido · Carinhoso · Ativo · Sociável · Protetor · Brincalhão",""],
+   ["CTA","Salvar cão",""]]},
+ {id:"T-014", nome:"Notificações", node:"13-177", itens:[
+   ["Filtros","Todos ({n}) · Comunidades ({n}) · Adoção",""],
+   ["Filtro Diário","Diário","gap","OBRIGATÓRIO pela Régua (categoria própria com opt-out)."],
+   ["Grupos","Hoje · Ontem · Esta semana · não lidas ({n})",""],
+   ["Fórmula","{nome} respondeu ao seu post em {comunidade}\n{nome} respondeu ao seu comentário em {comunidade}","","Regência unificada (“ao seu”)."],
+   ["Estado vazio","Por enquanto, nada por aqui.","prop","Não existe no Figma. Proposta."]]},
+ {id:"G-001", nome:"Configurações", node:"31-500", itens:[
+   ["Seções","Conta (E-mail · Senha · Método de login) · Meus cães · Sobre (Termos de uso · Política de privacidade)",""],
+   ["Seção de notificações","Notificações — Push · E-mail","prop","No Figma chama-se “Privacidade”, mas o conteúdo é notificação. Falta categoria Diário."],
+   ["Sair","Sair da conta",""],
+   ["Excluir conta","Excluir conta","prop","No Figma está “Deletar a conta”. Proposta pt-BR."],
+   ["Confirmação de exclusão","(modal de confirmação antes de excluir)","gap","Não existe. Necessário (LGPD)."]]}
+]},
+{fluxo:"Fluxo 3 — Comunidades", desc:"Uso da comunidade, posts, threads e o ciclo completo de solicitação de comunidade nova.", telas:[
+ {id:"T-011", nome:"Comunidade interna", node:"5-164", itens:[
+   ["Header","{comunidade} · {n} membros · {n} ativos agora",""],
+   ["CTA não-membro","Participar","prop","No Figma está “Entrar na comunidade”. D9: verbo único."],
+   ["Seção fixados","Comece por aqui · Fixado",""],
+   ["Moderadores","Moderadores da comunidade",""],
+   ["Ordenação","Organizar por: · Mais recentes","prop","No Figma está “ORGANIZAR POR:” em caixa alta."],
+   ["Micro-ações","Vivi isso também · Me ajudou · Responder","","D1: reativadas."],
+   ["Contador","Ver comentários ({n})","","Padronizado."],
+   ["Selo de origem","Vem do Diário do {nome}","","D2: mantido (aval do advogado a registrar)."]]},
+ {id:"T-011-B/C/D", nome:"Detalhe do post (thread)", node:"285-341", itens:[
+   ["Header","Post na comunidade · {comunidade}",""],
+   ["Campo de comentário","Conte como foi a sua experiência",""],
+   ["Responder resposta","@{usuario} (pré-preenchido no campo)",""],
+   ["Estado vazio","Sem respostas ainda",""]]},
+ {id:"T-024", nome:"Criar (botão +)", node:"682-861", itens:[
+   ["Título","Escolha o que você quer fazer agora",""],
+   ["Opções","Criar um post — Compartilhe um momento ou uma dúvida.\nCadastrar cão para adoção — Encontre um lar pra um cão que precisa.\nSolicitar criação de comunidade — Proponha uma nova comunidade no app.",""]]},
+ {id:"T-025-B", nome:"Criar post", node:"27-434", itens:[
+   ["Header","Criar um post","","T-029 usa “Post na comunidade” na mesma estrutura. Unificar? Decidir aqui."],
+   ["Destino","Onde quer postar? · Alterar",""],
+   ["Tipos","Tipo de post: Pergunta · Relato · Dica · Experiência",""],
+   ["Placeholder","Descreva sua dúvida com contexto. Isso ajuda outros tutores a responderem melhor.",""],
+   ["Anexos e cão","Adicionar foto · Adicionar vídeo · Cão relacionado",""],
+   ["CTA","Publicar na comunidade",""]]},
+ {id:"T-030", nome:"Confirmação de publicação", node:"772-508", itens:[
+   ["Banner","Sua pergunta foi publicada na comunidade",""],
+   ["CTAs","Ver comunidade · Voltar para o início",""]]},
+ {id:"T-033-A", nome:"Solicitar comunidade — Antes de solicitar", node:"682-612", itens:[
+   ["Título","Antes de solicitar sua comunidade",""],
+   ["Manifesto","Comunidade forte não nasce sozinha. No Amor de Cão, cada comunidade começa com quem tem conhecimento, audiência e disposição para levar adiante. Não queremos comunidades vazias — queremos comunidades que respiram desde o dia 1. Responda algumas perguntas para entendermos seu projeto.","","Peça central do funil de criadores."],
+   ["Pergunta de autoridade","Você é especialista, autoridade ou tem experiência sobre o tema da comunidade que pretende criar? (Sim / Não)",""],
+   ["Canal","Em qual canal você mais aborda esse tema?\nIndique o endereço do canal para conhecermos mais o seu trabalho. (Ex: @seuperfil ou link do seu canal)",""],
+   ["Co-moderadores","Indique dois co-moderadores usuários do app\nEles precisam já ter cadastro no Amor de Cão e aceitar a função dentro do app.","","D5: regra é opcional; aparência de obrigatório é proposital."],
+   ["Termo de compromisso","Seguir as regras universais e específicas da comunidade. Leia aqui\nCumprir a moderação da comunidade. Leia aqui\nDeclaro ciência de que, se aprovado pela curadoria, serei responsável por trazer 30 novos membros para a comunidade em até 30 dias. A ativação depende de dois passos: aprovação da curadoria + 30 novos membros.",""]]},
+ {id:"T-033-B/C/D/E", nome:"Solicitar comunidade — etapas 2 a 5", node:"682-912", itens:[
+   ["B — Título","Sobre o que será sua comunidade?\nSelecione um assunto para ajudar a curadoria a entender a proposta.",""],
+   ["C — Título","Informações básicas\nConte para a curadoria o que você quer construir.",""],
+   ["C — Foto","Adicionar foto — PNG, JPG até 5 MB",""],
+   ["D — Título","Configurações sugeridas\nDefina como você imagina o funcionamento da comunidade. A curadoria poderá ajustar essas opções antes da aprovação.",""],
+   ["D — Visibilidade","Pública — Qualquer pessoa pode encontrar e visualizar esta comunidade.\nPrivada — Apenas pessoas convidadas podem participar da comunidade.",""],
+   ["D — Publicação","Todos os membros — Qualquer pessoa pode criar posts.\nApenas administradores — Somente admins podem criar posts.",""],
+   ["E — Título","Revise antes de enviar\nConfira se as informações estão corretas antes da análise da curadoria.",""],
+   ["E — Aviso","Após aprovação da curadoria, você terá até 30 dias para trazer 30 novos membros. Só assim a comunidade será ativada.",""],
+   ["E — CTAs","Enviar solicitação · Voltar e editar",""]]},
+ {id:"T-034 / T-035", nome:"Solicitação enviada e acompanhamento", node:"687-1576", itens:[
+   ["T-034","Solicitação enviada!\nRecebemos sua proposta e ela já está em análise pela curadoria.\nVocê receberá uma resposta pelo app e também no seu e-mail.",""],
+   ["T-035-A Em análise","Sua solicitação está em análise.\nNosso time está avaliando sua proposta com carinho. Você receberá uma resposta pelo app e também no seu e-mail.\n[Ver detalhes da solicitação]",""],
+   ["T-035-B Aprovada","Sua comunidade foi aprovada!\nEla já aparece no feed das comunidades aguardando ativação. Agora você tem até 30 dias para ativá-la com 30 novos membros.\n[Convidar membros]","prop","Acrescenta o prazo de 30 dias que faltava no Figma."],
+   ["T-035-C Não aprovada","Solicitação não aprovada.\nApós análise, sua solicitação não foi aprovada nesse momento. Você poderá enviar um novo pedido após 30 dias.\n[Entenda por quê] [Continuar navegando]",""],
+   ["T-035-D Precisa de ajustes","(tela inteira não existe)","gap","Estado previsto no Doc Soberano. Escrever título, texto e CTA."]]},
+ {id:"T-036 / T-037", nome:"Comunidade ativada / em construção", node:"687-1910", itens:[
+   ["T-036","Comunidade ativada!\nParabéns! Sua comunidade acaba de atingir 30 novos membros e está agora ativa.\n[Ver comunidade] [Compartilhar link da comunidade]","prop","Precisão: “30 NOVOS membros”."],
+   ["T-037","Ao alcançar 30 novos membros, sua comunidade será automaticamente ativada.\n{n}/30 membros para ativação\n[Convidar membros] [Compartilhar link da comunidade]","prop","Contador unificado (D8)."]]}
+]},
+{fluxo:"Fluxo 4 — Adoção", desc:"Prateleira, filtros, perfil do cão, anúncio e cadastro de especialista.", telas:[
+ {id:"T-016", nome:"Prateleira de adoção", node:"13-331", itens:[
+   ["Header","Cães para adoção · {n} cães disponíveis",""],
+   ["Seções","Perto de você · Cães disponíveis",""],
+   ["CTA do rodapé","Tem um cão para adoção?\nAjude a encontrar um lar cheio de amor.\n[Cadastrar cão para adoção]",""],
+   ["Badge adotado","Adotado","prop","Handoff prevê; badge não existe no Figma."],
+   ["Estado vazio (filtros)","Nenhum cão encontrado com esses filtros. Tente ampliar a busca.","prop","Não existe no Figma. Proposta."]]},
+ {id:"T-017", nome:"Filtros de adoção", node:"13-634", itens:[
+   ["Busca","Buscar por raça, porte...",""],
+   ["Sexo","Macho · Fêmea · Tanto faz",""],
+   ["Localização","Digite sua cidade ou região · Raio de busca",""],
+   ["Compatibilidade","Bom com crianças · Bom com outros cães","","Padronizado “com”."],
+   ["CTAs","Aplicar filtros · Limpar tudo","","Doc-mãe dizia “Limpar filtros” — bater o martelo."]]},
+ {id:"T-018", nome:"Perfil do cão (adoção)", node:"13-1008", itens:[
+   ["Seções","Temperamento · Compatibilidade · Responsável",""],
+   ["Bloco de contato","Quer adotar?\nPara adotar esse cão ou saber mais sobre ele, entre em contato com o responsável.","prop","No Figma: “esse pet … com o protetor”. Correção de vocabulário de marca."],
+   ["Denúncia","Denunciar esse perfil",""],
+   ["Modal de denúncia","(motivos estruturados — SEM opção de maus-tratos, trava do Handoff)","gap","Modal não existe. Copy sensível — escrever com jurídico."]]},
+ {id:"T-020", nome:"Cadastrar cão para adoção", node:"13-1151", itens:[
+   ["Título","Cadastrar cão para adoção\nPreencha as informações para encontrar um bom lar para ele.",""],
+   ["Fotos","Fotos do cão* — Mínimo 1 e máximo 4",""],
+   ["Campos","Nome do cão* · Raça* · Porte · Idade · Sexo · Descrição do cão · Temperamento · Compatibilidade",""],
+   ["Localização","(campo novo — decisão D4)","gap","Escrever rótulo e placeholder."],
+   ["Contato","(campos novos de WhatsApp/e-mail — decisão D4)","gap","Escrever rótulos, placeholders e texto de consentimento."],
+   ["Saúde","Vacinado · Castrado","gap","Doc-mãe prevê; decidir se entra no MVP."],
+   ["Termos","Li e aceito os Termos de uso para anúncios de adoção.",""],
+   ["CTA","Ver preview",""]]},
+ {id:"T-021", nome:"Preview do anúncio", node:"13-1284", itens:[
+   ["Aviso de publicação","Após publicar, seu cão ficará visível e interessados poderão entrar em contato com você.","prop","Reescrita aprovada (D13)."],
+   ["CTAs","Publicar anúncio · Editar informações",""]]},
+ {id:"T-022-A", nome:"Cadastro de especialista", node:"13-1501", itens:[
+   ["Título","Cadastro profissional\nPreencha seus dados para ativar seu selo de especialista nas comunidades","","D3: selo automático."],
+   ["Campos","Profissão · Registro profissional (opcional) — Ex: CRMV, certificação, registro técnico · Área de atuação","","“Área de atuação” com placeholder “Cidade”: geografia ou especialidade? Definir."],
+   ["Declaração","Declaro que as informações acima são verdadeiras e de minha responsabilidade. Entendo que dados falsos podem levar à perda do selo e ao bloqueio do perfil.","","Única proteção do selo automático."],
+   ["CTA","Ativar meu selo",""]]}
+]},
+{fluxo:"Fluxo 5 — Diário do Cão", desc:"Coração do engajamento e área de maior cuidado jurídico. Textos JURÍDICO são aprovados pelo advogado e não podem ser editados aqui.", telas:[
+ {id:"T-026", nome:"Home do Diário", node:"722-910", itens:[
+   ["Header","Diário do {nome} · {data}",""],
+   ["Instrução","Toque nos sinais pra registrar o dia dele. Salva sozinho a cada toque.",""],
+   ["Sinal comida","Como ele comeu hoje? — Normal · Comeu menos · Não comeu",""],
+   ["Sinal energia","Energia de hoje? — Animado · Mais quieto · Apático",""],
+   ["Sinal cocô","Cocô hoje? — Normal · Não vi · Diferente",""],
+   ["Continuidade","Ontem: dia tranquilo",""],
+   ["Pós-registro","Dia registrado",""],
+   ["Marcos na tela","{n} dias de Diário com o {nome}\nO marco dos 30 dias tá chegando. Bonito de ver.",""],
+   ["Links","Ver histórico · Círculo da semana",""],
+   ["Estado sem cão","Cadastre um cão para começar o Diário. [Adicionar um cão]","prop","Handoff prevê; texto não existe."],
+   ["Erro ao salvar","Não conseguimos salvar. Sua marcação foi mantida — tente de novo.","prop","Handoff prevê retry; texto não existe."]]},
+ {id:"Leituras", nome:"Leituras automáticas — copy do advogado (não editável)", itens:[
+   ["Estado 1 — Tudo verde","Dia tranquilo. Você registrou tudo bem com o [nome] hoje.","jur"],
+   ["Estado 2 — Amarelo isolado","Hoje você marcou que o [nome] [sinal]. Pode ser muita coisa do dia a dia, como calor ou rotina. Vale só ficar de olho.","jur"],
+   ["Estado 3 — Vermelho isolado","Hoje foi um dia diferente para o [nome]. Se você está preocupado, confie no seu instinto e procure um veterinário.","jur"],
+   ["Estado 4 — Padrão amarelo 3 dias","O [nome] [sinal] nos últimos 3 dias. Pode não ser nada, mas três dias seguidos é um padrão que vale dividir com quem já passou por isso. Quer perguntar na comunidade? Tem gente lá com experiência pra compartilhar.","jur"],
+   ["Estado 5 — Padrão vermelho 3 dias","O [nome] apresentou [sinal] nos últimos 3 dias. Quando um sinal assim se repete, o caminho mais seguro é um veterinário.","jur"],
+   ["Estado 6 — Registro parcial","Anotado. Quando quiser, completa o resto.","jur"]]},
+ {id:"T-027", nome:"Ponte para a comunidade", node:"772-373", itens:[
+   ["Título do bloco","Vale observar",""],
+   ["Convite","Quer perguntar na comunidade Não Surta, Pergunta?",""],
+   ["Explicação","A gente monta um rascunho com o que você anotou. Você edita e publica se quiser.",""],
+   ["Rascunho (modelo)","Tenho registrado que o [nome] [sinal] nos últimos 3 dias.","jur","O resumo vive DENTRO do texto editável do post."],
+   ["Ações","Perguntar na comunidade · Agora não",""],
+   ["Comunidade indisponível","Vale observar e, se persistir, procurar um veterinário.","jur"]]},
+ {id:"T-029", nome:"Rascunho de post do Diário", node:"772-447", itens:[
+   ["Header","Post na comunidade — Gerado a partir do Diário do {nome}",""],
+   ["Trava de consentimento","Você edita o que quiser antes de publicar. Nada vai pra comunidade sem você tocar em publicar.",""],
+   ["CTAs","Publicar na comunidade · Cancelar",""]]},
+ {id:"T-028", nome:"Histórico do Diário", node:"727-592", itens:[
+   ["Header","Histórico · {mês} de {ano}",""],
+   ["Resumos por dia","Dia tranquilo · Comeu menos do que o normal",""],
+   ["Demais resumos por sinal","(não comeu / mais quieto / apático / cocô diferente / não vi…)","gap","Definir o conjunto completo."],
+   ["Legenda","ok · atenção · grave (ordem: comida · energia · cocô)","gap","Doc exige; não existe no Figma."],
+   ["Dia sem registro","Sem registro neste dia","prop","Doc: esmaecido, “nunca como falha”."],
+   ["CTA","Ver mais registros",""]]},
+ {id:"T-031 / T-031-A", nome:"Marcos", node:"731-1680", itens:[
+   ["Modal do marco","100 dias de diário — {nome}\nVocê acompanhou o {nome} por 100 dias seguidos. Isso é presença de verdade.\n78 dias tranquilos — De 100 registros com tudo bem\n[Compartilhar agora] [Fechar]",""],
+   ["Card no Movimento","Hoje celebramos {n} dias de Diário do {nome} 💚",""],
+   ["Copies dos demais marcos","(aniversário · tempo de convívio · primeiro registro · primeira semana completa · 30 dias)","gap","Escrever no mesmo tom."]]},
+ {id:"T-032-A", nome:"Círculo da Semana (preenchimento)", node:"715-551", itens:[
+   ["Título","Preencha o círculo da semana",""],
+   ["Instrução","Marque como você sente que foi a semana cuidando do {nome}. Partindo da semana passada — só ajuste o que mudou.","","Pré-preenchimento confirmado (D11)."],
+   ["Progresso","{n} de 8 áreas respondidas",""],
+   ["Dimensões","Alimentação · Exercício · Saúde · Afeto · Socialização · Estímulo · Ambiente · Descanso",""],
+   ["Salvamento parcial","Salve agora e continue quando quiser nesta semana. [Salvar progresso]",""]]},
+ {id:"T-032-B", nome:"Círculo — Evolução semanal", node:"726-422", itens:[
+   ["Título","Como anda o seu equilíbrio como tutor","prop","No Figma: “Como anda o equilíbrio do {nome}” — viola a trava (o Círculo mede o tutor). Pode editar, mas o objeto tem de ser o tutor."],
+   ["Subtítulo","Veja a evolução da sua percepção de cuidado ao longo das semanas.",""],
+   ["Métricas","{n}% · Equilíbrio geral nesta semana · +{n} pontos vs. semana passada",""],
+   ["Destaques","Cresceu em Exercício e Estímulo. Você registrou mais atividades positivas pra ele.\nAfeto e Saúde se mantiveram estáveis. Continue com a mesma constância.","","Sempre crescimento, nunca reprovação."],
+   ["CTA","Ver círculo da semana",""]]},
+ {id:"Push", nome:"Notificações do sistema", itens:[
+   ["Âncora do Diário","Como foi o dia do {nome} hoje?","","1×/dia, categoria Diário, opt-out. Nunca “você não registrou”."],
+   ["Marco","(tom de celebração — uma por marco)","gap","Escrever."],
+   ["Lembrete do Círculo","(suave, semanal, opt-out — nunca cobrança)","gap","Escrever."],
+   ["Ciclo de solicitação","aprovada · não aprovada · precisa de ajustes (app + e-mail)","gap","Redigir as 3."],
+   ["Comunidade ativada","(atingiu 30 novos membros)","gap","Escrever."]]}
+]}
+];
+
+// ===== identidade =====
+let revisor = localStorage.getItem("revisor_nome") || "";
+let papel = localStorage.getItem("revisor_papel") || "";
+window.entrar = function(){
+  const n = document.getElementById("loginNome").value.trim();
+  if(!n){ document.getElementById("loginNome").focus(); return; }
+  revisor = n; papel = document.getElementById("loginPapel").value;
+  localStorage.setItem("revisor_nome", revisor);
+  localStorage.setItem("revisor_papel", papel);
+  document.getElementById("login").close();
+  document.getElementById("quem").innerHTML = `revisando como: <b class="p-${papel}">${escapeHtml(revisor)} (${papel})</b>`;
+  iniciar();
+};
+
+// ===== estado =====
+let estado = {};      // item_id -> {st, novo, revisor, papel}
+let cmts = {};        // item_id -> [{autor,papel,texto,hora}]
+let filtroAtivo = "todas";
+const app = document.getElementById("app");
+const timers = {};
+
+function uid(f,t,i){ return f+"|"+t+"|"+i; }
+function escapeHtml(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+window.escapeHtml = escapeHtml;
+
+async function carregar(){
+  const [r1, r2] = await Promise.all([
+    sb.from("revisao_copy").select("*"),
+    sb.from("comentarios").select("*").order("created_at",{ascending:true})
+  ]);
+  if(r1.error||r2.error){ document.getElementById("conex").textContent="erro de conexão"; return; }
+  estado = {}; cmts = {};
+  r1.data.forEach(r=>{ if(r.status||r.novo_texto) estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||""}; });
+  r2.data.forEach(c=>{ (cmts[c.item_id]=cmts[c.item_id]||[]).push({autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at}); });
+  render();
+}
+function gravar(id){
+  const e = estado[id] || {};
+  clearTimeout(timers[id]);
+  timers[id] = setTimeout(async ()=>{
+    await sb.from("revisao_copy").upsert({ item_id:id, status:e.st||"", novo_texto:e.novo||"", obs:e.papel||papel, revisor:e.revisor||revisor, updated_at:new Date().toISOString() });
+  }, 350);
+}
+async function limpar(id){
+  delete estado[id];
+  await sb.from("revisao_copy").upsert({item_id:id, status:"", novo_texto:"", obs:"", revisor:"", updated_at:new Date().toISOString()});
+}
+async function comentar(id, texto){
+  if(!texto.trim()) return;
+  await sb.from("comentarios").insert({item_id:id, autor:revisor, papel, texto:texto.trim()});
+}
+
+// ===== realtime =====
+function assinar(){
+  sb.channel("revisao")
+    .on("postgres_changes", {event:"*", schema:"public", table:"revisao_copy"}, (p)=>{
+      const r = p.new; if(!r) return;
+      const meu = document.activeElement?.closest?.(`[data-uid="${CSS.escape(r.item_id)}"]`);
+      if(!r.status && !r.novo_texto){ delete estado[r.item_id]; }
+      else { estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||""}; }
+      if(!meu) refreshUid(r.item_id);
+      atualizarContadores();
+    })
+    .on("postgres_changes", {event:"INSERT", schema:"public", table:"comentarios"}, (p)=>{
+      const c = p.new; if(!c) return;
+      (cmts[c.item_id]=cmts[c.item_id]||[]).push({autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at});
+      const box = document.querySelector(`[data-th="${CSS.escape(c.item_id)}"]`);
+      if(box){ box.insertAdjacentHTML("beforeend", cmtHtml(c)); }
+      const cnt = document.querySelector(`[data-thc="${CSS.escape(c.item_id)}"]`);
+      if(cnt) cnt.textContent = "💬 " + (cmts[c.item_id]||[]).length;
+    })
+    .subscribe((st)=>{
+      const c=document.getElementById("conex");
+      if(st==="SUBSCRIBED"){ c.textContent="● ao vivo"; c.classList.add("on"); }
+      else { c.textContent="reconectando…"; c.classList.remove("on"); }
+    });
+}
+function cmtHtml(c){
+  const h = new Date(c.hora||Date.now()).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+  return `<div class="cmt"><b class="p-${c.papel||'Copy'}">${escapeHtml(c.autor)}</b><span class="hora">${c.papel||""} · ${h}</span><br>${escapeHtml(c.texto)}</div>`;
+}
+function threadHtml(id){
+  const lista = (cmts[id]||[]).map(cmtHtml).join("");
+  return `<div class="thread"><div data-th="${escapeHtml(id)}">${lista}</div>
+    <div class="cmt-form"><input placeholder="Comentar… (assinado como ${escapeHtml(revisor)})" maxlength="500"><button>Enviar</button></div></div>`;
+}
+function ligarThread(container, id){
+  const inp = container.querySelector(".cmt-form input");
+  const btn = container.querySelector(".cmt-form button");
+  const enviar = ()=>{ comentar(id, inp.value); inp.value=""; };
+  btn.onclick = enviar;
+  inp.onkeydown = (e)=>{ if(e.key==="Enter") enviar(); };
+}
+
+// ===== render =====
+function passaFiltro(id,it){
+  const st = estado[id]?.st || "";
+  const tipo = it[2]||"";
+  if(filtroAtivo==="todas") return true;
+  if(filtroAtivo==="pend") return !st && tipo!=="jur";
+  if(filtroAtivo==="ap") return st==="ap";
+  if(filtroAtivo==="aj") return st==="aj";
+  if(filtroAtivo==="gap") return tipo==="gap";
+  return true;
+}
+function render(){
+  app.innerHTML = "";
+  DATA.forEach((fl,fi)=>{
+    const sec = document.createElement("section"); sec.className="fluxo "+(fl.cls||"");
+    sec.innerHTML = `<h2>${fl.fluxo}</h2><p>${fl.desc}</p>`;
+    fl.telas.forEach((tela,ti)=>{
+      const visiveis = tela.itens.map((it,ii)=>({it,ii})).filter(({it,ii})=>passaFiltro(uid(fi,ti,ii),it));
+      if(!visiveis.length && filtroAtivo!=="todas") return;
+      const card = document.createElement("div"); card.className="tela"; card.dataset.key=fi+"-"+ti;
+      const done = tela.itens.filter((it,ii)=>estado[uid(fi,ti,ii)]?.st).length;
+      const idTela = "TELA|"+fi+"|"+ti;
+      const nCmts = (cmts[idTela]||[]).length;
+      const h = document.createElement("div"); h.className="tela-h";
+      h.innerHTML = `<span class="tid">${tela.id}</span><span class="tnome">${tela.nome}</span>
+        ${tela.node?`<a class="lk" href="${FIGMA}${tela.node}" target="_blank" rel="noopener">Abrir no Figma ↗</a>`:""}
+        <button class="bt-notas" data-thc="${escapeHtml(idTela)}">💬 ${nCmts}</button>
+        <span class="tstat">${done}/${tela.itens.length}</span><span class="seta">▶</span>`;
+      card.appendChild(h);
+      const notas = document.createElement("div"); notas.className="notas-tela";
+      notas.innerHTML = `<h4>🎨 Apontamentos da tela (design, dúvidas, qualquer coisa fora da copy)</h4>${threadHtml(idTela)}`;
+      ligarThread(notas, idTela);
+      card.appendChild(notas);
+      const corpo = document.createElement("div"); corpo.className="tela-corpo";
+      (filtroAtivo==="todas" ? tela.itens.map((it,ii)=>({it,ii})) : visiveis).forEach(({it,ii})=>{
+        corpo.appendChild(renderItem(fi,ti,ii,it));
+      });
+      card.appendChild(corpo);
+      h.onclick = (ev)=>{
+        if(ev.target.closest(".lk")) return;
+        if(ev.target.closest(".bt-notas")){ notas.classList.toggle("aberta"); card.classList.add("aberta"); return; }
+        card.classList.toggle("aberta");
+      };
+      if(filtroAtivo!=="todas") card.classList.add("aberta");
+      sec.appendChild(card);
+    });
+    if(sec.querySelector(".tela")) app.appendChild(sec);
+  });
+  atualizarContadores();
+}
+function renderItem(fi,ti,ii,it){
+  const id = uid(fi,ti,ii);
+  const [el, txt, tipo, nota] = it;
+  const e = estado[id] || {};
+  const div = document.createElement("div");
+  div.dataset.uid = id;
+  div.className = "item"+(tipo&&tipo!=="tar"?" "+tipo:"")+(e.st==="ap"?" ap":"")+(e.st==="aj"?" aj editando":"");
+  let badges = "";
+  if(tipo==="jur") badges += `<span class="badge bd-jur">JURÍDICO — travada pelo advogado</span> `;
+  if(tipo==="gap") badges += `<span class="badge bd-gap">FALTA COPY — escrever</span> `;
+  if(tipo==="prop") badges += `<span class="badge bd-obs">PROPOSTA NOVA — aprovar ou editar</span> `;
+  if(e.st && e.revisor){
+    const acao = tipo==="tar" ? "concluída" : (e.st==="ap"?"aprovada":"ajustada");
+    badges += `<span class="badge bd-quem">${acao} por <span class="p-${e.papel||'Copy'}">${escapeHtml(e.revisor)}</span></span> `;
+  }
+  const nC = (cmts[id]||[]).length;
+  div.innerHTML = `
+    <div class="el">${el}</div>
+    <div class="meio">
+      ${badges?`<div>${badges}</div>`:""}
+      <div class="copy">${escapeHtml(txt)}</div>
+      ${nota?`<div class="nota">💡 ${escapeHtml(nota)}</div>`:""}
+      ${tipo!=="tar"?`<div class="edit"><textarea placeholder="${tipo==='gap'?'Escreva aqui a copy proposta…':'Escreva aqui a nova versão…'}">${escapeHtml(e.novo||"")}</textarea></div>`:""}
+      ${threadHtml(id)}
+    </div>
+    <div class="btns">${tipo==="jur"
+      ? `<div class="lock">🔒 não editável</div>`
+      : tipo==="tar"
+      ? `<button class="b-ap ${e.st==='ap'?'on':''}">${e.st==='ap'?'✓ Feito':'Concluir'}</button>${e.st?`<button class="b-x">reabrir</button>`:""}`
+      : `<button class="b-ap ${e.st==='ap'?'on':''}">✓ Aprovar</button>
+         <button class="b-aj ${e.st==='aj'?'on':''}">✎ Ajustar</button>
+         ${e.st?`<button class="b-x">limpar</button>`:""}`}
+    </div>`;
+  ligarThread(div, id);
+  if(tipo!=="jur"){
+    const bAp = div.querySelector(".b-ap");
+    if(bAp) bAp.onclick = ()=>{ estado[id]={st:"ap",novo:"",revisor,papel}; gravar(id); refreshUid(id); };
+    const bAj = div.querySelector(".b-aj");
+    if(bAj) bAj.onclick = ()=>{ estado[id]={st:"aj", novo:estado[id]?.novo || (tipo==="gap"?"":txt), revisor, papel}; gravar(id); refreshUid(id, true); };
+    const bx = div.querySelector(".b-x");
+    if(bx) bx.onclick = ()=>{ limpar(id); refreshUid(id); atualizarContadores(); };
+    const ta = div.querySelector(".edit textarea");
+    if(ta) ta.oninput = ()=>{ estado[id]=estado[id]||{st:"aj"}; estado[id].novo=ta.value; estado[id].revisor=revisor; estado[id].papel=papel; gravar(id); };
+  }
+  return div;
+}
+function localizarItem(id){
+  const [fi,ti,ii] = id.split("|").map(Number);
+  return {fi,ti,ii,it:DATA[fi]?.telas[ti]?.itens[ii]};
+}
+function refreshUid(id, foco){
+  if(id.startsWith("TELA|")) return;
+  const alvo = document.querySelector(`[data-uid="${CSS.escape(id)}"]`);
+  const {fi,ti,ii,it} = localizarItem(id);
+  if(!alvo || !it) return;
+  const novo = renderItem(fi,ti,ii,it);
+  alvo.replaceWith(novo);
+  const card = document.querySelector(`.tela[data-key="${fi}-${ti}"]`);
+  if(card){ const done = DATA[fi].telas[ti].itens.filter((x,xi)=>estado[uid(fi,ti,xi)]?.st).length;
+    card.querySelector(".tstat").textContent = `${done}/${DATA[fi].telas[ti].itens.length}`; }
+  if(foco){ const ta=novo.querySelector(".edit textarea"); if(ta) ta.focus(); }
+}
+function atualizarContadores(){
+  let ap=0,aj=0,tot=0;
+  DATA.forEach((fl,fi)=>fl.telas.forEach((t,ti)=>t.itens.forEach((it,ii)=>{
+    if((it[2]||"")==="jur") return;
+    tot++;
+    const st = estado[uid(fi,ti,ii)]?.st;
+    if(st==="ap")ap++; if(st==="aj")aj++;
+  })));
+  document.getElementById("nAp").textContent=ap;
+  document.getElementById("nAj").textContent=aj;
+  document.getElementById("nPe").textContent=tot-ap-aj;
+  document.getElementById("prog").textContent=(ap+aj)+" / "+tot;
+  document.getElementById("barra").style.width = tot? (100*(ap+aj)/tot)+"%" : "0%";
+}
+document.getElementById("filtros").onclick = (ev)=>{
+  const b = ev.target.closest("button"); if(!b) return;
+  document.querySelectorAll("#filtros button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); filtroAtivo = b.dataset.f; render();
+};
+
+// ===== relatórios =====
+let txtAtual = "", nomeArq = "relatorio.md";
+window.copiarTxt = ()=>navigator.clipboard.writeText(txtAtual).then(()=>alert("Copiado!"));
+window.baixarTxt = ()=>{ const b=new Blob([txtAtual],{type:"text/markdown"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=nomeArq; a.click(); };
+window.exportar = function(tipo){
+  const d = new Date().toLocaleDateString("pt-BR");
+  let out = "";
+  if(tipo==="dev"){
+    out = `# Instruções de alteração de copy — Amor de Cão (${d})\nAplicar cada alteração DE → PARA exatamente como escrito, incluindo pontuação. Strings [JURÍDICO] não podem ser alteradas.\n\n`;
+    DATA.forEach((fl,fi)=>{ if(fi===0) return; let bloco="";
+      fl.telas.forEach((t,ti)=>{ let l="";
+        t.itens.forEach((it,ii)=>{ const e=estado[uid(fi,ti,ii)]; const tp=it[2]||"";
+          if(tp==="jur"||tp==="tar") return;
+          if(e?.st==="aj" && (e.novo||"").trim()){
+            l += tp==="gap" ? `- **${it[0]}** — COPY NOVA:\n  - INSERIR: "${e.novo.trim()}"\n`
+                            : `- **${it[0]}**\n  - DE: "${it[1]}"\n  - PARA: "${e.novo.trim()}"\n`;
+            l += `  - Por: ${e.revisor} (${e.papel||"?"})\n`;
+            (cmts[uid(fi,ti,ii)]||[]).forEach(c=>{ l+=`  - 💬 ${c.autor}: ${c.texto}\n`; });
+          }});
+        if(l) bloco += `### ${t.id} — ${t.nome}\n${l}\n`; });
+      if(bloco) out += `## ${fl.fluxo}\n\n${bloco}`; });
+    nomeArq="instrucoes_dev.md";
+  }
+  if(tipo==="design"){
+    out = `# Tarefas de Design — Amor de Cão (${d})\n\n## Checklist\n`;
+    DATA[0].telas.forEach((t,ti)=>{ out+=`\n### ${t.nome}\n`;
+      t.itens.forEach((it,ii)=>{ const e=estado[uid(0,ti,ii)];
+        out += `- [${e?.st==="ap"?"x":" "}] **${it[0]}** — ${it[1]}${e?.st==="ap"?` _(feito por ${e.revisor})_`:""}\n`;
+        (cmts[uid(0,ti,ii)]||[]).forEach(c=>{ out+=`  - 💬 ${c.autor}: ${c.texto}\n`; });
+      });});
+    out += `\n## Apontamentos por tela\n`;
+    DATA.forEach((fl,fi)=>{ if(fi===0) return;
+      fl.telas.forEach((t,ti)=>{ const th = cmts["TELA|"+fi+"|"+ti]||[];
+        if(th.length){ out+=`\n### ${t.id} — ${t.nome}\n`; th.forEach(c=>{ out+=`- ${c.autor} (${c.papel}): ${c.texto}\n`; }); } });});
+    nomeArq="tarefas_design.md";
+  }
+  if(tipo==="juridico"){
+    out = `# Pendências jurídicas — Amor de Cão (${d})\n\n`;
+    out += `1. Termos de Uso do app (incluir aviso de não substituição de avaliação veterinária — pendência da Régua, Parte 4).\n`;
+    out += `2. Política de Privacidade (incluir tratamento de dados de saúde do cão — pendência da Régua).\n`;
+    out += `3. Termos de uso para anúncios de adoção (checkbox já existe na T-020).\n`;
+    out += `4. Copy do modal de denúncia de perfil (ReportModal) — motivos estruturados SEM opção de maus-tratos (trava do Handoff de Adoção).\n`;
+    out += `5. Registrar por escrito, como aditivo da Régua, o aval do advogado ao selo público "Vem do Diário do {nome}" (decisão D2).\n`;
+    out += `\n## Comentários em itens jurídicos\n`;
+    DATA.forEach((fl,fi)=>fl.telas.forEach((t,ti)=>t.itens.forEach((it,ii)=>{
+      if((it[2]||"")!=="jur") return;
+      const th = cmts[uid(fi,ti,ii)]||[];
+      if(th.length){ out+=`\n### ${t.id} — ${it[0]}\n`; th.forEach(c=>{ out+=`- ${c.autor} (${c.papel}): ${c.texto}\n`; }); }
+    })));
+    nomeArq="pendencias_juridico.md";
+  }
+  txtAtual = out;
+  document.getElementById("dlgT").textContent = {dev:"Instruções para o DEV",design:"Tarefas para o DESIGN",juridico:"Pendências para o JURÍDICO"}[tipo];
+  document.getElementById("dlgPre").textContent = out;
+  document.getElementById("dlg").showModal();
+};
+
+function iniciar(){ carregar(); assinar(); }
+if(revisor && papel){
+  document.getElementById("quem").innerHTML = `revisando como: <b class="p-${papel}">${escapeHtml(revisor)} (${papel})</b>`;
+  iniciar();
+} else {
+  document.getElementById("login").showModal();
+}
+</script>
+</body>
+</html>
