@@ -135,6 +135,13 @@ const FIGMA = "https://www.figma.com/design/V0Ol2lDC5Xp1ibGmdj9xNT/Aplicativo?no
 // tipo: "" normal | "jur" travada | "gap" falta copy | "prop" proposta nova | "tar" tarefa de design
 const DATA = [
 {fluxo:"Tarefas do Design", cls:"f-design", desc:"Correções e criações pendentes no Figma. Marque ✓ Feito ao concluir; use os comentários para dúvidas.", telas:[
+ {id:"SELOS", nome:"Sistema de Selos do perfil — NÃO DESENHADO (Tese Operacional, Bloco 2)", itens:[
+  ["Camada 1 — Identificação","Desenhar o selo de identificação (Tutor / Adotante / Profissional / ONG) no perfil do tutor e junto ao nome nas interações (posts, respostas, comentários)","tar","A própria Tese registra: sistema ainda não implementado no frontend — o Bloco 2 é a única fonte da regra."],
+  ["Selos de profissão","Desenhar os 13 selos de profissão verificada que substituem o genérico “Profissional”: Veterinário, Adestrador, Comportamentalista, Nutricionista canino, Criador responsável, Tosador, Pet sitter, Hotel canino, Hospedagem PetFriendly, Creche canina, Dog walker, Pet shop, Agência canina","tar"],
+  ["Camada 2 — Gamificação","Desenhar os 5 níveis (Bronze · Prata · Ouro · Diamante · Autoridade): medalha única, sempre o nível atual, exibida no perfil e nas interações. SEM ranking público","tar"],
+  ["Camada 3 — Função","Desenhar a indicação de função na comunidade: Moderadora/Dona · Co-moderadora · Autoridade-moderadora (permissões no Handoff Moderação/BackOffice)","tar"],
+  ["Composição visual","Aplicar o padrão da Tese: “{nome} | {identificação} | {nível}” (ex.: “Maria | Veterinário | Ouro”) nos cards de resposta e no perfil","tar"],
+  ["Onde aparece","Mapear e desenhar o selo em todos os contextos: T-012-A/B (perfil), T-011 e threads (autor de post/resposta), moderadores da T-011, respostas na Não Surta, Pergunta (“Resposta de vet tem selo” — regra da comunidade)","tar"]]},
  {id:"FIGMA", nome:"Telas e elementos a criar", itens:[
   ["T-035-D","Criar tela “Precisa de ajustes” do ciclo de solicitação de comunidade","tar"],
   ["ReportModal","Criar modal de denúncia de perfil (aguardar copy do jurídico — sem opção de maus-tratos)","tar"],
@@ -244,6 +251,15 @@ const DATA = [
    ["Grupos","Hoje · Ontem · Esta semana · não lidas ({n})",""],
    ["Fórmula","{nome} respondeu ao seu post em {comunidade}\n{nome} respondeu ao seu comentário em {comunidade}","","Regência unificada (“ao seu”)."],
    ["Estado vazio","Por enquanto, nada por aqui.","prop","Não existe no Figma. Proposta."]]},
+ {id:"SELOS", nome:"Copy do sistema de selos (Tese Operacional, Bloco 2)", itens:[
+   ["Identificação (Camada 1)","Tutor · Adotante · Profissional · ONG","","Rótulos oficiais da Tese, escolhidos no cadastro (T-004)."],
+   ["Profissões verificadas","Veterinário · Adestrador · Comportamentalista · Nutricionista canino · Criador responsável · Tosador · Pet sitter · Hotel canino · Hospedagem PetFriendly · Creche canina · Dog walker · Pet shop · Agência canina","","Substituem “Profissional” após verificação. Lista pode crescer."],
+   ["Níveis (Camada 2)","Bronze · Prata · Ouro · Diamante · Autoridade","","Medalha única, ascensão silenciosa, sem ranking público."],
+   ["Funções (Camada 3)","Moderadora/Dona · Co-moderadora · Autoridade-moderadora","","Conferir rótulos finais com o Handoff Moderação/BackOffice."],
+   ["Composição","{nome} | {identificação} | {nível}","","Ex. da Tese: “Maria | Veterinário | Ouro”."],
+   ["Tooltip do selo","(o que aparece ao tocar num selo — explicação de cada camada)","gap","Não existe em documento nenhum. Escrever microcopy explicativa."],
+   ["Comunicação de subida de nível","(o próprio usuário é avisado quando sobe de nível?)","gap","Tese define ascensão silenciosa (sem ranking), mas não diz se o usuário é notificado da própria subida. A DEFINIR — se sim, escrever no tom de celebração."],
+   ["Verificação de profissional","Fluxo da Tese 2.4: T-022-A com envio de documentos → análise do time → aprovação (selo da profissão) ou reprovação (mantém outro selo)","gap","CONFLITO A RESOLVER: a decisão D3 optou por selo automático, mas a Tese 2.4 exige análise — e Tese prevalece em autoridade. Léo precisa ratificar um dos dois e atualizar o outro."]]},
  {id:"G-001", nome:"Configurações", node:"31-500", itens:[
    ["Seções","Conta (E-mail · Senha · Método de login) · Meus cães · Sobre (Termos de uso · Política de privacidade)",""],
    ["Seção de notificações","Notificações — Push · E-mail","prop","No Figma chama-se “Privacidade”, mas o conteúdo é notificação. Falta categoria Diário."],
@@ -337,7 +353,7 @@ const DATA = [
    ["Aviso de publicação","Após publicar, seu cão ficará visível e interessados poderão entrar em contato com você.","prop","Reescrita aprovada (D13)."],
    ["CTAs","Publicar anúncio · Editar informações",""]]},
  {id:"T-022-A", nome:"Cadastro de especialista", node:"13-1501", itens:[
-   ["Título","Cadastro profissional\nPreencha seus dados para ativar seu selo de especialista nas comunidades","","D3: selo automático."],
+   ["Título","Cadastro profissional\nPreencha seus dados para ativar seu selo de especialista nas comunidades","","ATENÇÃO: D3 decidiu selo automático, mas a Tese 2.4 exige análise com documentos (ver card “Copy do sistema de selos” no Fluxo 2). Ratificar com o Léo antes de implementar."],
    ["Campos","Profissão · Registro profissional (opcional) — Ex: CRMV, certificação, registro técnico · Área de atuação","","“Área de atuação” com placeholder “Cidade”: geografia ou especialidade? Definir."],
    ["Declaração","Declaro que as informações acima são verdadeiras e de minha responsabilidade. Entendo que dados falsos podem levar à perda do selo e ao bloqueio do perfil.","","Única proteção do selo automático."],
    ["CTA","Ativar meu selo",""]]}
