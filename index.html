@@ -99,6 +99,7 @@
   <span>⏳ <span class="f-n" id="nPe">0</span></span>
   <span id="quem" style="color:#BBB;font-size:12px"></span>
   <span class="sp"></span>
+  <button id="btnAdmin" style="background:#3a3a3a;color:#bbb">🔑</button>
   <button style="background:var(--laranja);color:#fff" onclick="exportar('dev')">📋 DEV</button>
   <button style="background:var(--azul);color:#fff" onclick="exportar('design')">🎨 DESIGN</button>
   <button style="background:var(--pink);color:#fff" onclick="exportar('juridico')">⚖️ JURÍDICO</button>
@@ -452,6 +453,13 @@ window.entrar = function(){
 let estado = {};      // item_id -> {st, novo, revisor, papel}
 let cmts = {};        // item_id -> [{autor,papel,texto,hora}]
 let extras = {};      // card_key "fi|ti" -> [linhas de itens_extras]
+let ocultos = new Set();                       // item_ids base ocultados pelo admin
+let adminToken = localStorage.getItem("admin_token") || "";
+let isAdmin = false;
+async function adminAcao(acao, alvo){
+  const { data } = await sb.rpc("admin_acao", {p_acao:acao, p_alvo:alvo||"", p_token:adminToken});
+  return data === true;
+}
 let filtroAtivo = "todas";
 const app = document.getElementById("app");
 const timers = {};
@@ -461,16 +469,19 @@ function escapeHtml(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt
 window.escapeHtml = escapeHtml;
 
 async function carregar(){
-  const [r1, r2, r3] = await Promise.all([
+  const [r1, r2, r3, r4] = await Promise.all([
     sb.from("revisao_copy").select("*"),
     sb.from("comentarios").select("*").order("created_at",{ascending:true}),
-    sb.from("itens_extras").select("*").eq("arquivado", false).order("created_at",{ascending:true})
+    sb.from("itens_extras").select("*").eq("arquivado", false).order("created_at",{ascending:true}),
+    sb.from("itens_ocultos").select("item_id")
   ]);
-  if(r1.error||r2.error||r3.error){ document.getElementById("conex").textContent="erro de conexão"; return; }
-  estado = {}; cmts = {}; extras = {};
+  if(r1.error||r2.error||r3.error||r4.error){ document.getElementById("conex").textContent="erro de conexão"; return; }
+  estado = {}; cmts = {}; extras = {}; ocultos = new Set();
   r1.data.forEach(r=>{ if(r.status||r.novo_texto) estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||""}; });
   r2.data.forEach(c=>{ (cmts[c.item_id]=cmts[c.item_id]||[]).push({autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at}); });
   r3.data.forEach(x=>{ (extras[x.card_key]=extras[x.card_key]||[]).push(x); });
+  r4.data.forEach(o=>ocultos.add(o.item_id));
+  if(adminToken && !isAdmin){ isAdmin = await adminAcao("validar"); atualizarBotaoAdmin(); }
   render();
 }
 async function salvarExtra(cardKey, rotulo, texto, tipo){
@@ -479,7 +490,8 @@ async function salvarExtra(cardKey, rotulo, texto, tipo){
   return !error;
 }
 async function arquivarExtra(id){
-  await sb.from("itens_extras").update({arquivado:true}).eq("id", id);
+  const ok = await adminAcao("arquivar", String(id));
+  if(!ok) alert("Ação restrita ao administrador do painel.");
 }
 function gravar(id){
   const e = estado[id] || {};
@@ -507,6 +519,11 @@ function assinar(){
       else { estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||""}; }
       if(!meu){ if(r.item_id.startsWith("X|")) render(); else refreshUid(r.item_id); }
       atualizarContadores();
+    })
+    .on("postgres_changes", {event:"*", schema:"public", table:"itens_ocultos"}, (p)=>{
+      if(p.eventType==="DELETE"){ if(p.old?.item_id) ocultos.delete(p.old.item_id); }
+      else if(p.new?.item_id){ ocultos.add(p.new.item_id); }
+      render();
     })
     .on("postgres_changes", {event:"*", schema:"public", table:"itens_extras"}, (p)=>{
       const x = p.new; if(!x) return;
@@ -583,6 +600,7 @@ function render(){
       card.appendChild(notas);
       const corpo = document.createElement("div"); corpo.className="tela-corpo";
       (filtroAtivo==="todas" ? tela.itens.map((it,ii)=>({it,ii})) : visiveis).forEach(({it,ii})=>{
+        if(ocultos.has(uid(fi,ti,ii)) && !isAdmin) return;
         corpo.appendChild(renderItem(fi,ti,ii,it));
       });
       (extras[fi+"|"+ti]||[]).forEach(ex=>{
@@ -617,6 +635,7 @@ function renderItem(fi,ti,ii,it,ex){
   div.dataset.uid = id;
   div.className = "item"+(tipo&&tipo!=="tar"?" "+tipo:"")+(e.st==="ap"?" ap":"")+(e.st==="aj"?" aj editando":"");
   let badges = "";
+  if(!ex && ocultos.has(id)){ badges += `<span class="badge" style="background:#666;color:#fff">OCULTO PELO ADMIN — invisível para o time</span> `; div.style.opacity=".55"; }
   if(ex) badges += `<span class="badge bd-obs">CRIADO NO PAINEL</span> `;
   if(tipo==="jur") badges += `<span class="badge bd-jur">JURÍDICO — travada pelo advogado</span> `;
   if(tipo==="gap") badges += `<span class="badge bd-gap">FALTA COPY — escrever</span> `;
@@ -642,7 +661,8 @@ function renderItem(fi,ti,ii,it,ex){
       : `<button class="b-ap ${e.st==='ap'?'on':''}">✓ Aprovar</button>
          <button class="b-aj ${e.st==='aj'?'on':''}">✎ Ajustar</button>
          ${e.st?`<button class="b-x">limpar</button>`:""}`}
-      ${ex?`<button class="b-x b-arq">arquivar item</button>`:""}
+      ${ex&&isAdmin?`<button class="b-x b-arq">🗑 arquivar</button>`:""}
+      ${!ex&&isAdmin?`<button class="b-x b-oc">${ocultos.has(id)?"↩ reexibir":"🗑 ocultar"}</button>`:""}
     </div>`;
   ligarThread(div, id);
   if(tipo!=="jur"){
@@ -657,6 +677,14 @@ function renderItem(fi,ti,ii,it,ex){
   }
   const bArq = div.querySelector(".b-arq");
   if(bArq) bArq.onclick = ()=>{ if(confirm("Arquivar este item para todo o time? (fica guardado no banco, some do painel)")) arquivarExtra(ex.id); };
+  const bOc = div.querySelector(".b-oc");
+  if(bOc) bOc.onclick = async ()=>{
+    const acao = ocultos.has(id) ? "reexibir" : "ocultar";
+    if(acao==="ocultar" && !confirm("Ocultar este item para todo o time? (você pode reexibir depois)")) return;
+    const ok = await adminAcao(acao, id);
+    if(ok){ acao==="ocultar" ? ocultos.add(id) : ocultos.delete(id); render(); }
+    else alert("Chave de admin inválida.");
+  };
   return div;
 }
 function formExtra(fi,ti){
@@ -708,6 +736,7 @@ function atualizarContadores(){
     if(st==="ap")ap++; if(st==="aj")aj++;
   })));
   Object.values(extras).flat().forEach(x=>{ tot++; const st=estado["X|"+x.id]?.st; if(st==="ap")ap++; if(st==="aj")aj++; });
+  ocultos.forEach(id=>{ if(!id.startsWith("X|")){ tot--; const st=estado[id]?.st; if(st==="ap")ap--; if(st==="aj")aj--; } });
   document.getElementById("nAp").textContent=ap;
   document.getElementById("nAj").textContent=aj;
   document.getElementById("nPe").textContent=tot-ap-aj;
@@ -732,7 +761,7 @@ window.exportar = function(tipo){
     DATA.forEach((fl,fi)=>{ if(fi===0) return; let bloco="";
       fl.telas.forEach((t,ti)=>{ let l="";
         t.itens.forEach((it,ii)=>{ const e=estado[uid(fi,ti,ii)]; const tp=it[2]||"";
-          if(tp==="jur"||tp==="tar") return;
+          if(tp==="jur"||tp==="tar"||ocultos.has(uid(fi,ti,ii))) return;
           if(e?.st==="aj" && (e.novo||"").trim()){
             l += tp==="gap" ? `- **${it[0]}** — COPY NOVA:\n  - INSERIR: "${e.novo.trim()}"\n`
                             : `- **${it[0]}**\n  - DE: "${it[1]}"\n  - PARA: "${e.novo.trim()}"\n`;
@@ -801,6 +830,24 @@ window.exportar = function(tipo){
   document.getElementById("dlg").showModal();
 };
 
+function atualizarBotaoAdmin(){
+  const b = document.getElementById("btnAdmin");
+  if(!b) return;
+  if(isAdmin){ b.textContent = "🔑 admin ativo"; b.style.background = "var(--verde)"; b.style.color = "#fff"; }
+  else { b.textContent = "🔑"; b.style.background = "#3a3a3a"; b.style.color = "#bbb"; }
+}
+document.getElementById("btnAdmin").onclick = async ()=>{
+  if(isAdmin){
+    if(confirm("Sair do modo admin neste navegador?")){ isAdmin=false; adminToken=""; localStorage.removeItem("admin_token"); atualizarBotaoAdmin(); render(); }
+    return;
+  }
+  const t = (prompt("Chave de administrador:")||"").trim();
+  if(!t) return;
+  adminToken = t;
+  const ok = await adminAcao("validar");
+  if(ok){ isAdmin = true; localStorage.setItem("admin_token", t); atualizarBotaoAdmin(); render(); }
+  else { adminToken=""; alert("Chave inválida."); }
+};
 function iniciar(){ carregar(); assinar(); }
 if(revisor && papel){
   document.getElementById("quem").innerHTML = `revisando como: <b class="p-${papel}">${escapeHtml(revisor)} (${papel})</b>`;
