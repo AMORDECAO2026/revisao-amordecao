@@ -259,7 +259,7 @@ const DATA = [
    ["Composição","{nome} | {identificação} | {nível}","","Ex. da Tese: “Maria | Veterinário | Ouro”."],
    ["Tooltip do selo","(o que aparece ao tocar num selo — explicação de cada camada)","gap","Não existe em documento nenhum. Escrever microcopy explicativa."],
    ["Comunicação de subida de nível","(o próprio usuário é avisado quando sobe de nível?)","gap","Tese define ascensão silenciosa (sem ranking), mas não diz se o usuário é notificado da própria subida. A DEFINIR — se sim, escrever no tom de celebração."],
-   ["Verificação de profissional","Fluxo da Tese 2.4: T-022-A com envio de documentos → análise do time → aprovação (selo da profissão) ou reprovação (mantém outro selo)","gap","CONFLITO A RESOLVER: a decisão D3 optou por selo automático, mas a Tese 2.4 exige análise — e Tese prevalece em autoridade. Léo precisa ratificar um dos dois e atualizar o outro."]]},
+   ["Verificação de profissional","DECIDIDO (Léo, 29/07): selo de profissão SEM análise de documentos — ativação direta via T-022-A, com declaração de veracidade como proteção e perda do selo em caso de abuso.","","Atualizar em cascata: Tese 2.4 (remover análise) e regra da Não Surta, Pergunta (“veterinário verificado” → ajustar redação, pois não há mais verificação)."]]},
  {id:"G-001", nome:"Configurações", node:"31-500", itens:[
    ["Seções","Conta (E-mail · Senha · Método de login) · Meus cães · Sobre (Termos de uso · Política de privacidade)",""],
    ["Seção de notificações","Notificações — Push · E-mail","prop","No Figma chama-se “Privacidade”, mas o conteúdo é notificação. Falta categoria Diário."],
@@ -353,7 +353,7 @@ const DATA = [
    ["Aviso de publicação","Após publicar, seu cão ficará visível e interessados poderão entrar em contato com você.","prop","Reescrita aprovada (D13)."],
    ["CTAs","Publicar anúncio · Editar informações",""]]},
  {id:"T-022-A", nome:"Cadastro de especialista", node:"13-1501", itens:[
-   ["Título","Cadastro profissional\nPreencha seus dados para ativar seu selo de especialista nas comunidades","","ATENÇÃO: D3 decidiu selo automático, mas a Tese 2.4 exige análise com documentos (ver card “Copy do sistema de selos” no Fluxo 2). Ratificar com o Léo antes de implementar."],
+   ["Título","Cadastro profissional\nPreencha seus dados para ativar seu selo de especialista nas comunidades","","DECIDIDO (Léo, 29/07): selo automático, sem análise de documentos. Tese 2.4 será atualizada."],
    ["Campos","Profissão · Registro profissional (opcional) — Ex: CRMV, certificação, registro técnico · Área de atuação","","“Área de atuação” com placeholder “Cidade”: geografia ou especialidade? Definir."],
    ["Declaração","Declaro que as informações acima são verdadeiras e de minha responsabilidade. Entendo que dados falsos podem levar à perda do selo e ao bloqueio do perfil.","","Única proteção do selo automático."],
    ["CTA","Ativar meu selo",""]]}
@@ -361,7 +361,7 @@ const DATA = [
 {fluxo:"Fluxo 5 — Diário do Cão", desc:"Coração do engajamento e área de maior cuidado jurídico. Textos JURÍDICO são aprovados pelo advogado e não podem ser editados aqui.", telas:[
  {id:"T-026", nome:"Home do Diário", node:"722-910", itens:[
    ["Header","Diário do {nome} · {data}",""],
-   ["Instrução","Toque nos sinais pra registrar o dia dele. Salva sozinho a cada toque.",""],
+   ["Instrução (sem registro)","Como foi o dia do [nome]?","prop","V2 substituiu “Toque nos sinais pra registrar o dia dele. Salva sozinho a cada toque.” pelo E0. Design precisa atualizar o mockup. Sem opção neutra no registro; sinal não marcado quebra a sequência do quesito."],
    ["Sinal comida","Como ele comeu hoje? — Normal · Comeu menos · Não comeu",""],
    ["Sinal energia","Energia de hoje? — Animado · Mais quieto · Apático",""],
    ["Sinal cocô","Cocô hoje? — Normal · Não vi · Diferente",""],
@@ -371,19 +371,32 @@ const DATA = [
    ["Links","Ver histórico · Círculo da semana",""],
    ["Estado sem cão","Cadastre um cão para começar o Diário. [Adicionar um cão]","prop","Handoff prevê; texto não existe."],
    ["Erro ao salvar","Não conseguimos salvar. Sua marcação foi mantida — tente de novo.","prop","Handoff prevê retry; texto não existe."]]},
- {id:"Leituras", nome:"Leituras automáticas — copy do advogado (não editável)", itens:[
-   ["Estado 1 — Tudo verde","Dia tranquilo. Você registrou tudo bem com o [nome] hoje.","jur"],
-   ["Estado 2 — Amarelo isolado","Hoje você marcou que o [nome] [sinal]. Pode ser muita coisa do dia a dia, como calor ou rotina. Vale só ficar de olho.","jur"],
-   ["Estado 3 — Vermelho isolado","Hoje foi um dia diferente para o [nome]. Se você está preocupado, confie no seu instinto e procure um veterinário.","jur"],
-   ["Estado 4 — Padrão amarelo 3 dias","O [nome] [sinal] nos últimos 3 dias. Pode não ser nada, mas três dias seguidos é um padrão que vale dividir com quem já passou por isso. Quer perguntar na comunidade? Tem gente lá com experiência pra compartilhar.","jur"],
-   ["Estado 5 — Padrão vermelho 3 dias","O [nome] apresentou [sinal] nos últimos 3 dias. Quando um sinal assim se repete, o caminho mais seguro é um veterinário.","jur"],
-   ["Estado 6 — Registro parcial","Anotado. Quando quiser, completa o resto.","jur"]]},
- {id:"T-027", nome:"Ponte para a comunidade", node:"772-373", itens:[
+ {id:"Leituras", nome:"Leituras automáticas v2 — 16 estados (Régua revisada 29/07/2026, não editar aqui)", itens:[
+   ["Status jurídico","APROVADA: o advogado revisou a v2 completa (16 estados) — pronta para implementação. Confirmado pelo Léo em 29/07/2026.","","Registrar o aval por escrito na Régua (a linha “aprovada pelo advogado” saiu do texto na revisão)."],
+   ["E0 — Sem registro","Como foi o dia do [nome]?","jur","Substitui a instrução antiga “Toque nos sinais pra registrar…”."],
+   ["E1 — Registro parcial","Anotado. Quando quiser, completa o resto.","jur","Sem linha de pendência em texto; o chip neutro comunica o que falta."],
+   ["E2 — Dia bom","Dia tranquilo. Você registrou tudo bem com o [nome] hoje.","jur"],
+   ["E2r — Recuperação pós-amarelo","Tudo em dia com o [nome] hoje. Depois de alguns dias diferentes, é bom ver ele voltando ao normal.","jur","NOVO"],
+   ["E2v — Recuperação pós-vermelho","Tudo em dia com o [nome] hoje. Se você chegou a marcar com um veterinário, vale manter a consulta mesmo assim.","jur","NOVO — sustenta o encaminhamento mesmo com melhora."],
+   ["E3 — Amarelo isolado","Hoje você marcou que o [nome] [comeu menos]. Um dia diferente acontece. Vale só ficar de olho.","jur","Copy nova (v1 citava “calor ou rotina”)."],
+   ["E4 — Dois ou mais amarelos no dia","Hoje o [nome] teve dois sinais fora do normal: [sinal] e [sinal]. Pode ser só o dia. Vale ficar de olho amanhã.","jur","NOVO — não oferece ponte no primeiro dia."],
+   ["E5a — Padrão amarelo, mesmo sinal, 3 dias · PONTE","Três dias seguidos que o [nome] [comeu menos]. Pode não ser nada, mas é um padrão. Quer perguntar na comunidade? Tem gente lá com experiência pra compartilhar.","jur","Copy nova (substitui o Estado 4 da v1)."],
+   ["E5b — Padrão amarelo, múltiplos sinais, 2 dias · PONTE","Faz dois dias que o [nome] tem mais de um sinal diferente. Pode não ser nada, mas vale dividir com quem já passou por isso. Quer perguntar na comunidade?","jur","NOVO gatilho de ponte."],
+   ["E5d — Padrão distribuído, 3 de 5 dias · PONTE","Em 3 dos últimos 5 dias o [nome] teve algum sinal diferente, nem sempre o mesmo. Pode não ser nada, mas é um padrão. Quer perguntar na comunidade?","jur","NOVO — especificado mas DESLIGADO no MVP; liga com dado real."],
+   ["E5x-a — Padrão continua, ponte já oferecida","O [nome] segue com [sinal] hoje. Anotado.","jur","NOVO — ponte não repete como bloco; vira link discreto."],
+   ["E5x-b — Padrão continua, pergunta publicada","O [nome] segue com [sinal] hoje. Sua pergunta na comunidade continua aberta.","jur","NOVO — com link para o próprio post."],
+   ["E6 — Vermelho isolado · sem ponte","Hoje foi um dia diferente para o [nome]. Se você está preocupado, confie no seu instinto e procure um veterinário.","jur"],
+   ["E7a — Vermelho recorrente, mesmo sinal, 2 em 7 dias · sem ponte","O [nome] teve [sinal] de novo nos últimos dias. Quando um sinal assim volta, o caminho mais seguro é um veterinário.","jur","NOVO — pega recorrência não consecutiva."],
+   ["E7b — Vermelho recorrente, sinais diferentes, 2 em 7 dias · sem ponte","Nos últimos dias, o [nome] teve [sinal] e [sinal]. Quando aparecem sinais assim em poucos dias, o caminho mais seguro é um veterinário.","jur","NOVO"],
+   ["E8 — Padrão vermelho, janela de 3 dias · sem ponte","O [nome] apresentou [sinal] nos últimos 3 dias. Quando um sinal assim se repete, o caminho mais seguro é um veterinário.","jur","Um único vermelho na janela define o estado, inclusive em sequência mista."]]},
+ {id:"T-027", nome:"Ponte para a comunidade (regras v2)", node:"772-373", itens:[
+   ["Gatilhos da ponte","E5a: mesmo sinal 3 dias seguidos · E5b: 2+ sinais por 2 dias seguidos · E5d: 3 de 5 dias alterados (DESLIGADO no MVP)","","NOVO: antes só existia o gatilho de 3 dias. E4 (2 amarelos no mesmo dia) NÃO dispara ponte no 1º dia."],
    ["Título do bloco","Vale observar",""],
    ["Convite","Quer perguntar na comunidade Não Surta, Pergunta?",""],
    ["Explicação","A gente monta um rascunho com o que você anotou. Você edita e publica se quiser.",""],
-   ["Rascunho (modelo)","Tenho registrado que o [nome] [sinal] nos últimos 3 dias.","jur","O resumo vive DENTRO do texto editável do post."],
+   ["Rascunho (modelo)","Tenho registrado que o [nome] [sinal] nos últimos 3 dias.","jur","O resumo vive DENTRO do texto editável do post. Múltiplos sinais: consolidar num único rascunho."],
    ["Ações","Perguntar na comunidade · Agora não",""],
+   ["Persistência (NOVO)","Ponte já oferecida → vira link discreto (E5x-a) · Pergunta publicada → link para o post (E5x-b) · Padrão resolvido → leitura de recuperação (E2r/E2v) e a ponte some","prop","Estados novos da v2 — design precisa desenhar o link discreto e o link para o post."],
    ["Comunidade indisponível","Vale observar e, se persistir, procurar um veterinário.","jur"]]},
  {id:"T-029", nome:"Rascunho de post do Diário", node:"772-447", itens:[
    ["Header","Post na comunidade — Gerado a partir do Diário do {nome}",""],
@@ -391,7 +404,7 @@ const DATA = [
    ["CTAs","Publicar na comunidade · Cancelar",""]]},
  {id:"T-028", nome:"Histórico do Diário", node:"727-592", itens:[
    ["Header","Histórico · {mês} de {ano}",""],
-   ["Resumos por dia","Dia tranquilo · Comeu menos do que o normal",""],
+   ["Resumos por dia (formato v2)","{resumo} — {atenção/ok/grave} / {ok} / {ok} — ex.: “comeu menos — atenção / ok / ok”","prop","Formato novo do Handoff v2: resumo + os 3 indicadores em linha, ordem comida · energia · cocô."],
    ["Demais resumos por sinal","(não comeu / mais quieto / apático / cocô diferente / não vi…)","gap","Definir o conjunto completo."],
    ["Legenda","ok · atenção · grave (ordem: comida · energia · cocô)","gap","Doc exige; não existe no Figma."],
    ["Dia sem registro","Sem registro neste dia","prop","Doc: esmaecido, “nunca como falha”."],
@@ -438,6 +451,7 @@ window.entrar = function(){
 // ===== estado =====
 let estado = {};      // item_id -> {st, novo, revisor, papel}
 let cmts = {};        // item_id -> [{autor,papel,texto,hora}]
+let extras = {};      // card_key "fi|ti" -> [linhas de itens_extras]
 let filtroAtivo = "todas";
 const app = document.getElementById("app");
 const timers = {};
@@ -447,15 +461,25 @@ function escapeHtml(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt
 window.escapeHtml = escapeHtml;
 
 async function carregar(){
-  const [r1, r2] = await Promise.all([
+  const [r1, r2, r3] = await Promise.all([
     sb.from("revisao_copy").select("*"),
-    sb.from("comentarios").select("*").order("created_at",{ascending:true})
+    sb.from("comentarios").select("*").order("created_at",{ascending:true}),
+    sb.from("itens_extras").select("*").eq("arquivado", false).order("created_at",{ascending:true})
   ]);
-  if(r1.error||r2.error){ document.getElementById("conex").textContent="erro de conexão"; return; }
-  estado = {}; cmts = {};
+  if(r1.error||r2.error||r3.error){ document.getElementById("conex").textContent="erro de conexão"; return; }
+  estado = {}; cmts = {}; extras = {};
   r1.data.forEach(r=>{ if(r.status||r.novo_texto) estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||""}; });
   r2.data.forEach(c=>{ (cmts[c.item_id]=cmts[c.item_id]||[]).push({autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at}); });
+  r3.data.forEach(x=>{ (extras[x.card_key]=extras[x.card_key]||[]).push(x); });
   render();
+}
+async function salvarExtra(cardKey, rotulo, texto, tipo){
+  if(!rotulo.trim() || !texto.trim()) return false;
+  const { error } = await sb.from("itens_extras").insert({card_key:cardKey, rotulo:rotulo.trim(), texto:texto.trim(), tipo, autor:revisor, papel});
+  return !error;
+}
+async function arquivarExtra(id){
+  await sb.from("itens_extras").update({arquivado:true}).eq("id", id);
 }
 function gravar(id){
   const e = estado[id] || {};
@@ -481,8 +505,16 @@ function assinar(){
       const meu = document.activeElement?.closest?.(`[data-uid="${CSS.escape(r.item_id)}"]`);
       if(!r.status && !r.novo_texto){ delete estado[r.item_id]; }
       else { estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||""}; }
-      if(!meu) refreshUid(r.item_id);
+      if(!meu){ if(r.item_id.startsWith("X|")) render(); else refreshUid(r.item_id); }
       atualizarContadores();
+    })
+    .on("postgres_changes", {event:"*", schema:"public", table:"itens_extras"}, (p)=>{
+      const x = p.new; if(!x) return;
+      const lista = extras[x.card_key] = extras[x.card_key] || [];
+      const i = lista.findIndex(e=>e.id===x.id);
+      if(x.arquivado){ if(i>=0) lista.splice(i,1); }
+      else if(i>=0){ lista[i]=x; } else { lista.push(x); }
+      render();
     })
     .on("postgres_changes", {event:"INSERT", schema:"public", table:"comentarios"}, (p)=>{
       const c = p.new; if(!c) return;
@@ -527,6 +559,7 @@ function passaFiltro(id,it){
   return true;
 }
 function render(){
+  const abertas = new Set(Array.from(document.querySelectorAll(".tela.aberta")).map(c=>c.dataset.key));
   app.innerHTML = "";
   DATA.forEach((fl,fi)=>{
     const sec = document.createElement("section"); sec.className="fluxo "+(fl.cls||"");
@@ -552,27 +585,39 @@ function render(){
       (filtroAtivo==="todas" ? tela.itens.map((it,ii)=>({it,ii})) : visiveis).forEach(({it,ii})=>{
         corpo.appendChild(renderItem(fi,ti,ii,it));
       });
+      (extras[fi+"|"+ti]||[]).forEach(ex=>{
+        const idX = "X|"+ex.id;
+        const stX = estado[idX]?.st || "";
+        if(filtroAtivo==="pend" && stX) return;
+        if(filtroAtivo==="ap" && stX!=="ap") return;
+        if(filtroAtivo==="aj" && stX!=="aj") return;
+        if(filtroAtivo==="gap" && ex.tipo!=="gap") return;
+        corpo.appendChild(renderItem(fi,ti,null,[ex.rotulo, ex.texto, ex.tipo, "Adicionado por "+ex.autor+(ex.papel?" ("+ex.papel+")":"")], ex));
+      });
+      corpo.appendChild(formExtra(fi,ti));
       card.appendChild(corpo);
       h.onclick = (ev)=>{
         if(ev.target.closest(".lk")) return;
         if(ev.target.closest(".bt-notas")){ notas.classList.toggle("aberta"); card.classList.add("aberta"); return; }
         card.classList.toggle("aberta");
       };
-      if(filtroAtivo!=="todas") card.classList.add("aberta");
+      if(filtroAtivo!=="todas" || abertas.has(fi+"-"+ti)) card.classList.add("aberta");
       sec.appendChild(card);
     });
     if(sec.querySelector(".tela")) app.appendChild(sec);
   });
   atualizarContadores();
 }
-function renderItem(fi,ti,ii,it){
-  const id = uid(fi,ti,ii);
+function renderItem(fi,ti,ii,it,ex){
+  const id = ex ? "X|"+ex.id : uid(fi,ti,ii);
+  const refresh = (foco)=>{ if(ex) render(); else refreshUid(id, foco); };
   const [el, txt, tipo, nota] = it;
   const e = estado[id] || {};
   const div = document.createElement("div");
   div.dataset.uid = id;
   div.className = "item"+(tipo&&tipo!=="tar"?" "+tipo:"")+(e.st==="ap"?" ap":"")+(e.st==="aj"?" aj editando":"");
   let badges = "";
+  if(ex) badges += `<span class="badge bd-obs">CRIADO NO PAINEL</span> `;
   if(tipo==="jur") badges += `<span class="badge bd-jur">JURÍDICO — travada pelo advogado</span> `;
   if(tipo==="gap") badges += `<span class="badge bd-gap">FALTA COPY — escrever</span> `;
   if(tipo==="prop") badges += `<span class="badge bd-obs">PROPOSTA NOVA — aprovar ou editar</span> `;
@@ -597,18 +642,45 @@ function renderItem(fi,ti,ii,it){
       : `<button class="b-ap ${e.st==='ap'?'on':''}">✓ Aprovar</button>
          <button class="b-aj ${e.st==='aj'?'on':''}">✎ Ajustar</button>
          ${e.st?`<button class="b-x">limpar</button>`:""}`}
+      ${ex?`<button class="b-x b-arq">arquivar item</button>`:""}
     </div>`;
   ligarThread(div, id);
   if(tipo!=="jur"){
     const bAp = div.querySelector(".b-ap");
-    if(bAp) bAp.onclick = ()=>{ estado[id]={st:"ap",novo:"",revisor,papel}; gravar(id); refreshUid(id); };
+    if(bAp) bAp.onclick = ()=>{ estado[id]={st:"ap",novo:"",revisor,papel}; gravar(id); refresh(); };
     const bAj = div.querySelector(".b-aj");
-    if(bAj) bAj.onclick = ()=>{ estado[id]={st:"aj", novo:estado[id]?.novo || (tipo==="gap"?"":txt), revisor, papel}; gravar(id); refreshUid(id, true); };
-    const bx = div.querySelector(".b-x");
-    if(bx) bx.onclick = ()=>{ limpar(id); refreshUid(id); atualizarContadores(); };
+    if(bAj) bAj.onclick = ()=>{ estado[id]={st:"aj", novo:estado[id]?.novo || (tipo==="gap"?"":txt), revisor, papel}; gravar(id); refresh(true); };
+    const bx = div.querySelector(".b-x:not(.b-arq)");
+    if(bx) bx.onclick = ()=>{ limpar(id); refresh(); atualizarContadores(); };
     const ta = div.querySelector(".edit textarea");
     if(ta) ta.oninput = ()=>{ estado[id]=estado[id]||{st:"aj"}; estado[id].novo=ta.value; estado[id].revisor=revisor; estado[id].papel=papel; gravar(id); };
   }
+  const bArq = div.querySelector(".b-arq");
+  if(bArq) bArq.onclick = ()=>{ if(confirm("Arquivar este item para todo o time? (fica guardado no banco, some do painel)")) arquivarExtra(ex.id); };
+  return div;
+}
+function formExtra(fi,ti){
+  const div = document.createElement("div");
+  div.className = "item";
+  div.innerHTML = `
+    <div class="el" style="padding-top:8px">＋ Novo item</div>
+    <div class="meio" style="display:none">
+      <input class="fx-rot" placeholder="Rótulo (ex.: Botão de compartilhar)" maxlength="80" style="width:100%;font:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--borda);border-radius:8px;margin-bottom:6px">
+      <textarea class="fx-txt" placeholder="Texto do item — copy, tarefa ou o que falta escrever" style="width:100%;min-height:56px;font:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--borda);border-radius:8px"></textarea>
+      <select class="fx-tipo" style="font:inherit;font-size:12px;padding:6px;border:1px solid var(--borda);border-radius:6px;margin-top:6px">
+        <option value="">Copy para revisar</option>
+        <option value="tar">Tarefa (concluir/reabrir)</option>
+        <option value="gap">Falta copy (escrever)</option>
+      </select>
+    </div>
+    <div class="btns"><button class="fx-add">＋ Adicionar</button></div>`;
+  const meio = div.querySelector(".meio");
+  const btn = div.querySelector(".fx-add");
+  btn.onclick = async ()=>{
+    if(meio.style.display==="none"){ meio.style.display=""; btn.textContent="Salvar"; div.querySelector(".fx-rot").focus(); return; }
+    const ok = await salvarExtra(fi+"|"+ti, div.querySelector(".fx-rot").value, div.querySelector(".fx-txt").value, div.querySelector(".fx-tipo").value);
+    if(ok){ render(); } else { alert("Preencha rótulo e texto."); }
+  };
   return div;
 }
 function localizarItem(id){
@@ -635,6 +707,7 @@ function atualizarContadores(){
     const st = estado[uid(fi,ti,ii)]?.st;
     if(st==="ap")ap++; if(st==="aj")aj++;
   })));
+  Object.values(extras).flat().forEach(x=>{ tot++; const st=estado["X|"+x.id]?.st; if(st==="ap")ap++; if(st==="aj")aj++; });
   document.getElementById("nAp").textContent=ap;
   document.getElementById("nAj").textContent=aj;
   document.getElementById("nPe").textContent=tot-ap-aj;
@@ -668,6 +741,20 @@ window.exportar = function(tipo){
           }});
         if(l) bloco += `### ${t.id} — ${t.nome}\n${l}\n`; });
       if(bloco) out += `## ${fl.fluxo}\n\n${bloco}`; });
+    let extrasDev = "";
+    Object.entries(extras).forEach(([ck, lista])=>{
+      const [fi,ti] = ck.split("|").map(Number);
+      const t = DATA[fi]?.telas[ti]; if(!t) return;
+      lista.forEach(x=>{
+        const e = estado["X|"+x.id];
+        if(x.tipo!=="tar" && e?.st==="aj" && (e.novo||"").trim()){
+          extrasDev += `### ${t.id} — ${t.nome} (item criado no painel por ${x.autor})\n- **${x.rotulo}**\n  - DE: "${x.texto}"\n  - PARA: "${e.novo.trim()}"\n\n`;
+        } else if(x.tipo!=="tar" && e?.st==="ap"){
+          extrasDev += `### ${t.id} — ${t.nome} (item criado no painel por ${x.autor})\n- **${x.rotulo}** — APROVADO: "${x.texto}"\n\n`;
+        }
+      });
+    });
+    if(extrasDev) out += `## Itens criados no painel\n\n${extrasDev}`;
     nomeArq="instrucoes_dev.md";
   }
   if(tipo==="design"){
@@ -681,6 +768,16 @@ window.exportar = function(tipo){
     DATA.forEach((fl,fi)=>{ if(fi===0) return;
       fl.telas.forEach((t,ti)=>{ const th = cmts["TELA|"+fi+"|"+ti]||[];
         if(th.length){ out+=`\n### ${t.id} — ${t.nome}\n`; th.forEach(c=>{ out+=`- ${c.autor} (${c.papel}): ${c.texto}\n`; }); } });});
+    let extrasTar = "";
+    Object.entries(extras).forEach(([ck, lista])=>{
+      const [fi,ti] = ck.split("|").map(Number);
+      const t = DATA[fi]?.telas[ti]; if(!t) return;
+      lista.filter(x=>x.tipo==="tar").forEach(x=>{
+        const e = estado["X|"+x.id];
+        extrasTar += `- [${e?.st==="ap"?"x":" "}] **${x.rotulo}** (${t.id}, criado por ${x.autor}) — ${x.texto}${e?.st==="ap"?` _(feito por ${e.revisor})_`:""}\n`;
+      });
+    });
+    if(extrasTar) out += `\n## Tarefas criadas no painel\n${extrasTar}`;
     nomeArq="tarefas_design.md";
   }
   if(tipo==="juridico"){
