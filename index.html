@@ -152,7 +152,8 @@ const DATA = [
   ["T-020","Adicionar campos de localização e contato (aguardar copy)","tar"],
   ["T-014 / G-001","Adicionar categoria “Diário” nas notificações e renomear seção “Privacidade”→“Notificações”","tar"],
   ["T-016","Badge “Adotado” e estado vazio da prateleira","tar"],
-  ["T-028","Adicionar legenda ok/atenção/grave e estado de dia sem registro","tar"]]}
+  ["T-028","Adicionar legenda ok/atenção/grave e estado de dia sem registro","tar"],
+  ["T-032-B","Refazer “Destaques da semana” → seção “O que mudou essa semana”: três cards por direção (subiram/desceram/iguais), linha de fechamento e 4 estados de borda. Copy aprovada no card T-032-B do Fluxo 5 — a copy do mockup atual virou proibição","tar"]]}
 ]},
 {fluxo:"Fluxo 1 — Entrada e cadastro", desc:"Do splash à escolha de comunidades. Primeira impressão da marca.", telas:[
  {id:"T-000", nome:"Splash Screen", node:"1-434", itens:[
@@ -427,8 +428,17 @@ const DATA = [
    ["Título","Como anda o seu equilíbrio como tutor","prop","No Figma: “Como anda o equilíbrio do {nome}” — viola a trava (o Círculo mede o tutor). Pode editar, mas o objeto tem de ser o tutor."],
    ["Subtítulo","Veja a evolução da sua percepção de cuidado ao longo das semanas.",""],
    ["Métricas","{n}% · Equilíbrio geral nesta semana · +{n} pontos vs. semana passada",""],
-   ["Destaques","Cresceu em Exercício e Estímulo. Você registrou mais atividades positivas pra ele.\nAfeto e Saúde se mantiveram estáveis. Continue com a mesma constância.","","Sempre crescimento, nunca reprovação."],
-   ["CTA","Ver círculo da semana",""]]},
+   ["Seção — Nome e regra","O que mudou essa semana","","DEFINIDO (Thiago, 30/07): substitui “Destaques da semana” do mockup. Geração por comparação aritmética semana atual vs. anterior, área por área — nunca causa, nunca conduta, nunca afirmação sobre necessidade do cão. Só aparece com as DUAS semanas completas (8 de 8, mesma condição do delta); fora disso, exibe a copy de borda. Três cards por direção — subiram, desceram, seguiram iguais: a soma é sempre 8, card sem itens não renderiza, nenhum card usa cor de alerta (queda não é erro)."],
+   ["CTA","Ver círculo da semana",""],
+   ["Card — subiram","↗ Você sentiu melhora em [áreas].","","“Você sentiu” devolve a autoria ao tutor: é ele relatando a própria percepção, não o app medindo o cão. Alta e queda são espelhadas de propósito — alta não soa elogio, queda não soa bronca."],
+   ["Card — desceram","↘ Você sentiu queda em [áreas].",""],
+   ["Card — seguiram iguais","= [áreas] seguiram como na semana passada.",""],
+   ["Linha de fechamento","Nenhuma semana é igual à outra. O que conta é você estar olhando.","","Abaixo dos três cards."],
+   ["Borda — todas as 8 iguais","Sua semana ficou igual à anterior em todas as áreas.\nFechamento: Constância também é cuidado.",""],
+   ["Borda — primeira semana","Essa é a sua primeira semana com o [nome] aqui. A partir da próxima, você começa a ver o que muda.",""],
+   ["Borda — semana anterior pulada","A semana passada ficou em branco, então não dá pra comparar. Essa aqui vira seu novo ponto de partida.",""],
+   ["Borda — semana anterior incompleta","A semana passada ficou pela metade, então não dá pra comparar. Essa aqui vira seu novo ponto de partida.","prop","A DEFINIR — único texto da seção ainda SEM aprovação do Thiago (criado porque “ficou em branco” seria falso numa semana parcial). Aprovar ou ajustar aqui mesmo."],
+   ["Trava de linguagem","PROIBIDO nesta seção: atribuir causa (“você registrou mais atividades positivas”) · personificar a dimensão (“Ambiente pediu mais atenção”) · prescrever conduta (“continue com a mesma constância”).","","Os três exemplos são do mockup atual e viraram proibição no documento — dev não repetir. O sistema espelha e conta, nunca interpreta."]]},
  {id:"Push", nome:"Notificações do sistema", itens:[
    ["Âncora do Diário","Como foi o dia do {nome} hoje?","","1×/dia, categoria Diário, opt-out. Nunca “você não registrou”."],
    ["Marco","(tom de celebração — uma por marco)","gap","Escrever."],
@@ -613,8 +623,23 @@ function render(){
       const cardMatch = !!q && (tela.id+" "+tela.nome).toLowerCase().includes(q);
       const bate = (rot,txt)=> !q || cardMatch || ((rot||"")+" "+(txt||"")).toLowerCase().includes(q);
       let rendered = 0;
-      const visiveis = tela.itens.map((it,ii)=>({it,ii})).filter(({it,ii})=>passaFiltro(uid(fi,ti,ii),it));
-      if(!visiveis.length && filtroAtivo!=="todas" && !q) return;
+      // Itens da base que ESTE usuário pode ver (admin enxerga os ocultos; o resto não)
+      const baseVis = tela.itens.map((it,ii)=>({it,ii})).filter(({ii})=> isAdmin || !ocultos.has(uid(fi,ti,ii)));
+      const visiveis = baseVis.filter(({it,ii})=>passaFiltro(uid(fi,ti,ii),it));
+      const listaEx = extras[fi+"|"+ti]||[];
+      const exPassa = listaEx.filter(ex=>{
+        const eX = estado["X|"+ex.id]; const stX = eX?.st || "";
+        if(filtroAtivo==="pend") return !stX;
+        if(filtroAtivo==="ap") return stX==="ap";
+        if(filtroAtivo==="aj") return stX==="aj";
+        if(filtroAtivo==="gap") return ex.tipo==="gap";
+        if(filtroAtivo==="impl") return eX?.impl===true && !eX?.implPor;
+        if(filtroAtivo==="implok") return eX?.impl===true && !!eX?.implPor;
+        return true;
+      });
+      // Card some quando nada dele é visível para este usuário neste filtro
+      if(filtroAtivo!=="todas" && !visiveis.length && !exPassa.length && !q) return;
+      if(filtroAtivo==="todas" && !q && !baseVis.length && !listaEx.length) return;
       const card = document.createElement("div"); card.className="tela"; card.dataset.key=fi+"-"+ti;
       const s = statsCard(fi,ti);
       const idTela = "TELA|"+fi+"|"+ti;
@@ -630,21 +655,12 @@ function render(){
       ligarThread(notas, idTela);
       card.appendChild(notas);
       const corpo = document.createElement("div"); corpo.className="tela-corpo";
-      (filtroAtivo==="todas" ? tela.itens.map((it,ii)=>({it,ii})) : visiveis).forEach(({it,ii})=>{
-        if(ocultos.has(uid(fi,ti,ii)) && !isAdmin) return;
+      (filtroAtivo==="todas" ? baseVis : visiveis).forEach(({it,ii})=>{
         if(!bate(it[0], it[1])) return;
         rendered++;
         corpo.appendChild(renderItem(fi,ti,ii,it));
       });
-      (extras[fi+"|"+ti]||[]).forEach(ex=>{
-        const idX = "X|"+ex.id;
-        const stX = estado[idX]?.st || "";
-        if(filtroAtivo==="pend" && stX) return;
-        if(filtroAtivo==="ap" && stX!=="ap") return;
-        if(filtroAtivo==="aj" && stX!=="aj") return;
-        if(filtroAtivo==="gap" && ex.tipo!=="gap") return;
-        if(filtroAtivo==="impl" && !(estado[idX]?.impl===true && !estado[idX]?.implPor)) return;
-        if(filtroAtivo==="implok" && !(estado[idX]?.impl===true && !!estado[idX]?.implPor)) return;
+      exPassa.forEach(ex=>{
         if(!bate(ex.rotulo, ex.texto)) return;
         rendered++;
         corpo.appendChild(renderItem(fi,ti,null,[ex.rotulo, ex.texto, ex.tipo, "Adicionado por "+ex.autor+(ex.papel?" ("+ex.papel+")":"")], ex));
