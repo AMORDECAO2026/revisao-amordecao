@@ -92,7 +92,7 @@
     <button data-f="gap">Faltando copy</button>
     <button data-f="impl">🚧 Implementar</button>
     <button data-f="implok">✅ Implementados</button>
-    <input id="busca" placeholder="🔍 buscar texto ou tela" style="border:1px solid var(--borda);border-radius:20px;padding:4px 12px;font-size:12px;min-width:150px">
+    <a href="https://drive.google.com/drive/folders/1Xmr2VoAeo476945SUvpWEjrO22zfp8Z1?usp=drive_link" target="_blank" rel="noopener" style="border:1px solid var(--borda);border-radius:20px;padding:4px 12px;font-size:12px;text-decoration:none;color:var(--azul);font-weight:700;background:#fff">📁 Documentos do projeto</a>
   </div>
 </header>
 <main id="app"><p style="color:#5F6368">Carregando revisão…</p></main>
@@ -813,11 +813,6 @@ document.getElementById("filtros").onclick = (ev)=>{
   const b = ev.target.closest("button"); if(!b) return;
   document.querySelectorAll("#filtros button").forEach(x=>x.classList.remove("on"));
   b.classList.add("on"); filtroAtivo = b.dataset.f; render();
-};
-let buscaTimer;
-document.getElementById("busca").oninput = (ev)=>{
-  clearTimeout(buscaTimer);
-  buscaTimer = setTimeout(()=>{ filtroTexto = ev.target.value; render(); }, 250);
 };
 
 // ===== relatórios =====
