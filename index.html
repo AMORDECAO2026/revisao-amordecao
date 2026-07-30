@@ -90,6 +90,8 @@
     <button data-f="ap">Aprovadas</button>
     <button data-f="aj">Ajustadas</button>
     <button data-f="gap">Faltando copy</button>
+    <button data-f="impl">🚧 Implementar</button>
+    <input id="busca" placeholder="🔍 buscar texto ou tela" style="border:1px solid var(--borda);border-radius:20px;padding:4px 12px;font-size:12px;min-width:150px">
   </div>
 </header>
 <main id="app"><p style="color:#5F6368">Carregando revisão…</p></main>
@@ -461,6 +463,7 @@ async function adminAcao(acao, alvo){
   return data === true;
 }
 let filtroAtivo = "todas";
+let filtroTexto = "";
 const app = document.getElementById("app");
 const timers = {};
 
@@ -477,7 +480,7 @@ async function carregar(){
   ]);
   if(r1.error||r2.error||r3.error||r4.error){ document.getElementById("conex").textContent="erro de conexão"; return; }
   estado = {}; cmts = {}; extras = {}; ocultos = new Set();
-  r1.data.forEach(r=>{ if(r.status||r.novo_texto) estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||""}; });
+  r1.data.forEach(r=>{ if(r.status||r.novo_texto||r.implementar) estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||"", impl:r.implementar===true}; });
   r2.data.forEach(c=>{ (cmts[c.item_id]=cmts[c.item_id]||[]).push({autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at}); });
   r3.data.forEach(x=>{ (extras[x.card_key]=extras[x.card_key]||[]).push(x); });
   r4.data.forEach(o=>ocultos.add(o.item_id));
@@ -493,16 +496,37 @@ async function arquivarExtra(id){
   const ok = await adminAcao("arquivar", String(id));
   if(!ok) alert("Ação restrita ao administrador do painel.");
 }
-function gravar(id){
+function setSave(id, txt, erro){
+  document.querySelectorAll(`[data-save="${CSS.escape(id)}"]`).forEach(s=>{
+    s.textContent = txt; s.style.color = erro ? "var(--pink)" : "var(--verde-esc)";
+  });
+}
+async function gravarAgora(id){
   const e = estado[id] || {};
+  const { error } = await sb.from("revisao_copy").upsert({ item_id:id, status:e.st||"", novo_texto:e.novo||"", obs:e.papel||papel, revisor:e.revisor||revisor, implementar:e.impl===true, updated_at:new Date().toISOString() });
+  if(error){ setSave(id, "⚠ NÃO SALVOU — verifique a conexão e digite de novo", true); console.error(error); }
+  else { setSave(id, "✓ salvo às " + new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})); }
+}
+function gravar(id){
+  setSave(id, "· salvando…");
   clearTimeout(timers[id]);
-  timers[id] = setTimeout(async ()=>{
-    await sb.from("revisao_copy").upsert({ item_id:id, status:e.st||"", novo_texto:e.novo||"", obs:e.papel||papel, revisor:e.revisor||revisor, updated_at:new Date().toISOString() });
-  }, 350);
+  timers[id] = setTimeout(()=>gravarAgora(id), 350);
+}
+// Contagem do card: exclui itens ocultos, inclui itens criados no painel
+function statsCard(fi,ti){
+  let done=0, total=0;
+  DATA[fi].telas[ti].itens.forEach((it,ii)=>{
+    const id = uid(fi,ti,ii);
+    if(ocultos.has(id)) return;
+    total++;
+    if(estado[id]?.st) done++;
+  });
+  (extras[fi+"|"+ti]||[]).forEach(x=>{ total++; if(estado["X|"+x.id]?.st) done++; });
+  return {done, total};
 }
 async function limpar(id){
   delete estado[id];
-  await sb.from("revisao_copy").upsert({item_id:id, status:"", novo_texto:"", obs:"", revisor:"", updated_at:new Date().toISOString()});
+  await sb.from("revisao_copy").upsert({item_id:id, status:"", novo_texto:"", obs:"", revisor:"", implementar:false, updated_at:new Date().toISOString()});
 }
 async function comentar(id, texto){
   if(!texto.trim()) return;
@@ -515,8 +539,8 @@ function assinar(){
     .on("postgres_changes", {event:"*", schema:"public", table:"revisao_copy"}, (p)=>{
       const r = p.new; if(!r) return;
       const meu = document.activeElement?.closest?.(`[data-uid="${CSS.escape(r.item_id)}"]`);
-      if(!r.status && !r.novo_texto){ delete estado[r.item_id]; }
-      else { estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||""}; }
+      if(!r.status && !r.novo_texto && !r.implementar){ delete estado[r.item_id]; }
+      else { estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||"", impl:r.implementar===true}; }
       if(!meu){ if(r.item_id.startsWith("X|")) render(); else refreshUid(r.item_id); }
       atualizarContadores();
     })
@@ -573,6 +597,7 @@ function passaFiltro(id,it){
   if(filtroAtivo==="ap") return st==="ap";
   if(filtroAtivo==="aj") return st==="aj";
   if(filtroAtivo==="gap") return tipo==="gap";
+  if(filtroAtivo==="impl") return estado[id]?.impl===true;
   return true;
 }
 function render(){
@@ -582,17 +607,21 @@ function render(){
     const sec = document.createElement("section"); sec.className="fluxo "+(fl.cls||"");
     sec.innerHTML = `<h2>${fl.fluxo}</h2><p>${fl.desc}</p>`;
     fl.telas.forEach((tela,ti)=>{
+      const q = filtroTexto.trim().toLowerCase();
+      const cardMatch = !!q && (tela.id+" "+tela.nome).toLowerCase().includes(q);
+      const bate = (rot,txt)=> !q || cardMatch || ((rot||"")+" "+(txt||"")).toLowerCase().includes(q);
+      let rendered = 0;
       const visiveis = tela.itens.map((it,ii)=>({it,ii})).filter(({it,ii})=>passaFiltro(uid(fi,ti,ii),it));
-      if(!visiveis.length && filtroAtivo!=="todas") return;
+      if(!visiveis.length && filtroAtivo!=="todas" && !q) return;
       const card = document.createElement("div"); card.className="tela"; card.dataset.key=fi+"-"+ti;
-      const done = tela.itens.filter((it,ii)=>estado[uid(fi,ti,ii)]?.st).length;
+      const s = statsCard(fi,ti);
       const idTela = "TELA|"+fi+"|"+ti;
       const nCmts = (cmts[idTela]||[]).length;
       const h = document.createElement("div"); h.className="tela-h";
       h.innerHTML = `<span class="tid">${tela.id}</span><span class="tnome">${tela.nome}</span>
         ${tela.node?`<a class="lk" href="${FIGMA}${tela.node}" target="_blank" rel="noopener">Abrir no Figma ↗</a>`:""}
         <button class="bt-notas" data-thc="${escapeHtml(idTela)}">💬 ${nCmts}</button>
-        <span class="tstat">${done}/${tela.itens.length}</span><span class="seta">▶</span>`;
+        <span class="tstat">${s.done}/${s.total}</span><span class="seta">▶</span>`;
       card.appendChild(h);
       const notas = document.createElement("div"); notas.className="notas-tela";
       notas.innerHTML = `<h4>🎨 Apontamentos da tela (design, dúvidas, qualquer coisa fora da copy)</h4>${threadHtml(idTela)}`;
@@ -601,6 +630,8 @@ function render(){
       const corpo = document.createElement("div"); corpo.className="tela-corpo";
       (filtroAtivo==="todas" ? tela.itens.map((it,ii)=>({it,ii})) : visiveis).forEach(({it,ii})=>{
         if(ocultos.has(uid(fi,ti,ii)) && !isAdmin) return;
+        if(!bate(it[0], it[1])) return;
+        rendered++;
         corpo.appendChild(renderItem(fi,ti,ii,it));
       });
       (extras[fi+"|"+ti]||[]).forEach(ex=>{
@@ -610,8 +641,12 @@ function render(){
         if(filtroAtivo==="ap" && stX!=="ap") return;
         if(filtroAtivo==="aj" && stX!=="aj") return;
         if(filtroAtivo==="gap" && ex.tipo!=="gap") return;
+        if(filtroAtivo==="impl" && estado[idX]?.impl!==true) return;
+        if(!bate(ex.rotulo, ex.texto)) return;
+        rendered++;
         corpo.appendChild(renderItem(fi,ti,null,[ex.rotulo, ex.texto, ex.tipo, "Adicionado por "+ex.autor+(ex.papel?" ("+ex.papel+")":"")], ex));
       });
+      if(q && !rendered && !cardMatch) return;
       corpo.appendChild(formExtra(fi,ti));
       card.appendChild(corpo);
       h.onclick = (ev)=>{
@@ -619,7 +654,7 @@ function render(){
         if(ev.target.closest(".bt-notas")){ notas.classList.toggle("aberta"); card.classList.add("aberta"); return; }
         card.classList.toggle("aberta");
       };
-      if(filtroAtivo!=="todas" || abertas.has(fi+"-"+ti)) card.classList.add("aberta");
+      if(filtroAtivo!=="todas" || q || abertas.has(fi+"-"+ti)) card.classList.add("aberta");
       sec.appendChild(card);
     });
     if(sec.querySelector(".tela")) app.appendChild(sec);
@@ -644,6 +679,7 @@ function renderItem(fi,ti,ii,it,ex){
     const acao = tipo==="tar" ? "concluída" : (e.st==="ap"?"aprovada":"ajustada");
     badges += `<span class="badge bd-quem">${acao} por <span class="p-${e.papel||'Copy'}">${escapeHtml(e.revisor)}</span></span> `;
   }
+  if(e.impl) badges += `<span class="badge" style="background:var(--laranja);color:#fff">🚧 A IMPLEMENTAR — texto ainda não está no produto</span> `;
   const nC = (cmts[id]||[]).length;
   div.innerHTML = `
     <div class="el">${el}</div>
@@ -651,7 +687,7 @@ function renderItem(fi,ti,ii,it,ex){
       ${badges?`<div>${badges}</div>`:""}
       <div class="copy">${escapeHtml(txt)}</div>
       ${nota?`<div class="nota">💡 ${escapeHtml(nota)}</div>`:""}
-      ${tipo!=="tar"?`<div class="edit"><textarea placeholder="${tipo==='gap'?'Escreva aqui a copy proposta…':'Escreva aqui a nova versão…'}">${escapeHtml(e.novo||"")}</textarea></div>`:""}
+      ${tipo!=="tar"?`<div class="edit"><div class="nota" style="font-weight:700;color:var(--amarelo)">✏️ Nova versão — salva sozinha e o item já conta como revisado (Ajustada). Não clique em Aprovar: isso descartaria este texto. <span class="save-ind" data-save="${escapeHtml(id)}" style="font-weight:400"></span></div><textarea placeholder="${tipo==='gap'?'Escreva aqui a copy proposta…':'Escreva aqui a nova versão…'}">${escapeHtml(e.novo||"")}</textarea></div>`:""}
       ${threadHtml(id)}
     </div>
     <div class="btns">${tipo==="jur"
@@ -660,6 +696,7 @@ function renderItem(fi,ti,ii,it,ex){
       ? `<button class="b-ap ${e.st==='ap'?'on':''}">${e.st==='ap'?'✓ Feito':'Concluir'}</button>${e.st?`<button class="b-x">reabrir</button>`:""}`
       : `<button class="b-ap ${e.st==='ap'?'on':''}">✓ Aprovar</button>
          <button class="b-aj ${e.st==='aj'?'on':''}">✎ Ajustar</button>
+         <button class="b-im" style="${e.impl?'background:var(--laranja);border-color:var(--laranja);color:#fff':''}">🚧 Implementar</button>
          ${e.st?`<button class="b-x">limpar</button>`:""}`}
       ${ex&&isAdmin?`<button class="b-x b-arq">🗑 arquivar</button>`:""}
       ${!ex&&isAdmin?`<button class="b-x b-oc">${ocultos.has(id)?"↩ reexibir":"🗑 ocultar"}</button>`:""}
@@ -667,13 +704,27 @@ function renderItem(fi,ti,ii,it,ex){
   ligarThread(div, id);
   if(tipo!=="jur"){
     const bAp = div.querySelector(".b-ap");
-    if(bAp) bAp.onclick = ()=>{ estado[id]={st:"ap",novo:"",revisor,papel}; gravar(id); refresh(); };
+    if(bAp) bAp.onclick = ()=>{
+      const temNovo = (estado[id]?.novo||"").trim();
+      if(temNovo && !confirm("Este item tem uma NOVA VERSÃO escrita e já está salvo como Ajustada.\n\nAprovar significa manter o texto ORIGINAL e DESCARTAR a nova versão.\n\nQuer mesmo descartar a nova versão?")) return;
+      estado[id]={st:"ap",novo:"",revisor,papel}; gravar(id); refresh();
+    };
     const bAj = div.querySelector(".b-aj");
     if(bAj) bAj.onclick = ()=>{ estado[id]={st:"aj", novo:estado[id]?.novo || (tipo==="gap"?"":txt), revisor, papel}; gravar(id); refresh(true); };
+    const bIm = div.querySelector(".b-im");
+    if(bIm) bIm.onclick = ()=>{
+      estado[id] = estado[id] || {st:"", novo:"", revisor, papel};
+      estado[id].impl = !estado[id].impl;
+      if(!estado[id].revisor) estado[id].revisor = revisor;
+      gravar(id); refresh();
+    };
     const bx = div.querySelector(".b-x:not(.b-arq)");
     if(bx) bx.onclick = ()=>{ limpar(id); refresh(); atualizarContadores(); };
     const ta = div.querySelector(".edit textarea");
-    if(ta) ta.oninput = ()=>{ estado[id]=estado[id]||{st:"aj"}; estado[id].novo=ta.value; estado[id].revisor=revisor; estado[id].papel=papel; gravar(id); };
+    if(ta){
+      ta.oninput = ()=>{ estado[id]=estado[id]||{st:"aj"}; estado[id].novo=ta.value; estado[id].revisor=revisor; estado[id].papel=papel; gravar(id); };
+      ta.onblur = ()=>{ if(timers[id]){ clearTimeout(timers[id]); timers[id]=null; gravarAgora(id); } };
+    }
   }
   const bArq = div.querySelector(".b-arq");
   if(bArq) bArq.onclick = ()=>{ if(confirm("Arquivar este item para todo o time? (fica guardado no banco, some do painel)")) arquivarExtra(ex.id); };
@@ -723,8 +774,7 @@ function refreshUid(id, foco){
   const novo = renderItem(fi,ti,ii,it);
   alvo.replaceWith(novo);
   const card = document.querySelector(`.tela[data-key="${fi}-${ti}"]`);
-  if(card){ const done = DATA[fi].telas[ti].itens.filter((x,xi)=>estado[uid(fi,ti,xi)]?.st).length;
-    card.querySelector(".tstat").textContent = `${done}/${DATA[fi].telas[ti].itens.length}`; }
+  if(card){ const s = statsCard(fi,ti); card.querySelector(".tstat").textContent = `${s.done}/${s.total}`; }
   if(foco){ const ta=novo.querySelector(".edit textarea"); if(ta) ta.focus(); }
 }
 function atualizarContadores(){
@@ -747,6 +797,11 @@ document.getElementById("filtros").onclick = (ev)=>{
   const b = ev.target.closest("button"); if(!b) return;
   document.querySelectorAll("#filtros button").forEach(x=>x.classList.remove("on"));
   b.classList.add("on"); filtroAtivo = b.dataset.f; render();
+};
+let buscaTimer;
+document.getElementById("busca").oninput = (ev)=>{
+  clearTimeout(buscaTimer);
+  buscaTimer = setTimeout(()=>{ filtroTexto = ev.target.value; render(); }, 250);
 };
 
 // ===== relatórios =====
@@ -784,6 +839,26 @@ window.exportar = function(tipo){
       });
     });
     if(extrasDev) out += `## Itens criados no painel\n\n${extrasDev}`;
+    let implDev = "";
+    DATA.forEach((fl,fi)=>fl.telas.forEach((t,ti)=>t.itens.forEach((it,ii)=>{
+      const id = uid(fi,ti,ii); const e = estado[id];
+      if(e?.impl && !ocultos.has(id)){
+        const textoFinal = (e.st==="aj" && (e.novo||"").trim()) ? e.novo.trim() : it[1];
+        implDev += `- **${t.id} · ${it[0]}** — CRIAR NO PRODUTO (não existe ainda):\n  - TEXTO FINAL: "${textoFinal}"\n`;
+      }
+    })));
+    Object.entries(extras).forEach(([ck, lista])=>{
+      const [fi,ti] = ck.split("|").map(Number);
+      const t = DATA[fi]?.telas[ti]; if(!t) return;
+      lista.forEach(x=>{
+        const e = estado["X|"+x.id];
+        if(e?.impl){
+          const textoFinal = (e.st==="aj" && (e.novo||"").trim()) ? e.novo.trim() : x.texto;
+          implDev += `- **${t.id} · ${x.rotulo}** (criado no painel) — CRIAR NO PRODUTO:\n  - TEXTO FINAL: "${textoFinal}"\n`;
+        }
+      });
+    });
+    if(implDev) out += `## 🚧 A IMPLEMENTAR — textos aprovados que ainda não existem no produto\n\n${implDev}\n`;
     nomeArq="instrucoes_dev.md";
   }
   if(tipo==="design"){
