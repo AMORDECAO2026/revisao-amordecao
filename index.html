@@ -91,6 +91,7 @@
     <button data-f="aj">Ajustadas</button>
     <button data-f="gap">Faltando copy</button>
     <button data-f="impl">🚧 Implementar</button>
+    <button data-f="implok">✅ Implementados</button>
     <input id="busca" placeholder="🔍 buscar texto ou tela" style="border:1px solid var(--borda);border-radius:20px;padding:4px 12px;font-size:12px;min-width:150px">
   </div>
 </header>
@@ -480,7 +481,7 @@ async function carregar(){
   ]);
   if(r1.error||r2.error||r3.error||r4.error){ document.getElementById("conex").textContent="erro de conexão"; return; }
   estado = {}; cmts = {}; extras = {}; ocultos = new Set();
-  r1.data.forEach(r=>{ if(r.status||r.novo_texto||r.implementar) estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||"", impl:r.implementar===true}; });
+  r1.data.forEach(r=>{ if(r.status||r.novo_texto||r.implementar) estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||"", impl:r.implementar===true, implPor:r.implementado_por||"", implEm:r.implementado_em||null}; });
   r2.data.forEach(c=>{ (cmts[c.item_id]=cmts[c.item_id]||[]).push({autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at}); });
   r3.data.forEach(x=>{ (extras[x.card_key]=extras[x.card_key]||[]).push(x); });
   r4.data.forEach(o=>ocultos.add(o.item_id));
@@ -503,7 +504,7 @@ function setSave(id, txt, erro){
 }
 async function gravarAgora(id){
   const e = estado[id] || {};
-  const { error } = await sb.from("revisao_copy").upsert({ item_id:id, status:e.st||"", novo_texto:e.novo||"", obs:e.papel||papel, revisor:e.revisor||revisor, implementar:e.impl===true, updated_at:new Date().toISOString() });
+  const { error } = await sb.from("revisao_copy").upsert({ item_id:id, status:e.st||"", novo_texto:e.novo||"", obs:e.papel||papel, revisor:e.revisor||revisor, implementar:e.impl===true, implementado_por:e.implPor||"", implementado_em:e.implEm||null, updated_at:new Date().toISOString() });
   if(error){ setSave(id, "⚠ NÃO SALVOU — verifique a conexão e digite de novo", true); console.error(error); }
   else { setSave(id, "✓ salvo às " + new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})); }
 }
@@ -526,7 +527,7 @@ function statsCard(fi,ti){
 }
 async function limpar(id){
   delete estado[id];
-  await sb.from("revisao_copy").upsert({item_id:id, status:"", novo_texto:"", obs:"", revisor:"", implementar:false, updated_at:new Date().toISOString()});
+  await sb.from("revisao_copy").upsert({item_id:id, status:"", novo_texto:"", obs:"", revisor:"", implementar:false, implementado_por:"", implementado_em:null, updated_at:new Date().toISOString()});
 }
 async function comentar(id, texto){
   if(!texto.trim()) return;
@@ -540,7 +541,7 @@ function assinar(){
       const r = p.new; if(!r) return;
       const meu = document.activeElement?.closest?.(`[data-uid="${CSS.escape(r.item_id)}"]`);
       if(!r.status && !r.novo_texto && !r.implementar){ delete estado[r.item_id]; }
-      else { estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||"", impl:r.implementar===true}; }
+      else { estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||"", impl:r.implementar===true, implPor:r.implementado_por||"", implEm:r.implementado_em||null}; }
       if(!meu){ if(r.item_id.startsWith("X|")) render(); else refreshUid(r.item_id); }
       atualizarContadores();
     })
@@ -597,7 +598,8 @@ function passaFiltro(id,it){
   if(filtroAtivo==="ap") return st==="ap";
   if(filtroAtivo==="aj") return st==="aj";
   if(filtroAtivo==="gap") return tipo==="gap";
-  if(filtroAtivo==="impl") return estado[id]?.impl===true;
+  if(filtroAtivo==="impl") return estado[id]?.impl===true && !estado[id]?.implPor;
+  if(filtroAtivo==="implok") return estado[id]?.impl===true && !!estado[id]?.implPor;
   return true;
 }
 function render(){
@@ -641,7 +643,8 @@ function render(){
         if(filtroAtivo==="ap" && stX!=="ap") return;
         if(filtroAtivo==="aj" && stX!=="aj") return;
         if(filtroAtivo==="gap" && ex.tipo!=="gap") return;
-        if(filtroAtivo==="impl" && estado[idX]?.impl!==true) return;
+        if(filtroAtivo==="impl" && !(estado[idX]?.impl===true && !estado[idX]?.implPor)) return;
+        if(filtroAtivo==="implok" && !(estado[idX]?.impl===true && !!estado[idX]?.implPor)) return;
         if(!bate(ex.rotulo, ex.texto)) return;
         rendered++;
         corpo.appendChild(renderItem(fi,ti,null,[ex.rotulo, ex.texto, ex.tipo, "Adicionado por "+ex.autor+(ex.papel?" ("+ex.papel+")":"")], ex));
@@ -679,7 +682,8 @@ function renderItem(fi,ti,ii,it,ex){
     const acao = tipo==="tar" ? "concluída" : (e.st==="ap"?"aprovada":"ajustada");
     badges += `<span class="badge bd-quem">${acao} por <span class="p-${e.papel||'Copy'}">${escapeHtml(e.revisor)}</span></span> `;
   }
-  if(e.impl) badges += `<span class="badge" style="background:var(--laranja);color:#fff">🚧 A IMPLEMENTAR — texto ainda não está no produto</span> `;
+  if(e.impl && !e.implPor) badges += `<span class="badge" style="background:var(--laranja);color:#fff">🚧 A IMPLEMENTAR — na fila do dev</span> `;
+  if(e.impl && e.implPor) badges += `<span class="badge" style="background:var(--verde-esc);color:#fff">✅ IMPLEMENTADO por ${escapeHtml(e.implPor)}${e.implEm?` em ${new Date(e.implEm).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})}`:""}</span> `;
   const nC = (cmts[id]||[]).length;
   div.innerHTML = `
     <div class="el">${el}</div>
@@ -695,10 +699,12 @@ function renderItem(fi,ti,ii,it,ex){
       : tipo==="tar"
       ? `<button class="b-ap ${e.st==='ap'?'on':''}">${e.st==='ap'?'✓ Feito':'Concluir'}</button>
          <button class="b-im" style="${e.impl?'background:var(--laranja);border-color:var(--laranja);color:#fff':''}">🚧 Implementar</button>
+         ${e.impl?`<button class="b-ok" style="${e.implPor?'':'background:var(--verde);border-color:var(--verde);color:#fff'}">${e.implPor?"↩ desfazer baixa":"✔ Dei baixa"}</button>`:""}
          ${e.st?`<button class="b-x">reabrir</button>`:""}`
       : `<button class="b-ap ${e.st==='ap'?'on':''}">✓ Aprovar</button>
          <button class="b-aj ${e.st==='aj'?'on':''}">✎ Ajustar</button>
          <button class="b-im" style="${e.impl?'background:var(--laranja);border-color:var(--laranja);color:#fff':''}">🚧 Implementar</button>
+         ${e.impl?`<button class="b-ok" style="${e.implPor?'':'background:var(--verde);border-color:var(--verde);color:#fff'}">${e.implPor?"↩ desfazer baixa":"✔ Dei baixa"}</button>`:""}
          ${e.st?`<button class="b-x">limpar</button>`:""}`}
       ${ex&&isAdmin?`<button class="b-x b-arq">🗑 arquivar</button>`:""}
       ${!ex&&isAdmin?`<button class="b-x b-oc">${ocultos.has(id)?"↩ reexibir":"🗑 ocultar"}</button>`:""}
@@ -717,7 +723,15 @@ function renderItem(fi,ti,ii,it,ex){
     if(bIm) bIm.onclick = ()=>{
       estado[id] = estado[id] || {st:"", novo:"", revisor, papel};
       estado[id].impl = !estado[id].impl;
+      if(!estado[id].impl){ estado[id].implPor=""; estado[id].implEm=null; }
       if(!estado[id].revisor) estado[id].revisor = revisor;
+      gravar(id); refresh();
+    };
+    const bOk = div.querySelector(".b-ok");
+    if(bOk) bOk.onclick = ()=>{
+      if(!estado[id]) return;
+      if(estado[id].implPor){ estado[id].implPor=""; estado[id].implEm=null; }
+      else { estado[id].implPor=revisor; estado[id].implEm=new Date().toISOString(); }
       gravar(id); refresh();
     };
     const bx = div.querySelector(".b-x:not(.b-arq)");
@@ -844,7 +858,7 @@ window.exportar = function(tipo){
     let implDev = "";
     DATA.forEach((fl,fi)=>fl.telas.forEach((t,ti)=>t.itens.forEach((it,ii)=>{
       const id = uid(fi,ti,ii); const e = estado[id];
-      if(e?.impl && !ocultos.has(id)){
+      if(e?.impl && !e?.implPor && !ocultos.has(id)){
         const textoFinal = (e.st==="aj" && (e.novo||"").trim()) ? e.novo.trim() : it[1];
         implDev += `- **${t.id} · ${it[0]}** — CRIAR NO PRODUTO (não existe ainda):\n  - TEXTO FINAL: "${textoFinal}"\n`;
       }
