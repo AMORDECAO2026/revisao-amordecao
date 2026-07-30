@@ -182,8 +182,8 @@ const DATA = [
    ["Apoio","Enviamos um código para {telefone}",""],
    ["Timer","Reenviar em {mm:ss}",""],
    ["Erro","Código inválido. Tente novamente.",""],
-   ["Link pós-timer","Reenviar código","gap","Não existe no Figma. Escrever/aprovar."],
-   ["Botão de confirmação","Confirmar","gap","Não existe no Figma. Escrever/aprovar."]]},
+   ["Link pós-timer","Reenviar código","gap","O QUE É: quando o timer “Reenviar em 00:45” zera, ele vira um link clicável — este é o texto desse link. A sugestão “Reenviar código” já resolve; é só aprovar ou ajustar."],
+   ["Botão de confirmação","Confirmar","gap","O QUE É: o botão pink abaixo da grade de dígitos, que habilita quando o código está completo. A spec prevê o botão mas ninguém definiu o rótulo. “Confirmar” é a sugestão; aprovar ou ajustar."]]},
  {id:"T-004", nome:"Identificação de perfil", node:"1-300", itens:[
    ["Título","Me conta uma coisa",""],
    ["Subtítulo","O que te trouxe até aqui?",""],
@@ -207,7 +207,7 @@ const DATA = [
    ["Título","Selecione suas comunidades","","Doc-mãe dizia “Escolha suas comunidades” — bater o martelo aqui."],
    ["Subtítulo","Com base no que você nos contou, separamos essas comunidades pra você.",""],
    ["Seções","Comunidade oficial / Comunidades pra você",""],
-   ["Descrições das comunidades","(vêm do backoffice — as do mockup são só representação)","gap","D10: criar campo “descrição curta” no backoffice e redigir as das 7 comunidades-semente."]]}
+   ["Descrições das comunidades","(vêm do backoffice — as do mockup são só representação)","gap","O QUE É: a linha curta sob o nome de cada comunidade neste card e na T-011 (ex. do mockup: “A fase de filhote, sem enlouquecer sozinho.”). FALTA: criar o campo “descrição curta” no backoffice e redigir as 7, derivadas dos manifestos oficiais. FONTE: doc “Descrições e Regras das 7 Comunidades-Semente” (Drive) — cada manifesto de ~400 caracteres vira uma linha, no mesmo tom. As frases do mockup servem de rascunho inicial."]]}
 ]},
 {fluxo:"Fluxo 2 — Home e perfis", desc:"Home pública e logada, perfis de tutor e cão, notificações, configurações.", telas:[
  {id:"T-002", nome:"Home pública (visitante)", node:"1-75", itens:[
@@ -239,7 +239,7 @@ const DATA = [
    ["Seção cães","Cães da {tutor}","prop","No Figma está “Meus cães” (errado em perfil alheio)."],
    ["Seção comunidades","Comunidades da {tutor}","prop","No Figma está “Suas comunidades”."],
    ["Badge","Em comum","","Copy nova do design — precisa só de aprovação."],
-   ["Botão social","Seguir","gap","Doc-mãe prevê; não existe no Figma. Aprovar rótulo (ou decidir não ter)."]]},
+   ["Botão social","Seguir","gap","O QUE É: o botão pink principal ao ver o perfil de OUTRO tutor (no seu perfil, essa posição é “Editar perfil”). A Especificação de Telas prevê uma ação social ali, mas o Figma não desenhou. DECIDIR: existe seguir tutor no MVP? Se sim, aprovar o rótulo “Seguir”; se não, marcar este item como oculto e registrar a decisão."]]},
  {id:"T-013", nome:"Perfil do cão", node:"5-925", itens:[
    ["Nudge de perfil","Perfil incompleto. Adicionar mais dados ajuda a encontrar melhor suas comunidades.\n[Completar perfil]",""],
    ["Seções","Temperamento · Tutor · Ver perfil do tutor · Comunidades para o {nome}",""]]},
@@ -252,25 +252,25 @@ const DATA = [
    ["CTA","Salvar cão",""]]},
  {id:"T-014", nome:"Notificações", node:"13-177", itens:[
    ["Filtros","Todos ({n}) · Comunidades ({n}) · Adoção",""],
-   ["Filtro Diário","Diário","gap","OBRIGATÓRIO pela Régua (categoria própria com opt-out)."],
+   ["Filtro Diário","Diário","gap","O QUE É: a notificação âncora do Diário precisa de categoria PRÓPRIA, com opt-out — exigência da Régua de Linguagem. Isso pede duas strings: esta aba de filtro na T-014 e o toggle correspondente em G-001. O rótulo “Diário” já resolve as duas; aprovar. FONTE: Compêndio do Diário, seção “Notificação âncora”."],
    ["Grupos","Hoje · Ontem · Esta semana · não lidas ({n})",""],
    ["Fórmula","{nome} respondeu ao seu post em {comunidade}\n{nome} respondeu ao seu comentário em {comunidade}","","Regência unificada (“ao seu”)."],
-   ["Estado vazio","Por enquanto, nada por aqui.","prop","Não existe no Figma. Proposta."]]},
+   ["Estado vazio","Por enquanto, nada por aqui.","prop","O QUE É: o que a central mostra quando o usuário não tem notificação nenhuma (usuário novo ou tudo lido). A frase ao lado é proposta minha — aprovar ou ajustar."]]},
  {id:"SELOS", nome:"Copy do sistema de selos (Tese Operacional, Bloco 2)", itens:[
    ["Identificação (Camada 1)","Tutor · Adotante · Profissional · ONG","","Rótulos oficiais da Tese, escolhidos no cadastro (T-004)."],
    ["Profissões verificadas","Veterinário · Adestrador · Comportamentalista · Nutricionista canino · Criador responsável · Tosador · Pet sitter · Hotel canino · Hospedagem PetFriendly · Creche canina · Dog walker · Pet shop · Agência canina","","Substituem “Profissional” após verificação. Lista pode crescer."],
    ["Níveis (Camada 2)","Bronze · Prata · Ouro · Diamante · Autoridade","","Medalha única, ascensão silenciosa, sem ranking público."],
    ["Funções (Camada 3)","Moderadora/Dona · Co-moderadora · Autoridade-moderadora","","Conferir rótulos finais com o Handoff Moderação/BackOffice."],
    ["Composição","{nome} | {identificação} | {nível}","","Ex. da Tese: “Maria | Veterinário | Ouro”."],
-   ["Tooltip do selo","(o que aparece ao tocar num selo — explicação de cada camada)","gap","Não existe em documento nenhum. Escrever microcopy explicativa."],
-   ["Comunicação de subida de nível","(o próprio usuário é avisado quando sobe de nível?)","gap","Tese define ascensão silenciosa (sem ranking), mas não diz se o usuário é notificado da própria subida. A DEFINIR — se sim, escrever no tom de celebração."],
+   ["Tooltip do selo","(o que aparece ao tocar num selo — explicação de cada camada)","gap","O QUE É: quando um tutor vê “Maria | Veterinário | Ouro” pela primeira vez, precisa entender o que cada selo significa — este é o texto do toque/tooltip. FALTA: uma frase por camada, ex.: identificação (“Como essa pessoa usa o app”), profissão (“Profissional que se declarou da área — a responsabilidade pela informação é dele”, atenção à decisão D3 de selo sem verificação) e nível (“Reconhecimento por respostas úteis à comunidade”). Não existe em documento nenhum — criar do zero. FONTE conceitual: Tese Operacional, Bloco 2.2."],
+   ["Comunicação de subida de nível","(o próprio usuário é avisado quando sobe de nível?)","gap","O QUE É: a Tese define ascensão SILENCIOSA (sem ranking público), mas não diz se o PRÓPRIO usuário é avisado quando sobe de Bronze para Prata etc. DECIDIR primeiro: avisa ou o selo só muda? Se avisar, escrever a notificação em tom de celebração privada, ex.: “Suas respostas têm ajudado de verdade. Você agora é Prata.” — nunca comparativa. FONTE: Tese Operacional, Bloco 2.2 e 2.3 (critérios de subida)."],
    ["Verificação de profissional","DECIDIDO (Léo, 29/07): selo de profissão SEM análise de documentos — ativação direta via T-022-A, com declaração de veracidade como proteção e perda do selo em caso de abuso.","","Atualizar em cascata: Tese 2.4 (remover análise) e regra da Não Surta, Pergunta (“veterinário verificado” → ajustar redação, pois não há mais verificação)."]]},
  {id:"G-001", nome:"Configurações", node:"31-500", itens:[
    ["Seções","Conta (E-mail · Senha · Método de login) · Meus cães · Sobre (Termos de uso · Política de privacidade)",""],
    ["Seção de notificações","Notificações — Push · E-mail","prop","No Figma chama-se “Privacidade”, mas o conteúdo é notificação. Falta categoria Diário."],
    ["Sair","Sair da conta",""],
    ["Excluir conta","Excluir conta","prop","No Figma está “Deletar a conta”. Proposta pt-BR."],
-   ["Confirmação de exclusão","(modal de confirmação antes de excluir)","gap","Não existe. Necessário (LGPD)."]]}
+   ["Confirmação de exclusão","(modal de confirmação antes de excluir)","gap","O QUE É: o modal que abre ao tocar “Excluir conta”. Precisa de: título, texto dizendo o que se perde (cães cadastrados, Diário, comunidades, posts) e que a ação é definitiva, botão de confirmar e de cancelar. Não existe em documento nenhum — copy a criar do zero, com revisão jurídica leve (LGPD). Proposta inicial: “Excluir sua conta? Seus cães, seu Diário e suas conversas serão apagados de forma definitiva.” + [Excluir de vez] [Cancelar]."]]}
 ]},
 {fluxo:"Fluxo 3 — Comunidades", desc:"Uso da comunidade, posts, threads e o ciclo completo de solicitação de comunidade nova.", telas:[
  {id:"T-011", nome:"Comunidade interna", node:"5-164", itens:[
@@ -322,7 +322,7 @@ const DATA = [
    ["T-035-A Em análise","Sua solicitação está em análise.\nNosso time está avaliando sua proposta com carinho. Você receberá uma resposta pelo app e também no seu e-mail.\n[Ver detalhes da solicitação]",""],
    ["T-035-B Aprovada","Sua comunidade foi aprovada!\nEla já aparece no feed das comunidades aguardando ativação. Agora você tem até 30 dias para ativá-la com 30 novos membros.\n[Convidar membros]","prop","Acrescenta o prazo de 30 dias que faltava no Figma."],
    ["T-035-C Não aprovada","Solicitação não aprovada.\nApós análise, sua solicitação não foi aprovada nesse momento. Você poderá enviar um novo pedido após 30 dias.\n[Entenda por quê] [Continuar navegando]",""],
-   ["T-035-D Precisa de ajustes","(tela inteira não existe)","gap","Estado previsto no Doc Soberano. Escrever título, texto e CTA."]]},
+   ["T-035-D Precisa de ajustes","(tela inteira não existe)","gap","O QUE É: o 4º estado do acompanhamento — a curadoria devolve a solicitação com pedido de correção (ex.: co-moderador não aceitou em 5 dias). Precisa de: título, texto explicando o ajuste pedido, espaço para o pedido específico da curadoria e CTA para corrigir. FONTE: “Abertura de Nova Comunidade”, Passo 8 (“Pedir ajuste” → notificação app+email com pedido específico) e Handoff Moderação/BackOffice, seção 12 (status adjustment_requested). A análise completa está no 💬 do item “T-035-D” nas Tarefas do Design (Thiago, 30/07)."]]},
  {id:"T-036 / T-037", nome:"Comunidade ativada / em construção", node:"687-1910", itens:[
    ["T-036","Comunidade ativada!\nParabéns! Sua comunidade acaba de atingir 30 novos membros e está agora ativa.\n[Ver comunidade] [Compartilhar link da comunidade]","prop","Precisão: “30 NOVOS membros”."],
    ["T-037","Ao alcançar 30 novos membros, sua comunidade será automaticamente ativada.\n{n}/30 membros para ativação\n[Convidar membros] [Compartilhar link da comunidade]","prop","Contador unificado (D8)."]]}
@@ -344,14 +344,14 @@ const DATA = [
    ["Seções","Temperamento · Compatibilidade · Responsável",""],
    ["Bloco de contato","Quer adotar?\nPara adotar esse cão ou saber mais sobre ele, entre em contato com o responsável.","prop","No Figma: “esse pet … com o protetor”. Correção de vocabulário de marca."],
    ["Denúncia","Denunciar esse perfil",""],
-   ["Modal de denúncia","(motivos estruturados — SEM opção de maus-tratos, trava do Handoff)","gap","Modal não existe. Copy sensível — escrever com jurídico."]]},
+   ["Modal de denúncia","(motivos estruturados — SEM opção de maus-tratos, trava do Handoff)","gap","O QUE É: o modal que abre em “Denunciar esse perfil”. Precisa de: título, lista de motivos em opções fechadas (ex.: anúncio falso/golpe, perfil falso, conteúdo impróprio, spam), campo opcional de detalhes e botão de envio. TRAVA DURA: nenhuma opção nem palavra sobre maus-tratos a animais — denúncia aqui é de perfil/anúncio, não de crime (o app não recebe denúncia de maus-tratos por decisão jurídica). FONTE: Handoff de Adoção — ReportModal gera registro estruturado (tipo, motivo, conteúdo, autor, horário). Escrever COM revisão do advogado."]]},
  {id:"T-020", nome:"Cadastrar cão para adoção", node:"13-1151", itens:[
    ["Título","Cadastrar cão para adoção\nPreencha as informações para encontrar um bom lar para ele.",""],
    ["Fotos","Fotos do cão* — Mínimo 1 e máximo 4",""],
    ["Campos","Nome do cão* · Raça* · Porte · Idade · Sexo · Descrição do cão · Temperamento · Compatibilidade",""],
-   ["Localização","(campo novo — decisão D4)","gap","Escrever rótulo e placeholder."],
-   ["Contato","(campos novos de WhatsApp/e-mail — decisão D4)","gap","Escrever rótulos, placeholders e texto de consentimento."],
-   ["Saúde","Vacinado · Castrado","gap","Doc-mãe prevê; decidir se entra no MVP."],
+   ["Localização","(campo novo — decisão D4)","gap","O QUE É: campo obrigatório no formulário de anúncio — o Handoff exige localização estruturada e geolocalizada (não texto livre), porque a prateleira ordena por distância e filtra por raio. FALTA: rótulo e placeholder. Proposta: “Onde o cão está” + “Cidade”. FONTE: Handoff de Adoção, regra de dado estruturado."],
+   ["Contato","(campos novos de WhatsApp/e-mail — decisão D4)","gap","O QUE É: os campos de WhatsApp e e-mail que o anunciante preenche — são eles que aparecem PÚBLICOS no bloco “Quer adotar?” da T-018 (modelo de contato direto, decisão D4). FALTA: rótulos, placeholders e uma linha de consentimento explícito, ex.: “Esses contatos ficarão visíveis para usuários logados interessados no cão.” FONTE: Handoff de Adoção, Seção 4 e risco assinalado sobre exposição de dado pessoal — o consentimento no formulário é o que transforma o risco em escolha informada."],
+   ["Saúde","Vacinado · Castrado","gap","O QUE É: checkboxes de saúde do anúncio previstos na Especificação de Telas (T-020: “vacinado, castrado etc.”) e não desenhados. DECIDIR primeiro se entram no MVP; se sim, aprovar os rótulos “Vacinado” e “Castrado” (evitar lista longa — cada atributo a mais é atrito no cadastro). Cuidado: são autodeclaração do anunciante, não verificação do app — não prometer nada além do checkbox."],
    ["Termos","Li e aceito os Termos de uso para anúncios de adoção.",""],
    ["CTA","Ver preview",""]]},
  {id:"T-021", nome:"Preview do anúncio", node:"13-1284", itens:[
@@ -410,14 +410,14 @@ const DATA = [
  {id:"T-028", nome:"Histórico do Diário", node:"727-592", itens:[
    ["Header","Histórico · {mês} de {ano}",""],
    ["Resumos por dia (formato v2)","{resumo} — {atenção/ok/grave} / {ok} / {ok} — ex.: “comeu menos — atenção / ok / ok”","prop","Formato novo do Handoff v2: resumo + os 3 indicadores em linha, ordem comida · energia · cocô."],
-   ["Demais resumos por sinal","(não comeu / mais quieto / apático / cocô diferente / não vi…)","gap","Definir o conjunto completo."],
-   ["Legenda","ok · atenção · grave (ordem: comida · energia · cocô)","gap","Doc exige; não existe no Figma."],
+   ["Demais resumos por sinal","(não comeu / mais quieto / apático / cocô diferente / não vi…)","gap","O QUE É: a frase curta de cada dia no Histórico. O padrão já existe para um caso: “Comeu menos do que o normal”. FALTA: a frase equivalente para cada opção restante dos 3 sinais (não comeu, mais quieto, apático, cocô diferente, não vi) e a regra para dia com mais de um sinal alterado. TRAVA: espelhar o registro, sem inferência (“Não comeu” ok; “ficou doente” proibido). FONTE: Handoff DEV Diário, seção D-009, com exemplo do formato “comeu menos — atenção / ok / ok”. ATENÇÃO: se o ajuste do sinal cocô (Firme/Mole/Líquido) for aprovado, os resumos seguem as opções novas."],
+   ["Legenda","ok · atenção · grave (ordem: comida · energia · cocô)","gap","O QUE É: a legenda fixa no topo do Histórico que ensina a ler os 3 indicadores de cada dia — os rótulos dos níveis (ok / atenção / grave) e a ordem fixa dos sinais (comida · energia · cocô). A copy já está praticamente definida no doc; falta só aprovar como strings de interface. FONTE: Handoff DEV Diário, seção D-009."],
    ["Dia sem registro","Sem registro neste dia","prop","Doc: esmaecido, “nunca como falha”."],
    ["CTA","Ver mais registros",""]]},
  {id:"T-031 / T-031-A", nome:"Marcos", node:"731-1680", itens:[
    ["Modal do marco","100 dias de diário — {nome}\nVocê acompanhou o {nome} por 100 dias seguidos. Isso é presença de verdade.\n78 dias tranquilos — De 100 registros com tudo bem\n[Compartilhar agora] [Fechar]",""],
    ["Card no Movimento","Hoje celebramos {n} dias de Diário do {nome} 💚",""],
-   ["Copies dos demais marcos","(aniversário · tempo de convívio · primeiro registro · primeira semana completa · 30 dias)","gap","Escrever no mesmo tom."]]},
+   ["Copies dos demais marcos","(aniversário · tempo de convívio · primeiro registro · primeira semana completa · 30 dias)","gap","O QUE É: cada marco tem um modal celebratório e um card no Movimento — só o de 100 dias tem copy pronta (o modelo está neste card, acima). FALTA: escrever no mesmo tom os 5 restantes: aniversário do cão, tempo de convívio (“X anos com você”), primeiro registro, primeira semana completa e 30 dias. TRAVAS: celebra, nunca compara (sem ranking); streak suave, sem punição por quebra; cão em memorial não recebe marco festivo. FONTE: Compêndio do Diário, seção D-005."]]},
  {id:"T-032-A", nome:"Círculo da Semana (preenchimento)", node:"715-551", itens:[
    ["Título","Preencha o círculo da semana",""],
    ["Instrução","Marque como você sente que foi a semana cuidando do {nome}. Partindo da semana passada — só ajuste o que mudou.","","Pré-preenchimento confirmado (D11)."],
@@ -441,10 +441,10 @@ const DATA = [
    ["Trava de linguagem","PROIBIDO nesta seção: atribuir causa (“você registrou mais atividades positivas”) · personificar a dimensão (“Ambiente pediu mais atenção”) · prescrever conduta (“continue com a mesma constância”).","","Os três exemplos são do mockup atual e viraram proibição no documento — dev não repetir. O sistema espelha e conta, nunca interpreta."]]},
  {id:"Push", nome:"Notificações do sistema", itens:[
    ["Âncora do Diário","Como foi o dia do {nome} hoje?","","1×/dia, categoria Diário, opt-out. Nunca “você não registrou”."],
-   ["Marco","(tom de celebração — uma por marco)","gap","Escrever."],
-   ["Lembrete do Círculo","(suave, semanal, opt-out — nunca cobrança)","gap","Escrever."],
-   ["Ciclo de solicitação","aprovada · não aprovada · precisa de ajustes (app + e-mail)","gap","Redigir as 3."],
-   ["Comunidade ativada","(atingiu 30 novos membros)","gap","Escrever."]]}
+   ["Marco","(tom de celebração — uma por marco)","gap","O QUE É: a push opcional que avisa o marco no dia (categoria Diário, respeita opt-out). Uma frase por marco, tom de celebração — pode derivar da copy do modal de cada marco (item “Copies dos demais marcos”, card T-031). Nunca dispara para cão em memorial. FONTE: Compêndio, D-005 (“notificação opcional de marco, tom de celebração”)."],
+   ["Lembrete do Círculo","(suave, semanal, opt-out — nunca cobrança)","gap","O QUE É: a push semanal, no fecho de semana, convidando a preencher o Círculo. TRAVA: convite, nunca cobrança (“lembrete que gera culpa é veneno e produz desinstalação” — Compêndio). Proposta de partida: “Como foi a semana de vocês? O círculo do [nome] tá esperando.” FONTE: Compêndio, D-006 / T-032-A."],
+   ["Ciclo de solicitação","aprovada · não aprovada · precisa de ajustes (app + e-mail)","gap","O QUE É: as 3 notificações (app + e-mail cada) do ciclo de solicitação de comunidade. O CONTEÚDO de cada uma já está definido no doc — aprovada: comunica aprovação + próximo passo de 30 novos membros em 30 dias; não aprovada: motivo + pode reapresentar após 30 dias; ajustes: o pedido específico da curadoria. FALTA só redigir as frases finais. FONTE: “Abertura de Nova Comunidade”, tabela do Passo 8."],
+   ["Comunidade ativada","(atingiu 30 novos membros)","gap","O QUE É: a push ao fundador quando a comunidade atinge 30 novos membros e ativa sozinha. Par da tela T-036 (“Comunidade ativada! Parabéns…”) — a push pode ser a versão de uma linha da mesma copy. FONTE: “Abertura de Nova Comunidade”, Passo 9."]]}
 ]}
 ];
 
