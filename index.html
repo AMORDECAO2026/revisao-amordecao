@@ -693,7 +693,9 @@ function renderItem(fi,ti,ii,it,ex){
     <div class="btns">${tipo==="jur"
       ? `<div class="lock">🔒 não editável</div>`
       : tipo==="tar"
-      ? `<button class="b-ap ${e.st==='ap'?'on':''}">${e.st==='ap'?'✓ Feito':'Concluir'}</button>${e.st?`<button class="b-x">reabrir</button>`:""}`
+      ? `<button class="b-ap ${e.st==='ap'?'on':''}">${e.st==='ap'?'✓ Feito':'Concluir'}</button>
+         <button class="b-im" style="${e.impl?'background:var(--laranja);border-color:var(--laranja);color:#fff':''}">🚧 Implementar</button>
+         ${e.st?`<button class="b-x">reabrir</button>`:""}`
       : `<button class="b-ap ${e.st==='ap'?'on':''}">✓ Aprovar</button>
          <button class="b-aj ${e.st==='aj'?'on':''}">✎ Ajustar</button>
          <button class="b-im" style="${e.impl?'background:var(--laranja);border-color:var(--laranja);color:#fff':''}">🚧 Implementar</button>
@@ -865,7 +867,7 @@ window.exportar = function(tipo){
     out = `# Tarefas de Design — Amor de Cão (${d})\n\n## Checklist\n`;
     DATA[0].telas.forEach((t,ti)=>{ out+=`\n### ${t.nome}\n`;
       t.itens.forEach((it,ii)=>{ const e=estado[uid(0,ti,ii)];
-        out += `- [${e?.st==="ap"?"x":" "}] **${it[0]}** — ${it[1]}${e?.st==="ap"?` _(feito por ${e.revisor})_`:""}\n`;
+        out += `- [${e?.st==="ap"?"x":" "}] **${it[0]}** — ${it[1]}${e?.st==="ap"?` _(feito por ${e.revisor})_`:""}${e?.impl?" **→ 🚧 revisado, pronto para o dev implementar**":""}\n`;
         (cmts[uid(0,ti,ii)]||[]).forEach(c=>{ out+=`  - 💬 ${c.autor}: ${c.texto}\n`; });
       });});
     out += `\n## Apontamentos por tela\n`;
