@@ -53,8 +53,14 @@
   .cmt{font-size:12.5px;background:#fff;border:1px solid var(--borda);border-radius:8px;padding:6px 10px;margin-bottom:4px;}
   .cmt b{font-size:11px;} .cmt .hora{color:var(--cinza);font-size:10px;margin-left:6px;}
   .cmt-form{display:flex;gap:6px;margin-top:4px;}
-  .cmt-form input{flex:1;font:inherit;font-size:12.5px;padding:6px 10px;border:1px solid var(--borda);border-radius:8px;background:#fff;}
-  .cmt-form button{border:none;background:#1A1A1A;color:#fff;border-radius:8px;padding:0 12px;font-size:12px;font-weight:700;cursor:pointer;}
+  .cmt-form input.cmt-txt{flex:1;font:inherit;font-size:12.5px;padding:6px 10px;border:1px solid var(--borda);border-radius:8px;background:#fff;}
+  .cmt-form button.cmt-send{border:none;background:#1A1A1A;color:#fff;border-radius:8px;padding:0 12px;font-size:12px;font-weight:700;cursor:pointer;}
+  .cmt-form button.cmt-foto{border:1px solid var(--borda);background:#fff;border-radius:8px;padding:0 10px;font-size:14px;cursor:pointer;}
+  .cmt-fotos{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+  .cmt-fotos img{max-height:140px;max-width:46%;border-radius:8px;border:1px solid var(--borda);cursor:zoom-in;}
+  .cmt-prev{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;font-size:11px;}
+  .cmt-prev .pv{background:#E8EAF6;border-radius:6px;padding:2px 8px;}
+  .cmt-prev .pv b{cursor:pointer;color:var(--pink);margin-left:4px;}
   .btns{display:flex;flex-direction:column;gap:6px;flex-shrink:0;padding-top:2px;}
   .btns button{width:96px;border-radius:8px;border:1px solid var(--borda);background:#fff;padding:7px 0;font-size:12px;font-weight:700;cursor:pointer;}
   .btns .b-ap.on{background:var(--verde);border-color:var(--verde);color:#fff;}
@@ -76,6 +82,9 @@
   #login h2{margin:0 0 4px;font-size:18px;} #login p{margin:0 0 14px;color:var(--cinza);font-size:13px;}
   #login input,#login select{width:100%;font:inherit;font-size:14px;padding:10px;border:1px solid var(--borda);border-radius:8px;margin-bottom:10px;}
   #login button{width:100%;background:var(--verde);color:#fff;border:none;border-radius:8px;padding:11px;font-size:14px;font-weight:800;cursor:pointer;}
+  #semaforo{padding:10px 20px;font-size:13px;font-weight:700;}
+  #semaforo.sem-warn{background:#FFF3E0;color:#B26A00;border-bottom:2px solid var(--laranja);}
+  #semaforo.sem-ok{background:#E6F4D9;color:var(--verde-esc);border-bottom:2px solid var(--verde);}
   @media(max-width:640px){ .item{flex-direction:column;gap:6px;} .el{width:auto;} .btns{flex-direction:row;} }
 </style>
 </head>
@@ -95,6 +104,7 @@
     <a href="https://drive.google.com/drive/folders/1Xmr2VoAeo476945SUvpWEjrO22zfp8Z1?usp=drive_link" target="_blank" rel="noopener" style="border:1px solid var(--borda);border-radius:20px;padding:4px 12px;font-size:12px;text-decoration:none;color:var(--azul);font-weight:700;background:#fff">📁 Documentos do projeto</a>
   </div>
 </header>
+<div id="semaforo" style="display:none"></div>
 <main id="app"><p style="color:#5F6368">Carregando revisão…</p></main>
 <footer>
   <span>✅ <span class="f-n" id="nAp">0</span></span>
@@ -445,6 +455,47 @@ const DATA = [
    ["Lembrete do Círculo","(suave, semanal, opt-out — nunca cobrança)","gap","O QUE É: a push semanal, no fecho de semana, convidando a preencher o Círculo. TRAVA: convite, nunca cobrança (“lembrete que gera culpa é veneno e produz desinstalação” — Compêndio). Proposta de partida: “Como foi a semana de vocês? O círculo do [nome] tá esperando.” FONTE: Compêndio, D-006 / T-032-A."],
    ["Ciclo de solicitação","aprovada · não aprovada · precisa de ajustes (app + e-mail)","gap","O QUE É: as 3 notificações (app + e-mail cada) do ciclo de solicitação de comunidade. O CONTEÚDO de cada uma já está definido no doc — aprovada: comunica aprovação + próximo passo de 30 novos membros em 30 dias; não aprovada: motivo + pode reapresentar após 30 dias; ajustes: o pedido específico da curadoria. FALTA só redigir as frases finais. FONTE: “Abertura de Nova Comunidade”, tabela do Passo 8."],
    ["Comunidade ativada","(atingiu 30 novos membros)","gap","O QUE É: a push ao fundador quando a comunidade atinge 30 novos membros e ativa sozinha. Par da tela T-036 (“Comunidade ativada! Parabéns…”) — a push pode ser a versão de uma linha da mesma copy. FONTE: “Abertura de Nova Comunidade”, Passo 9."]]}
+]},
+{fluxo:"Fundamentos visuais — tokens (QA global)", cls:"f-design", desc:"Valores canônicos extraídos do Figma. ORDEM OBRIGATÓRIA: 1º Rodrigo zera as divergências na origem (card abaixo) → 2º Dano implementa o tema como constantes e dá baixa → 3º repuxar as telas já afetadas. Enquanto houver divergência aberta, o aviso no topo fica laranja e o agente do Dano opera sob o Contrato (card Aplicação).", telas:[
+ {id:"TOKENS", nome:"Tipografia e cores", itens:[
+  ["Família de fonte","Work Sans — família única do app","prop","Única família encontrada nas 4 telas analisadas."],
+  ["Título de tela (Title 1)","Work Sans SemiBold 20px · #151515","prop","Style nomeado “Title 1”. Visto em Login e T-016."],
+  ["Título de seção/card (Title 2)","Work Sans SemiBold 16px · #151515","prop","Style “Title 2” (T-024, T-026-B). DIVERGÊNCIA: a T-016 usa 20px (Title 1) para o MESMO papel de título de seção — Rodrigo decide qual escala vale para seção e ajusta a exceção."],
+  ["Corpo (Body Large)","Work Sans Regular 15px","prop","Visto nas 4 telas (subtítulos e textos corridos)."],
+  ["Botão (Button-txt)","Work Sans Medium 14px","prop","DIVERGÊNCIA de higiene: existe “Button-txt” e “Button-Txt” como styles separados — unificar num só no Figma."],
+  ["Legenda (Body Small)","Work Sans Medium 12px","prop","DIVERGÊNCIA: o mesmo style é Regular(400) no Login e Medium(500) nas outras 3 telas. Sugestão: Medium (maioria). Rodrigo bate o martelo e corrige o style."],
+  ["Cor de ação primária","#DF3890 (Zoomie Energy Pink)","prop","Hex único em todo o arquivo ✓."],
+  ["Verde da marca","#99BD05 (Tennis Ball Green)","prop","Hex único ✓. Versão translúcida usada em alertas: 30% de opacidade."],
+  ["Texto principal","#151515 (Black For Text)","prop",""],
+  ["Texto secundário","#151515 a 50% (Black 50)","prop","DIVERGÊNCIA de papel: subtítulo de tela usa 50% no Login mas cor sólida na T-026-B — definir se subtítulo é secundário ou principal."],
+  ["Fundo de tela","#F1F1F1 (Background)","prop",""],
+  ["Fundos de apoio","#CEE9EF (Blue Baby Boom) · #F2E8CC (Dog Bone Cream) · #FFFFFF (cards/chips selecionados)","prop",""],
+  ["Borda padrão","#151515 a 20% (Black 20)","prop","DIVERGÊNCIA: no Login a variable “Black 20%” aponta para #080808; nas demais, #151515. Unificar a variable no Figma."]]},
+ {id:"TOKENS", nome:"Espaçamentos e raios", itens:[
+  ["Padding lateral de tela","24px","prop","Consistente nas 4 telas ✓."],
+  ["Espaço entre seções","24px","prop","Consistente ✓."],
+  ["Espaço entre itens empilhados","8px","prop","Botões do Login, cards do T-024, chips do Diário ✓."],
+  ["Padding interno de card","16px","prop","DIVERGÊNCIA: hoje convivem 12, 16 e 24px (até dentro da mesma T-026-B). Sugestão: 16px padrão; exceções só documentadas aqui."],
+  ["Raio de card","16px","prop","DIVERGÊNCIA: card de alerta verde da T-026-B usa 12px — unificar ou documentar como exceção."],
+  ["Raio de inputs e chips","8px","prop","Consistente ✓."],
+  ["Raio de pill (botões redondos)","999px","prop","DIVERGÊNCIA cosmética: 99px e 999px convivem com o mesmo intento “totalmente redondo”. Padronizar 999."],
+  ["Botão primário (CTA)","Pill rosa #DF3890 · raio 999px · texto branco Medium 14px · altura 48px","prop","DECISÃO: hoje o Login usa outro padrão (retângulo raio 8, borda cinza, texto preto, 63px de altura) e os chips usam 56px. Sugestão: este pill rosa como CTA padrão do app; Login se adapta. Rodrigo decide."],
+  ["Largura de container","392px (viewport 440)","prop","DIVERGÊNCIA: 392 vs 393px entre telas — padronizar um valor."]]},
+ {id:"TOKENS", nome:"Aplicação", itens:[
+  ["Contrato do agente (Dano: copie e cole no Claude em TODA puxada de tela)","CONTRATO DE EXTRAÇÃO FIGMA→CÓDIGO — Amor de Cão (v1)\n1. Fonte única: Work Sans. Escala: Title1 SemiBold 20 · Title2 SemiBold 16 · Body Large Regular 15 · Button Medium 14 · Body Small Medium 12.\n2. Cores APENAS destas constantes: pink #DF3890 · verde #99BD05 · texto #151515 · texto secundário #151515 a 50% · borda #151515 a 20% · fundo #F1F1F1 · apoios #CEE9EF e #F2E8CC · branco.\n3. Espaços: lateral de tela 24 · entre seções 24 · entre itens 8 · interno de card 16. Raios: card 16 · input/chip 8 · pill 999. CTA padrão: pill rosa, raio 999, altura 48, texto branco Medium 14.\n4. Implemente estes valores como CONSTANTES/tema e referencie as constantes — nunca copie px/hex soltos da tela.\n5. Se a tela trouxer um valor fora desta tabela, NÃO reproduza: use o token mais próximo e liste ao final da resposta “DIVERGÊNCIAS ENCONTRADAS: tela · elemento · valor do Figma vs token usado”.\n6. Nunca invente copy: os textos finais vêm do Documento de Copy/painel; texto do Figma pode ser placeholder.","","POR QUÊ: o pipeline é Figma → agente → código. Com estas regras o agente deixa de propagar ambiguidade da fonte e passa a DETECTÁ-LA. Este contrato também sai no topo do relatório 📋 DEV. Selecionar o texto acima e copiar."],
+  ["Dano — implementar o tema","Implementar TODOS os tokens aprovados como constantes/tema único do app (fonte, escala tipográfica, cores, espaçamentos, raios) e substituir valores soltos pelas constantes","tar","É a correção do erro global de espaçamento e fonte. ORDEM: só depois de o Rodrigo zerar as divergências abaixo — tema em cima de fonte suja nasce errado. Depois da baixa, divergência visual no app = bug contra o token."]]},
+ {id:"DIVERG", nome:"Divergências abertas na origem — Rodrigo corrige no STYLE/variable, nunca tela a tela", itens:[
+  ["1 · Style “Body Small”","Unificar o peso: hoje é Regular(400) no Login e Medium(500) nas demais telas, sob o MESMO nome. Corrigir o style para Medium 12 (uma definição só).","tar","É a divergência que mais espalha erro: o agente escolhe um peso por tela."],
+  ["2 · Variable “Black 20”","Dois hex sob o mesmo papel: #080808 (Login) vs #151515 (demais). Unificar a variable para #151515 a 20%.","tar"],
+  ["3 · Styles “Button-txt” / “Button-Txt”","Existem como dois styles separados. Fundir num único (Medium 14) e reapontar os usos.","tar"],
+  ["4 · Botão primário fora do padrão","Login usa retângulo raio 8, borda cinza, altura 63. Substituir pelo CTA padrão (pill rosa, raio 999, altura 48, texto branco).","tar"],
+  ["5 · Três alturas de botão","48 (CTA) · 56 (chips) · 63 (Login) convivendo. Padronizar: 48 para CTA, 56 para chip; eliminar 63.","tar"],
+  ["6 · Escala de título de seção","T-016 usa Title1 (20px) para títulos de seção; o padrão das demais é Title2 (16px). Trocar o style aplicado nas seções da T-016.","tar"],
+  ["7 · Padding interno de card","12, 16 e 24px convivem (até dentro da T-026-B). Padronizar 16 no componente de card; exceção só se documentada nos tokens.","tar"],
+  ["8 · Raio de card","Padrão 16px, mas o card de alerta verde da T-026-B usa 12. Alinhar para 16 ou registrar exceção no token.","tar"],
+  ["9 · Raio de pill","99 e 999 convivem com o mesmo intento. Padronizar 999 nos componentes (Btn-events, progresso).","tar"],
+  ["10 · Cor do subtítulo de tela","Login usa texto a 50%; T-026-B usa cor sólida no mesmo papel. Definir (sugestão: 50%) e aplicar no style.","tar"],
+  ["11 · Largura de container","392 vs 393px no mesmo viewport 440. Padronizar 392 nos frames.","tar"]]}
 ]}
 ];
 
@@ -492,7 +543,7 @@ async function carregar(){
   if(r1.error||r2.error||r3.error||r4.error){ document.getElementById("conex").textContent="erro de conexão"; return; }
   estado = {}; cmts = {}; extras = {}; ocultos = new Set();
   r1.data.forEach(r=>{ if(r.status||r.novo_texto||r.implementar) estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||"", impl:r.implementar===true, implPor:r.implementado_por||"", implEm:r.implementado_em||null}; });
-  r2.data.forEach(c=>{ (cmts[c.item_id]=cmts[c.item_id]||[]).push({autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at}); });
+  r2.data.forEach(c=>{ (cmts[c.item_id]=cmts[c.item_id]||[]).push({autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at,fotos:c.fotos||[]}); });
   r3.data.forEach(x=>{ (extras[x.card_key]=extras[x.card_key]||[]).push(x); });
   r4.data.forEach(o=>ocultos.add(o.item_id));
   if(adminToken && !isAdmin){ isAdmin = await adminAcao("validar"); atualizarBotaoAdmin(); }
@@ -570,7 +621,7 @@ function assinar(){
     })
     .on("postgres_changes", {event:"INSERT", schema:"public", table:"comentarios"}, (p)=>{
       const c = p.new; if(!c) return;
-      (cmts[c.item_id]=cmts[c.item_id]||[]).push({autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at});
+      (cmts[c.item_id]=cmts[c.item_id]||[]).push({autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at,fotos:c.fotos||[]});
       const box = document.querySelector(`[data-th="${CSS.escape(c.item_id)}"]`);
       if(box){ box.insertAdjacentHTML("beforeend", cmtHtml(c)); }
       const cnt = document.querySelector(`[data-thc="${CSS.escape(c.item_id)}"]`);
@@ -582,19 +633,56 @@ function assinar(){
       else { c.textContent="reconectando…"; c.classList.remove("on"); }
     });
 }
+const FOTO_URL = SB_URL + "/storage/v1/object/public/fotos-painel/";
 function cmtHtml(c){
   const h = new Date(c.hora||Date.now()).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
-  return `<div class="cmt"><b class="p-${c.papel||'Copy'}">${escapeHtml(c.autor)}</b><span class="hora">${c.papel||""} · ${h}</span><br>${escapeHtml(c.texto)}</div>`;
+  const fotos = (c.fotos||[]).map(p=>`<a href="${FOTO_URL}${p}" target="_blank" rel="noopener"><img src="${FOTO_URL}${p}" loading="lazy" alt="foto anexada"></a>`).join("");
+  return `<div class="cmt"><b class="p-${c.papel||'Copy'}">${escapeHtml(c.autor)}</b><span class="hora">${c.papel||""} · ${h}</span>${c.texto?`<br>${escapeHtml(c.texto)}`:""}${fotos?`<div class="cmt-fotos">${fotos}</div>`:""}</div>`;
 }
 function threadHtml(id){
   const lista = (cmts[id]||[]).map(cmtHtml).join("");
   return `<div class="thread"><div data-th="${escapeHtml(id)}">${lista}</div>
-    <div class="cmt-form"><input placeholder="Comentar… (assinado como ${escapeHtml(revisor)})" maxlength="500"><button>Enviar</button></div></div>`;
+    <div class="cmt-form"><button class="cmt-foto" title="Anexar prints (app e Figma lado a lado)">📷</button><input type="file" class="cmt-file" accept="image/*" multiple style="display:none"><input class="cmt-txt" placeholder="Comentar… (assinado como ${escapeHtml(revisor)})" maxlength="500"><button class="cmt-send">Enviar</button></div>
+    <div class="cmt-prev"></div></div>`;
 }
 function ligarThread(container, id){
-  const inp = container.querySelector(".cmt-form input");
-  const btn = container.querySelector(".cmt-form button");
-  const enviar = ()=>{ comentar(id, inp.value); inp.value=""; };
+  const inp = container.querySelector(".cmt-txt");
+  const btn = container.querySelector(".cmt-send");
+  const fbtn = container.querySelector(".cmt-foto");
+  const file = container.querySelector(".cmt-file");
+  const prev = container.querySelector(".cmt-prev");
+  let fotos = [];
+  const renderPrev = ()=>{
+    prev.innerHTML = fotos.map((f,i)=>`<span class="pv">📷 ${escapeHtml(f.name.length>22? f.name.slice(0,20)+"…" : f.name)}<b data-i="${i}">✕</b></span>`).join("");
+    prev.querySelectorAll("b").forEach(b=>b.onclick=()=>{ fotos.splice(+b.dataset.i,1); renderPrev(); });
+  };
+  fbtn.onclick = ()=>file.click();
+  file.onchange = ()=>{
+    for(const f of file.files){
+      if(f.size > 5*1024*1024){ alert(`“${f.name}” passa de 5 MB — tire um print em vez de foto da câmera, ou reduza a imagem.`); continue; }
+      fotos.push(f);
+    }
+    file.value=""; renderPrev();
+  };
+  const enviar = async ()=>{
+    const texto = inp.value;
+    if(!texto.trim() && !fotos.length) return;
+    btn.disabled = true; if(fotos.length) btn.textContent = "Enviando…";
+    try{
+      const paths = [];
+      for(const f of fotos){
+        const ext = (f.name.split(".").pop()||"png").toLowerCase().replace(/[^a-z0-9]/g,"") || "png";
+        const path = crypto.randomUUID()+"."+ext;
+        const { error } = await sb.storage.from("fotos-painel").upload(path, f, {contentType: f.type||"image/png"});
+        if(error) throw error;
+        paths.push(path);
+      }
+      const { error } = await sb.from("comentarios").insert({item_id:id, autor:revisor, papel, texto:texto.trim(), fotos:paths});
+      if(error) throw error;
+      inp.value=""; fotos=[]; renderPrev();
+    }catch(e){ alert("Não consegui enviar. Verifique a conexão e tente de novo."); console.error(e); }
+    btn.disabled = false; btn.textContent = "Enviar";
+  };
   btn.onclick = enviar;
   inp.onkeydown = (e)=>{ if(e.key==="Enter") enviar(); };
 }
@@ -824,6 +912,24 @@ function atualizarContadores(){
   document.getElementById("nPe").textContent=tot-ap-aj;
   document.getElementById("prog").textContent=(ap+aj)+" / "+tot;
   document.getElementById("barra").style.width = tot? (100*(ap+aj)/tot)+"%" : "0%";
+  atualizarSemaforo();
+}
+function atualizarSemaforo(){
+  const el = document.getElementById("semaforo");
+  if(!el) return;
+  let fiD=-1, tiD=-1, itensD=null;
+  DATA.forEach((fl,fi)=>fl.telas.forEach((t,ti)=>{ if(t.id==="DIVERG"){ fiD=fi; tiD=ti; itensD=t.itens; } }));
+  if(!itensD){ el.style.display="none"; return; }
+  let abertas = 0;
+  itensD.forEach((it,ii)=>{ if(estado[uid(fiD,tiD,ii)]?.st!=="ap") abertas++; });
+  el.style.display = "block";
+  if(abertas>0){
+    el.className = "sem-warn";
+    el.textContent = `⚠ Fonte (Figma) com ${abertas} divergência${abertas>1?"s":""} aberta${abertas>1?"s":""} de ${itensD.length} — telas puxadas do Figma podem sair do padrão. Dano: cole o Contrato do Agente no Claude antes de qualquer puxada (Fundamentos visuais → Aplicação). Ordem: Rodrigo zera a origem → Dano implementa o tema → repuxar as telas afetadas.`;
+  } else {
+    el.className = "sem-ok";
+    el.textContent = "✓ Fonte (Figma) sem divergências abertas — pipeline liberado. Próximo passo: Dano implementa o tema e dá baixa; depois, repuxar as telas afetadas.";
+  }
 }
 document.getElementById("filtros").onclick = (ev)=>{
   const b = ev.target.closest("button"); if(!b) return;
@@ -840,6 +946,9 @@ window.exportar = function(tipo){
   let out = "";
   if(tipo==="dev"){
     out = `# Instruções de alteração de copy — Amor de Cão (${d})\nAplicar cada alteração DE → PARA exatamente como escrito, incluindo pontuação. Strings [JURÍDICO] não podem ser alteradas.\n\n`;
+    let contrato = "";
+    DATA.forEach(fl=>fl.telas.forEach(t=>t.itens.forEach(it=>{ if(String(it[0]).startsWith("Contrato do agente")) contrato = it[1]; })));
+    if(contrato) out += `## CONTRATO DO AGENTE — colar no Claude em toda puxada de tela do Figma\n\n${contrato}\n\n---\n\n`;
     DATA.forEach((fl,fi)=>{ if(fi===0) return; let bloco="";
       fl.telas.forEach((t,ti)=>{ let l="";
         t.itens.forEach((it,ii)=>{ const e=estado[uid(fi,ti,ii)]; const tp=it[2]||"";
