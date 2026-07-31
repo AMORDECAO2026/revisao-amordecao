@@ -163,7 +163,9 @@ const DATA = [
   ["T-014 / G-001","Adicionar categoria “Diário” nas notificações e renomear seção “Privacidade”→“Notificações”","tar"],
   ["T-016","Badge “Adotado” e estado vazio da prateleira","tar"],
   ["T-028","Adicionar legenda ok/atenção/grave e estado de dia sem registro","tar"],
-  ["T-032-B","Refazer “Destaques da semana” → seção “O que mudou essa semana”: três cards por direção (subiram/desceram/iguais), linha de fechamento e 4 estados de borda. Copy aprovada no card T-032-B do Fluxo 5 — a copy do mockup atual virou proibição","tar"]]}
+  ["T-032-B","Refazer “Destaques da semana” → seção “O que mudou essa semana”: três cards por direção (subiram/desceram/iguais), linha de fechamento e 4 estados de borda. Copy aprovada no card T-032-B do Fluxo 5 — a copy do mockup atual virou proibição","tar"]]},
+ {id:"FIGMA", nome:"Comentários do Figma — sem tela identificada", itens:[
+  ["Sobre este card","Comentários importados do Figma cuja tela não pôde ser identificada automaticamente caem na conversa deste card — abra o 💬 no cabeçalho. Admin pode tocar no nome do autor de qualquer comentário para renomeá-lo (útil porque a conta do Figma é compartilhada).","",""]]}
 ]},
 {fluxo:"Fluxo 1 — Entrada e cadastro", desc:"Do splash à escolha de comunidades. Primeira impressão da marca.", telas:[
  {id:"T-000", nome:"Splash Screen", node:"1-434", itens:[
@@ -543,7 +545,7 @@ async function carregar(){
   if(r1.error||r2.error||r3.error||r4.error){ document.getElementById("conex").textContent="erro de conexão"; return; }
   estado = {}; cmts = {}; extras = {}; ocultos = new Set();
   r1.data.forEach(r=>{ if(r.status||r.novo_texto||r.implementar) estado[r.item_id] = {st:r.status, novo:r.novo_texto||"", revisor:r.revisor||"", papel:r.obs||"", impl:r.implementar===true, implPor:r.implementado_por||"", implEm:r.implementado_em||null}; });
-  r2.data.forEach(c=>{ (cmts[c.item_id]=cmts[c.item_id]||[]).push({autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at,fotos:c.fotos||[]}); });
+  r2.data.forEach(c=>{ (cmts[c.item_id]=cmts[c.item_id]||[]).push({id:c.id,autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at,fotos:c.fotos||[]}); });
   r3.data.forEach(x=>{ (extras[x.card_key]=extras[x.card_key]||[]).push(x); });
   r4.data.forEach(o=>ocultos.add(o.item_id));
   if(adminToken && !isAdmin){ isAdmin = await adminAcao("validar"); atualizarBotaoAdmin(); }
@@ -621,7 +623,7 @@ function assinar(){
     })
     .on("postgres_changes", {event:"INSERT", schema:"public", table:"comentarios"}, (p)=>{
       const c = p.new; if(!c) return;
-      (cmts[c.item_id]=cmts[c.item_id]||[]).push({autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at,fotos:c.fotos||[]});
+      (cmts[c.item_id]=cmts[c.item_id]||[]).push({id:c.id,autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at,fotos:c.fotos||[]});
       const box = document.querySelector(`[data-th="${CSS.escape(c.item_id)}"]`);
       if(box){ box.insertAdjacentHTML("beforeend", cmtHtml(c)); }
       const cnt = document.querySelector(`[data-thc="${CSS.escape(c.item_id)}"]`);
@@ -637,7 +639,10 @@ const FOTO_URL = SB_URL + "/storage/v1/object/public/fotos-painel/";
 function cmtHtml(c){
   const h = new Date(c.hora||Date.now()).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
   const fotos = (c.fotos||[]).map(p=>`<a href="${FOTO_URL}${p}" target="_blank" rel="noopener"><img src="${FOTO_URL}${p}" loading="lazy" alt="foto anexada"></a>`).join("");
-  return `<div class="cmt"><b class="p-${c.papel||'Copy'}">${escapeHtml(c.autor)}</b><span class="hora">${c.papel||""} · ${h}</span>${c.texto?`<br>${escapeHtml(c.texto)}`:""}${fotos?`<div class="cmt-fotos">${fotos}</div>`:""}</div>`;
+  const autorHtml = (isAdmin && c.id)
+    ? `<b class="p-${c.papel||'Copy'} cmt-autor" data-cid="${c.id}" title="Admin: tocar para renomear" style="cursor:pointer;text-decoration:underline dotted">${escapeHtml(c.autor)}</b>`
+    : `<b class="p-${c.papel||'Copy'}">${escapeHtml(c.autor)}</b>`;
+  return `<div class="cmt">${autorHtml}<span class="hora">${c.papel||""} · ${h}</span>${c.texto?`<br>${escapeHtml(c.texto)}`:""}${fotos?`<div class="cmt-fotos">${fotos}</div>`:""}</div>`;
 }
 function threadHtml(id){
   const lista = (cmts[id]||[]).map(cmtHtml).join("");
@@ -1059,6 +1064,17 @@ document.getElementById("btnAdmin").onclick = async ()=>{
   if(ok){ isAdmin = true; localStorage.setItem("admin_token", t); atualizarBotaoAdmin(); render(); }
   else { adminToken=""; alert("Chave inválida."); }
 };
+document.addEventListener("click", async (ev)=>{
+  const a = ev.target.closest?.(".cmt-autor");
+  if(!a || !isAdmin) return;
+  const novo = (prompt("Novo nome do autor deste comentário:", a.textContent)||"").trim();
+  if(!novo || novo === a.textContent) return;
+  const ok = await adminAcao("comentario_autor", a.dataset.cid + "|" + novo);
+  if(ok){
+    Object.values(cmts).flat().forEach(c=>{ if(String(c.id)===String(a.dataset.cid)) c.autor = novo; });
+    a.textContent = novo;
+  } else alert("Não foi possível renomear (chave de admin inválida?).");
+});
 function iniciar(){ carregar(); assinar(); }
 if(revisor && papel){
   document.getElementById("quem").innerHTML = `revisando como: <b class="p-${papel}">${escapeHtml(revisor)} (${papel})</b>`;
