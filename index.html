@@ -159,7 +159,7 @@ const FIGMA = "https://www.figma.com/design/V0Ol2lDC5Xp1ibGmdj9xNT/Aplicativo?no
 // tipo: "" normal | "jur" travada | "gap" falta copy | "prop" proposta nova | "tar" tarefa de design
 const DATA = [
 {fluxo:"Tarefas do Design", cls:"f-design", desc:"Correções e criações pendentes no Figma. Marque ✓ Feito ao concluir; use os comentários para dúvidas.", telas:[
- {id:"SELOS", nome:"Sistema de Selos do perfil — NÃO DESENHADO (Tese Operacional, Bloco 2)", itens:[
+ {id:"SELOS", nome:"Sistema de Selos do perfil (Tese, Bloco 2) — em desenho: sections Selos do perfil, Gamificação e Selos de profissão já existem no Figma", itens:[
   ["Camada 1 — Identificação","Desenhar o selo de identificação (Tutor / Adotante / Profissional / ONG) no perfil do tutor e junto ao nome nas interações (posts, respostas, comentários)","tar","A própria Tese registra: sistema ainda não implementado no frontend — o Bloco 2 é a única fonte da regra."],
   ["Selos de profissão","Desenhar os 13 selos de profissão verificada que substituem o genérico “Profissional”: Veterinário, Adestrador, Comportamentalista, Nutricionista canino, Criador responsável, Tosador, Pet sitter, Hotel canino, Hospedagem PetFriendly, Creche canina, Dog walker, Pet shop, Agência canina","tar"],
   ["Camada 2 — Gamificação","Desenhar os 5 níveis (Bronze · Prata · Ouro · Diamante · Autoridade): medalha única, sempre o nível atual, exibida no perfil e nas interações. SEM ranking público","tar"],
@@ -237,7 +237,7 @@ const DATA = [
    ["Seções","Comunidades em destaque · Ver todas ({n}) · Acontecendo agora",""],
    ["Card de adoção","Adote um cão\nEncontre seu próximo melhor amigo.\n[Ver cães]",""],
    ["Guest gate","(sem copy: visitante que toca em qualquer ação vai direto para o login)","","D14: redirect direto, sem modal."]]},
- {id:"T-007", nome:"Home logada — Comunidades", node:"731-1088", itens:[
+ {id:"T-007", nome:"Home logada · Comunidades", node:"731-1088", itens:[
    ["Saudação","Olá {tutor}, hoje tem {n} novas conversas nas suas comunidades",""],
    ["Card Diário — resumo","Ontem o {nome} teve um dia tranquilo.",""],
    ["Card Diário — convite","E hoje, como ele tá?","","Tom informal “tá” fixado no Compêndio."],
@@ -286,7 +286,7 @@ const DATA = [
    ["Composição","{nome} | {identificação} | {nível}","","Ex. da Tese: “Maria | Veterinário | Ouro”."],
    ["Tooltip do selo","(o que aparece ao tocar num selo — explicação de cada camada)","gap","O QUE É: quando um tutor vê “Maria | Veterinário | Ouro” pela primeira vez, precisa entender o que cada selo significa — este é o texto do toque/tooltip. FALTA: uma frase por camada, ex.: identificação (“Como essa pessoa usa o app”), profissão (“Profissional que se declarou da área — a responsabilidade pela informação é dele”, atenção à decisão D3 de selo sem verificação) e nível (“Reconhecimento por respostas úteis à comunidade”). Não existe em documento nenhum — criar do zero. FONTE conceitual: Tese Operacional, Bloco 2.2."],
    ["Comunicação de subida de nível","(o próprio usuário é avisado quando sobe de nível?)","gap","O QUE É: a Tese define ascensão SILENCIOSA (sem ranking público), mas não diz se o PRÓPRIO usuário é avisado quando sobe de Bronze para Prata etc. DECIDIR primeiro: avisa ou o selo só muda? Se avisar, escrever a notificação em tom de celebração privada, ex.: “Suas respostas têm ajudado de verdade. Você agora é Prata.” — nunca comparativa. FONTE: Tese Operacional, Bloco 2.2 e 2.3 (critérios de subida)."],
-   ["Verificação de profissional","DECIDIDO (Léo, 29/07): selo de profissão SEM análise de documentos — ativação direta via T-022-A, com declaração de veracidade como proteção e perda do selo em caso de abuso.","","Atualizar em cascata: Tese 2.4 (remover análise) e regra da Não Surta, Pergunta (“veterinário verificado” → ajustar redação, pois não há mais verificação)."]]},
+   ["Verificação de profissional","DECIDIDO (Léo, 29/07): selo de profissão SEM análise de documentos — ativação direta via T-022, com declaração de veracidade como proteção e perda do selo em caso de abuso.","","Atualizar em cascata: Tese 2.4 (remover análise) e regra da Não Surta, Pergunta (“veterinário verificado” → ajustar redação, pois não há mais verificação)."]]},
  {id:"G-001", nome:"Configurações", node:"31-500", itens:[
    ["Seções","Conta (E-mail · Senha · Método de login) · Meus cães · Sobre (Termos de uso · Política de privacidade)",""],
    ["Seção de notificações","Notificações — Push · E-mail","prop","No Figma chama-se “Privacidade”, mas o conteúdo é notificação. Falta categoria Diário."],
@@ -304,7 +304,7 @@ const DATA = [
    ["Micro-ações","Vivi isso também · Me ajudou · Responder","","D1: reativadas."],
    ["Contador","Ver comentários ({n})","","Padronizado."],
    ["Selo de origem","Vem do Diário do {nome}","","D2: mantido (aval do advogado a registrar)."]]},
- {id:"T-011-B/C/D", nome:"Detalhe do post (thread)", node:"285-341", itens:[
+ {id:"T-011.1", nome:"Detalhe do post (thread) — variantes A e B", node:"285-341", itens:[
    ["Header","Post na comunidade · {comunidade}",""],
    ["Campo de comentário","Conte como foi a sua experiência",""],
    ["Responder resposta","@{usuario} (pré-preenchido no campo)",""],
@@ -312,7 +312,7 @@ const DATA = [
  {id:"T-024", nome:"Criar (botão +)", node:"682-861", itens:[
    ["Título","Escolha o que você quer fazer agora",""],
    ["Opções","Criar um post — Compartilhe um momento ou uma dúvida.\nCadastrar cão para adoção — Encontre um lar pra um cão que precisa.\nSolicitar criação de comunidade — Proponha uma nova comunidade no app.",""]]},
- {id:"T-025-B", nome:"Criar post", node:"27-434", itens:[
+ {id:"T-025", nome:"Criar post", node:"27-434", itens:[
    ["Header","Criar um post","","T-029 usa “Post na comunidade” na mesma estrutura. Unificar? Decidir aqui."],
    ["Destino","Onde quer postar? · Alterar",""],
    ["Tipos","Tipo de post: Pergunta · Relato · Dica · Experiência",""],
@@ -379,7 +379,7 @@ const DATA = [
  {id:"T-021", nome:"Preview do anúncio", node:"13-1284", itens:[
    ["Aviso de publicação","Após publicar, seu cão ficará visível e interessados poderão entrar em contato com você.","prop","Reescrita aprovada (D13)."],
    ["CTAs","Publicar anúncio · Editar informações",""]]},
- {id:"T-022-A", nome:"Cadastro de especialista", node:"13-1501", itens:[
+ {id:"T-022", nome:"Cadastro de especialista", node:"13-1501", itens:[
    ["Título","Cadastro profissional\nPreencha seus dados para ativar seu selo de especialista nas comunidades","","DECIDIDO (Léo, 29/07): selo automático, sem análise de documentos. Tese 2.4 será atualizada."],
    ["Campos","Profissão · Registro profissional (opcional) — Ex: CRMV, certificação, registro técnico · Área de atuação","","“Área de atuação” com placeholder “Cidade”: geografia ou especialidade? Definir."],
    ["Declaração","Declaro que as informações acima são verdadeiras e de minha responsabilidade. Entendo que dados falsos podem levar à perda do selo e ao bloqueio do perfil.","","Única proteção do selo automático."],
@@ -416,7 +416,7 @@ const DATA = [
    ["E7a — Vermelho recorrente, mesmo sinal, 2 em 7 dias · sem ponte","O [nome] teve [sinal] de novo nos últimos dias. Quando um sinal assim volta, o caminho mais seguro é um veterinário.","","NOVO — pega recorrência não consecutiva."],
    ["E7b — Vermelho recorrente, sinais diferentes, 2 em 7 dias · sem ponte","Nos últimos dias, o [nome] teve [sinal] e [sinal]. Quando aparecem sinais assim em poucos dias, o caminho mais seguro é um veterinário.","","NOVO"],
    ["E8 — Padrão vermelho, janela de 3 dias · sem ponte","O [nome] apresentou [sinal] nos últimos 3 dias. Quando um sinal assim se repete, o caminho mais seguro é um veterinário.","","Um único vermelho na janela define o estado, inclusive em sequência mista."]]},
- {id:"T-027", nome:"Ponte para a comunidade (regras v2)", node:"772-373", itens:[
+ {id:"T-026-C", nome:"Padrão detectado + ponte (regras v2) — ex-T-027", node:"772-373", itens:[
    ["Gatilhos da ponte","E5a: mesmo sinal 3 dias seguidos · E5b: 2+ sinais por 2 dias seguidos · E5d: 3 de 5 dias alterados (DESLIGADO no MVP)","","NOVO: antes só existia o gatilho de 3 dias. E4 (2 amarelos no mesmo dia) NÃO dispara ponte no 1º dia."],
    ["Título do bloco","Vale observar",""],
    ["Convite","Quer perguntar na comunidade Não Surta, Pergunta?",""],
@@ -436,9 +436,9 @@ const DATA = [
    ["Legenda","ok · atenção · grave (ordem: comida · energia · cocô)","gap","O QUE É: a legenda fixa no topo do Histórico que ensina a ler os 3 indicadores de cada dia — os rótulos dos níveis (ok / atenção / grave) e a ordem fixa dos sinais (comida · energia · cocô). A copy já está praticamente definida no doc; falta só aprovar como strings de interface. FONTE: Handoff DEV Diário, seção D-009."],
    ["Dia sem registro","Sem registro neste dia","prop","Doc: esmaecido, “nunca como falha”."],
    ["CTA","Ver mais registros",""]]},
- {id:"T-031 / T-031-A", nome:"Marcos", node:"731-1680", itens:[
+ {id:"T-031", nome:"Marcos — modal (T-031) + card na T-008 Movimento", node:"731-1680", itens:[
    ["Modal do marco","100 dias de diário — {nome}\nVocê acompanhou o {nome} por 100 dias seguidos. Isso é presença de verdade.\n78 dias tranquilos — De 100 registros com tudo bem\n[Compartilhar agora] [Fechar]",""],
-   ["Card no Movimento","Hoje celebramos {n} dias de Diário do {nome} 💚",""],
+   ["Card no Movimento (vive na T-008)","Hoje celebramos {n} dias de Diário do {nome} 💚","","O card de marco é componente exibido na T-008 — Home logada · Movimento (ex-frame T-031)."],
    ["Copies dos demais marcos","(aniversário · tempo de convívio · primeiro registro · primeira semana completa · 30 dias)","gap","O QUE É: cada marco tem um modal celebratório e um card no Movimento — só o de 100 dias tem copy pronta (o modelo está neste card, acima). FALTA: escrever no mesmo tom os 5 restantes: aniversário do cão, tempo de convívio (“X anos com você”), primeiro registro, primeira semana completa e 30 dias. TRAVAS: celebra, nunca compara (sem ranking); streak suave, sem punição por quebra; cão em memorial não recebe marco festivo. FONTE: Compêndio do Diário, seção D-005."]]},
  {id:"T-032-A", nome:"Círculo da Semana (preenchimento)", node:"715-551", itens:[
    ["Título","Preencha o círculo da semana",""],
