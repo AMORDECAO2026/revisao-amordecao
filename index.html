@@ -508,6 +508,68 @@ const DATA = [
   ["9 · Pill com raio 99 e 999","ONDE: 99 no componente “Btn-events” (pill verde da T-016) e na barra de progresso da T-026-B; 999 no “Btn-default” (CTA rosa). Visualmente idêntico — mas o agente lê o número e propaga dois valores.\nFAZER: editar os componentes que usam 99 → 999.\nPRONTA QUANDO: buscar raio 99 não retornar nada.","tar"],
   ["10 · Cor do subtítulo de tela — DECIDIDO: 50%","DECISÃO DO RODRIGO (registrada): subtítulo de tela usa Black 50 (#151515 a 50%).\nONDE aplicar: o subtítulo “Como foi o dia do [nome] hoje?” da T-026-B está em cor sólida — trocar para Black 50. Conferir as outras telas novas do Diário/Comunidades.\nPRONTA QUANDO: todo subtítulo de tela usar a variable Black 50.","tar"],
   ["11 · Container 392 vs 393","ONDE: o bloco de conteúdo interno mede 393px na T-001 Login e 392px na T-024 (mesmo viewport 440).\nFAZER: padronizar 392 (que é o certo: 440 − 24 de cada lado) ajustando o frame interno do Login.\nPRONTA QUANDO: todo container interno medir 392.","tar"]]}
+]},
+{fluxo:"Regras de implementação — checklist do DEV", cls:"f-design", desc:"As regras de negócio decididas nos documentos e nesta revisão, como itens verificáveis. Dano: dá Feito ao implementar cada uma (🚧/baixa seguem valendo). Thiago audita pelo contador. Fontes: Handoff DEV Diário v2, Handoff de Adoção, Abertura de Nova Comunidade, Tese Bloco 2, Plano de Métricas e decisões D1–D14 do painel.", telas:[
+ {id:"DEV-1", nome:"Diário — regras de negócio", itens:[
+  ["Registro","Um registro por cão por dia; reabrir no mesmo dia EDITA, não duplica; registro parcial é permitido.","tar"],
+  ["Autosave","Salva a cada toque; seleção única por sinal; tocar de novo troca a seleção sem pedir confirmação.","tar"],
+  ["Quebra de sequência","Não existe opção neutra. Sinal não marcado quebra a sequência daquele quesito; dia sem registro quebra as sequências por sinal e por dia.","tar"],
+  ["Dois contadores de padrão","Por SINAL: dias consecutivos âmbar/vermelho no mesmo quesito (alimenta E5a/E8). Por DIA: dia é “alterado” se qualquer sinal for âmbar/vermelho (alimenta E4, E5b, E5d).","tar"],
+  ["Vermelho define","Um único vermelho dentro da janela de 3 dias coloca o padrão em E8, inclusive em sequência mista e com múltiplos quesitos disparando juntos.","tar"],
+  ["E5d desligado","O padrão distribuído (3 dos últimos 5 dias) fica ESPECIFICADO mas DESLIGADO no MVP — implementar atrás de flag; liga só com dado real de frequência.","tar"],
+  ["Ponte — consentimento","O resumo do padrão vive DENTRO do texto editável do rascunho (T-029); nada é publicado sem o toque em Publicar; múltiplos sinais consolidam num único rascunho.","tar"],
+  ["Ponte — persistência","“Agora não” não repete a ponte no mesmo dia. Padrão persistindo: vira link discreto (E5x-a). Pergunta publicada: link para o post (E5x-b). Padrão resolvido: ponte some e a leitura vira recuperação (E2r/E2v).","tar"],
+  ["Degradação","Comunidade indisponível → CTA neutro: “Vale observar e, se persistir, procurar um veterinário.”","tar"],
+  ["Sem cão","Tutor sem cão (ex.: Adotante): Diário não se aplica — estado vazio com CTA Adicionar um cão → T-013.1.","tar"],
+  ["Memorial","Cão em memorial: Diário, marcos e Círculo ocultos; sem lembretes; NUNCA notificação festiva de aniversário.","tar"],
+  ["Erro ao salvar","Mantém a seleção do tutor e permite retry — nunca perde o toque.","tar"],
+  ["Histórico é log","T-028: sem gráfico, sem score, sem contagem agregada (“4 dias ruins”), sem inferência de saúde; detalhe de dia passado é read-only; legenda fixa ok/atenção/grave na ordem comida·energia·cocô.","tar"],
+  ["Leituras literais","As 16 leituras (E0–E8) saem EXATAMENTE da matriz aprovada no card Leituras — proibido improvisar ou reaproveitar copy do mockup.","tar"]]},
+ {id:"DEV-2", nome:"Adoção — ciclo do badge Adotado (spec do Thiago, 30/07)", itens:[
+  ["Modal de encerramento","Anunciante encerra o anúncio → modal “Esse cão foi adotado?” com DUAS saídas: “Foi adotado” e “Não está mais disponível”.","tar"],
+  ["Saída adotado","“Foi adotado” dispara o evento cao_marcado_adotado e exibe o badge.","tar"],
+  ["Saída silenciosa","“Não está mais disponível” arquiva em silêncio: sem badge e FORA da métrica de desfecho.","tar"],
+  ["Janela de 48h","A confirmação é reversível por 48 horas, com desfazer visível ao anunciante; depois vira definitiva.","tar"],
+  ["Visual do adotado","T-016: selo “Adotado” sobre a foto, opacidade reduzida, sem ação de curtir. T-018: faixa no topo “Esse cão já encontrou uma casa” e contatos do responsável OCULTOS.","tar"],
+  ["Permanência de 7 dias","Anúncio adotado fica visível por 7 dias no FIM da lista e fora dos filtros (prova social da vitrine); depois arquiva automaticamente.","tar"],
+  ["Push de anúncio parado","Aos 30 e aos 60 dias sem desfecho: push ao anunciante “O [nome] ainda está esperando?” oferecendo os dois caminhos de encerramento.","tar"]]},
+ {id:"DEV-3", nome:"Decisões desta revisão (D1–D14 e correlatas)", itens:[
+  ["D4 · Contato direto","Adoção SEM botão “Tenho interesse”/intermediação: o interessado vê os contatos do anunciante e fala direto (exceto anúncio adotado, contatos ocultos).","tar"],
+  ["D3 · Selo profissional automático","Selo de profissional é AUTOMÁTICO na autodeclaração — sem análise de documentos, sem fila de aprovação. Instrumentar professional_verification_started e professional_verification_completed mesmo assim.","tar"],
+  ["D14 · Redirect direto","Fluxos que terminavam em tela intermediária de confirmação redirecionam DIRETO ao destino.","tar"],
+  ["D1 · Duas entradas reativadas","As duas entradas decididas em D1 voltam ativas, com o Sistema de Autoridade aplicado a elas.","tar"],
+  ["D11 · Confirmação destrutiva","Ações destrutivas confirmam antes de executar (padrão confirmado em D11).","tar"],
+  ["T-032-B · Resumo semanal","“O que mudou essa semana”: sempre 8 blocos (8/8), a soma dos dias exibidos é sempre 8, semana fecha domingo; card some se a semana não tem NENHUM registro.","tar"],
+  ["D2 · Selo “Vem do Diário”","Mantido como está — advogado já autorizou (registrar o aval por escrito é pendência do Thiago, não do dev).","tar"],
+  ["D8/D9 · Comunidade aguardando","Comunidade aprovada e ainda não ativa mostra estado “aguardando ativação” com ação Participar (fila de interessados antes do go-live).","tar"],
+  ["Âncora · post do dia","Conteúdo-âncora: no MÁXIMO 1 por dia por comunidade, em categoria própria, com opt-out de notificação pelo tutor.","tar"],
+  ["Enum do cocô","Valores do sinal cocô no banco: Firme · Mole · Líquido (nomenclatura restaurada no painel após o incidente do Aprovar).","tar"]]},
+ {id:"DEV-4", nome:"Solicitação de nova comunidade — ciclo completo", itens:[
+  ["Elegibilidade","Qualquer membro cadastrado pode solicitar — sem requisito de selo ou tempo de casa no MVP.","tar"],
+  ["Co-moderadores","Opcionais, precisam ser usuários cadastrados e ACEITAR o convite em até 5 dias; sem aceite, a solicitação segue só com o solicitante.","tar"],
+  ["Termo de responsabilidade","Envio exige os 3 aceites do termo (checkboxes independentes); sem os 3, botão de enviar desabilitado.","tar"],
+  ["Desfechos do backoffice","Três: aprovada, não aprovada, ajustes solicitados (adjustment_requested). Todos notificam no app E por e-mail.","tar"],
+  ["Reapresentação","Solicitação não aprovada pode ser reapresentada após 30 dias.","tar"],
+  ["Régua de sobrevivência","Comunidade nova precisa de 30 NOVOS membros em 30 dias após ativação; não atingiu → vai para reavaliação HUMANA (não é arquivamento automático).","tar"],
+  ["Ativação","Aprovada+ativada: entra automaticamente na lista, com T-036 (tela de comunidade nova) e push ao solicitante e co-mods.","tar"],
+  ["Vitrine","Lista de comunidades com rotação ALEATÓRIA da vitrine; T-011 mostra contador de membros e ação Convidar.","tar"],
+  ["Sementes","As 7 comunidades-semente nascem ativas, sem passar pelo fluxo de solicitação.","tar"]]},
+ {id:"DEV-5", nome:"Selos e Sistema de Autoridade", itens:[
+  ["Camadas do sistema","Selos de PARTICIPAÇÃO (Prata/Ouro/Diamante, automáticos) ≠ selo de AUTORIDADE (curadoria manual) ≠ selo PROFISSIONAL (autodeclarado, D3) ≠ papel na comunidade (role_in_community). São dimensões independentes no modelo de dados.","tar"],
+  ["Critério composto","Nível de participação exige as TRÊS condições simultâneas: Prata 15 contribuições + 20 dias + 8 respostas úteis; Ouro 40 + 45 + 20; Diamante 100 + 90 + 40. Atingiu → concede automático; sem rebaixamento no MVP.","tar"],
+  ["Autoridade é manual","Selo de Autoridade só via curadoria (backoffice); nunca automático, nunca comprável.","tar"],
+  ["Medalha única, sem ranking","Exibe-se apenas o selo de MAIOR nível; sem leaderboard, sem contagem pública comparativa.","tar"],
+  ["Exibição da identidade","Padrão de assinatura: {nome} | {identificação} | {nível}; role_in_community aparece no contexto da comunidade.","tar"],
+  ["Report procedente","Report procedente afeta o histórico do usuário no sistema de selos, mas NÃO se confunde com denúncia de maus-tratos (fluxo separado, tratamento sensível).","tar"]]},
+ {id:"DEV-6", nome:"Instrumentação — eventos e métricas a emitir desde o MVP", itens:[
+  ["Adoção","Evento cao_marcado_adotado (só na saída “Foi adotado” — a saída silenciosa fica FORA da métrica de desfecho).","tar"],
+  ["Selo profissional","Eventos professional_verification_started e professional_verification_completed (mesmo sendo automático — mede funil e abandono).","tar"],
+  ["Diário — uso","Taxa de tutores com registro no dia; registros por semana por tutor; registro completo vs parcial; tempo de registro alvo ~15s, alerta se P95 > 30s.","tar"],
+  ["Diário — métrica-rei","FRAÇÃO ORGÂNICA: % de registros feitos SEM lembrete/push. É ela que diz se o hábito é real.","tar"],
+  ["Ponte","Disparos da ponte por estado (E4/E5/E8), conversão em publicação, tempo até a 1ª resposta na comunidade; latência de resposta é métrica CRÍTICA (a promessa da ponte é gente respondendo).","tar"],
+  ["Âncora e Círculo","Âncora: entrega, abertura e CTR do card. Círculo: taxa de preenchimento e marcos atingidos (T-031).","tar"],
+  ["Comunidades","Eventos do ciclo de solicitação (enviada/aprovada/rejeitada/ajustes/ativada) + régua 30 novos membros/30 dias por comunidade nova.","tar"],
+  ["Soberanas por fase","F1: cadastros qualificados. F2: tutores ativos D7. Conferir nomes e cortes exatos no Plano de Métricas — ele é o documento dono; em divergência com este card, vale o Plano.","tar"]]}
 ]}
 ];
 
