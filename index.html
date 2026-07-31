@@ -125,6 +125,16 @@
     <button style="background:#7CB342;color:#fff" onclick="copiarTxt()">Copiar tudo</button>
   </div>
 </dialog>
+<dialog id="mover" style="border:none;border-radius:12px;max-width:420px;width:92%;padding:0">
+  <div style="background:#1A1A1A;color:#fff;padding:12px 16px;font-weight:700">➜ Mover comentário para uma tela</div>
+  <div style="padding:16px">
+    <select id="moverSel" style="width:100%;font:inherit;font-size:14px;padding:10px;border:1px solid var(--borda);border-radius:8px"></select>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button id="moverX" style="border:1px solid var(--borda);background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer">Cancelar</button>
+      <button id="moverOk" style="border:none;background:var(--verde);color:#fff;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer">Mover</button>
+    </div>
+  </div>
+</dialog>
 <dialog id="login">
   <div class="l-c">
     <h2>Quem está revisando?</h2>
@@ -621,11 +631,22 @@ function assinar(){
       else if(i>=0){ lista[i]=x; } else { lista.push(x); }
       render();
     })
-    .on("postgres_changes", {event:"INSERT", schema:"public", table:"comentarios"}, (p)=>{
+    .on("postgres_changes", {event:"*", schema:"public", table:"comentarios"}, (p)=>{
       const c = p.new; if(!c) return;
+      if(p.eventType === "UPDATE"){
+        // movido ou renomeado por outra pessoa: realoca localmente e re-renderiza
+        for(const lista of Object.values(cmts)){
+          const i = lista.findIndex(x=>String(x.id)===String(c.id));
+          if(i>=0){ lista.splice(i,1); break; }
+        }
+        (cmts[c.item_id]=cmts[c.item_id]||[]).push({id:c.id,autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at,fotos:c.fotos||[]});
+        cmts[c.item_id].sort((a,b)=>String(a.hora).localeCompare(String(b.hora)));
+        render();
+        return;
+      }
       (cmts[c.item_id]=cmts[c.item_id]||[]).push({id:c.id,autor:c.autor,papel:c.papel,texto:c.texto,hora:c.created_at,fotos:c.fotos||[]});
       const box = document.querySelector(`[data-th="${CSS.escape(c.item_id)}"]`);
-      if(box){ box.insertAdjacentHTML("beforeend", cmtHtml(c)); }
+      if(box){ box.insertAdjacentHTML("beforeend", cmtHtml(c, c.item_id==="TELA|0|2")); }
       const cnt = document.querySelector(`[data-thc="${CSS.escape(c.item_id)}"]`);
       if(cnt) cnt.textContent = "💬 " + (cmts[c.item_id]||[]).length;
     })
@@ -636,16 +657,18 @@ function assinar(){
     });
 }
 const FOTO_URL = SB_URL + "/storage/v1/object/public/fotos-painel/";
-function cmtHtml(c){
+function cmtHtml(c, mov){
   const h = new Date(c.hora||Date.now()).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
   const fotos = (c.fotos||[]).map(p=>`<a href="${FOTO_URL}${p}" target="_blank" rel="noopener"><img src="${FOTO_URL}${p}" loading="lazy" alt="foto anexada"></a>`).join("");
   const autorHtml = (isAdmin && c.id)
     ? `<b class="p-${c.papel||'Copy'} cmt-autor" data-cid="${c.id}" title="Admin: tocar para renomear" style="cursor:pointer;text-decoration:underline dotted">${escapeHtml(c.autor)}</b>`
     : `<b class="p-${c.papel||'Copy'}">${escapeHtml(c.autor)}</b>`;
-  return `<div class="cmt">${autorHtml}<span class="hora">${c.papel||""} · ${h}</span>${c.texto?`<br>${escapeHtml(c.texto)}`:""}${fotos?`<div class="cmt-fotos">${fotos}</div>`:""}</div>`;
+  const btnMov = (mov && c.id) ? ` <button class="cmt-mover" data-cid="${c.id}" style="border:1px solid var(--borda);background:#fff;border-radius:6px;font-size:10px;padding:1px 6px;cursor:pointer">➜ mover para tela</button>` : "";
+  return `<div class="cmt">${autorHtml}<span class="hora">${c.papel||""} · ${h}</span>${btnMov}${c.texto?`<br>${escapeHtml(c.texto)}`:""}${fotos?`<div class="cmt-fotos">${fotos}</div>`:""}</div>`;
 }
 function threadHtml(id){
-  const lista = (cmts[id]||[]).map(cmtHtml).join("");
+  const mov = (id === "TELA|0|2");
+  const lista = (cmts[id]||[]).map(c=>cmtHtml(c, mov)).join("");
   return `<div class="thread"><div data-th="${escapeHtml(id)}">${lista}</div>
     <div class="cmt-form"><button class="cmt-foto" title="Anexar prints (app e Figma lado a lado)">📷</button><input type="file" class="cmt-file" accept="image/*" multiple style="display:none"><input class="cmt-txt" placeholder="Comentar… (assinado como ${escapeHtml(revisor)})" maxlength="500"><button class="cmt-send">Enviar</button></div>
     <div class="cmt-prev"></div></div>`;
@@ -1063,6 +1086,44 @@ document.getElementById("btnAdmin").onclick = async ()=>{
   const ok = await adminAcao("validar");
   if(ok){ isAdmin = true; localStorage.setItem("admin_token", t); atualizarBotaoAdmin(); render(); }
   else { adminToken=""; alert("Chave inválida."); }
+};
+const dlgMover = document.getElementById("mover");
+let moverCid = null;
+document.addEventListener("click", (ev)=>{
+  const b = ev.target.closest?.(".cmt-mover");
+  if(!b) return;
+  moverCid = b.dataset.cid;
+  const sel = document.getElementById("moverSel");
+  if(!sel.options.length){
+    DATA.forEach((fl,fi)=>{
+      if(fi < 1 || fi > 5) return;
+      fl.telas.forEach((t,ti)=>{
+        const o = document.createElement("option");
+        o.value = `TELA|${fi}|${ti}`;
+        o.textContent = `${t.id} — ${t.nome}`;
+        sel.appendChild(o);
+      });
+    });
+  }
+  dlgMover.showModal();
+});
+document.getElementById("moverX").onclick = ()=>dlgMover.close();
+document.getElementById("moverOk").onclick = async ()=>{
+  const destino = document.getElementById("moverSel").value;
+  if(!destino || !moverCid) return;
+  const { data } = await sb.rpc("mover_comentario", {p_id:+moverCid, p_destino:destino});
+  if(data === true){
+    for(const lista of Object.values(cmts)){
+      const i = lista.findIndex(x=>String(x.id)===String(moverCid));
+      if(i>=0){
+        const cm = lista.splice(i,1)[0];
+        (cmts[destino]=cmts[destino]||[]).push(cm);
+        cmts[destino].sort((a,b)=>String(a.hora).localeCompare(String(b.hora)));
+        break;
+      }
+    }
+    dlgMover.close(); render();
+  } else alert("Não consegui mover — talvez já tenha sido movido por outra pessoa.");
 };
 document.addEventListener("click", async (ev)=>{
   const a = ev.target.closest?.(".cmt-autor");
