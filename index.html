@@ -286,7 +286,7 @@ const DATA = [
    ["Composição","{nome} | {identificação} | {nível}","","Ex. da Tese: “Maria | Veterinário | Ouro”."],
    ["Tooltip do selo","(o que aparece ao tocar num selo — explicação de cada camada)","gap","O QUE É: quando um tutor vê “Maria | Veterinário | Ouro” pela primeira vez, precisa entender o que cada selo significa — este é o texto do toque/tooltip. FALTA: uma frase por camada, ex.: identificação (“Como essa pessoa usa o app”), profissão (“Profissional que se declarou da área — a responsabilidade pela informação é dele”, atenção à decisão D3 de selo sem verificação) e nível (“Reconhecimento por respostas úteis à comunidade”). Não existe em documento nenhum — criar do zero. FONTE conceitual: Tese Operacional, Bloco 2.2."],
    ["Comunicação de subida de nível","(o próprio usuário é avisado quando sobe de nível?)","gap","O QUE É: a Tese define ascensão SILENCIOSA (sem ranking público), mas não diz se o PRÓPRIO usuário é avisado quando sobe de Bronze para Prata etc. DECIDIR primeiro: avisa ou o selo só muda? Se avisar, escrever a notificação em tom de celebração privada, ex.: “Suas respostas têm ajudado de verdade. Você agora é Prata.” — nunca comparativa. FONTE: Tese Operacional, Bloco 2.2 e 2.3 (critérios de subida)."],
-   ["Verificação de profissional","DECIDIDO (Léo, 29/07): selo de profissão SEM análise de documentos — ativação direta via T-022, com declaração de veracidade como proteção e perda do selo em caso de abuso.","","Atualizar em cascata: Tese 2.4 (remover análise) e regra da Não Surta, Pergunta (“veterinário verificado” → ajustar redação, pois não há mais verificação)."]]},
+   ["Verificação de profissional","DECIDIDO (Léo, 29/07): selo de profissão SEM análise de documentos — ativação direta via T-022, com declaração de veracidade como proteção e perda do selo em caso de abuso.","","Cascata: Tese 2.4 JÁ ATUALIZADA (31/07, eventos renomeados). Pendente só a regra da Não Surta, Pergunta (“veterinário verificado” → ajustar redação, pois não há mais verificação)."]]},
  {id:"G-001", nome:"Configurações", node:"31-500", itens:[
    ["Seções","Conta (E-mail · Senha · Método de login) · Meus cães · Sobre (Termos de uso · Política de privacidade)",""],
    ["Seção de notificações","Notificações — Push · E-mail","prop","No Figma chama-se “Privacidade”, mas o conteúdo é notificação. Falta categoria Diário."],
@@ -354,7 +354,7 @@ const DATA = [
    ["Header","Cães para adoção · {n} cães disponíveis",""],
    ["Seções","Perto de você · Cães disponíveis",""],
    ["CTA do rodapé","Tem um cão para adoção?\nAjude a encontrar um lar cheio de amor.\n[Cadastrar cão para adoção]",""],
-   ["Badge adotado","Adotado","prop","Handoff prevê; badge não existe no Figma."],
+   ["Badge adotado","Adotado","prop","O Handoff prevê a MARCAÇÃO “adotado” (evento cao_marcado_adotado) — o badge VISUAL é decisão nova, a documentar (checklist DEV-2). Não existe no Figma."],
    ["Estado vazio (filtros)","Nenhum cão encontrado com esses filtros. Tente ampliar a busca.","prop","Não existe no Figma. Proposta."]]},
  {id:"T-017", nome:"Filtros de adoção", node:"13-634", itens:[
    ["Busca","Buscar por raça, porte...",""],
@@ -380,7 +380,7 @@ const DATA = [
    ["Aviso de publicação","Após publicar, seu cão ficará visível e interessados poderão entrar em contato com você.","prop","Reescrita aprovada (D13)."],
    ["CTAs","Publicar anúncio · Editar informações",""]]},
  {id:"T-022", nome:"Cadastro de especialista", node:"13-1501", itens:[
-   ["Título","Cadastro profissional\nPreencha seus dados para ativar seu selo de especialista nas comunidades","","DECIDIDO (Léo, 29/07): selo automático, sem análise de documentos. Tese 2.4 será atualizada."],
+   ["Título","Cadastro profissional\nPreencha seus dados para ativar seu selo de especialista nas comunidades","","DECIDIDO (Léo, 29/07): selo automático, sem análise de documentos. FEITO: Tese 2.4 e Handoff de Adoção §7 já refletem a decisão (eventos renomeados em 31/07)."],
    ["Campos","Profissão · Registro profissional (opcional) — Ex: CRMV, certificação, registro técnico · Área de atuação","","“Área de atuação” com placeholder “Cidade”: geografia ou especialidade? Definir."],
    ["Declaração","Declaro que as informações acima são verdadeiras e de minha responsabilidade. Entendo que dados falsos podem levar à perda do selo e ao bloqueio do perfil.","","Única proteção do selo automático."],
    ["CTA","Ativar meu selo",""]]}
@@ -388,7 +388,7 @@ const DATA = [
 {fluxo:"Fluxo 5 — Diário do Cão", desc:"Coração do engajamento e área de maior cuidado jurídico. As leituras automáticas seguem a Régua v2, revisada e aprovada em 29/07/2026 — alterações nelas devem passar por nova revisão antes de ir ao dev.", telas:[
  {id:"T-026", nome:"Home do Diário", node:"722-910", itens:[
    ["Header","Diário do {nome} · {data}",""],
-   ["Instrução (sem registro)","Como foi o dia do [nome]?","prop","V2 substituiu “Toque nos sinais pra registrar o dia dele. Salva sozinho a cada toque.” pelo E0. Design precisa atualizar o mockup. Sem opção neutra no registro; sinal não marcado quebra a sequência do quesito."],
+   ["Instrução (sem registro)","Como foi o dia do [nome]?","prop","V2 substituiu “Toque nos sinais pra registrar o dia dele. Salva sozinho a cada toque.” pelo E0. Design precisa atualizar o mockup. Sem opção neutra no registro; sinal não marcado NÃO quebra sequência (Régua v2.1 — decisão registrada no card Conflitos do checklist DEV)."],
    ["Sinal comida","Como ele comeu hoje? — Normal · Comeu menos · Não comeu",""],
    ["Sinal energia","Energia de hoje? — Animado · Mais quieto · Apático",""],
    ["Sinal cocô","Cocô hoje? — Normal · Não vi · Diferente",""],
@@ -397,7 +397,7 @@ const DATA = [
    ["Marcos na tela","{n} dias de Diário com o {nome}\nO marco dos 30 dias tá chegando. Bonito de ver.",""],
    ["Links","Ver histórico · Círculo da semana",""],
    ["Estado sem cão","Cadastre um cão para começar o Diário. [Adicionar um cão]","prop","Handoff prevê; texto não existe."],
-   ["Erro ao salvar","Não conseguimos salvar. Sua marcação foi mantida — tente de novo.","prop","Handoff prevê retry; texto não existe."]]},
+   ["Erro ao salvar","Não conseguimos salvar. Sua marcação foi mantida — tente de novo.","prop","Retry está documentado só para o histórico (T-028); para o registro (T-026) é decisão nova — ver item “Erro ao salvar” no checklist DEV. Texto não existe no Figma."]]},
  {id:"Leituras", nome:"Leituras automáticas v2 — 16 estados (Régua revisada e aprovada em 29/07/2026)", itens:[
    ["Status jurídico","APROVADA: o advogado revisou a v2 completa (16 estados) — pronta para implementação. Confirmado pelo Léo em 29/07/2026.","","Registrar o aval por escrito na Régua (a linha “aprovada pelo advogado” saiu do texto na revisão)."],
    ["E0 — Sem registro","Como foi o dia do [nome]?","","Substitui a instrução antiga “Toque nos sinais pra registrar…”."],
@@ -432,7 +432,7 @@ const DATA = [
  {id:"T-028", nome:"Histórico do Diário", node:"727-592", itens:[
    ["Header","Histórico · {mês} de {ano}",""],
    ["Resumos por dia (formato v2)","{resumo} — {atenção/ok/grave} / {ok} / {ok} — ex.: “comeu menos — atenção / ok / ok”","prop","Formato novo do Handoff v2: resumo + os 3 indicadores em linha, ordem comida · energia · cocô."],
-   ["Demais resumos por sinal","(não comeu / mais quieto / apático / cocô diferente / não vi…)","gap","O QUE É: a frase curta de cada dia no Histórico. O padrão já existe para um caso: “Comeu menos do que o normal”. FALTA: a frase equivalente para cada opção restante dos 3 sinais (não comeu, mais quieto, apático, cocô diferente, não vi) e a regra para dia com mais de um sinal alterado. TRAVA: espelhar o registro, sem inferência (“Não comeu” ok; “ficou doente” proibido). FONTE: Handoff DEV Diário, seção D-009, com exemplo do formato “comeu menos — atenção / ok / ok”. ATENÇÃO: se o ajuste do sinal cocô (Firme/Mole/Líquido) for aprovado, os resumos seguem as opções novas."],
+   ["Demais resumos por sinal","(não comeu / mais quieto / apático / cocô diferente / não vi…)","gap","O QUE É: a frase curta de cada dia no Histórico. O padrão já existe para um caso: “Comeu menos do que o normal”. FALTA: a frase equivalente para cada opção restante dos 3 sinais (não comeu, mais quieto, apático, cocô diferente, não vi) e a regra para dia com mais de um sinal alterado. TRAVA: espelhar o registro, sem inferência (“Não comeu” ok; “ficou doente” proibido). FONTE: Handoff DEV Diário, seção D-009, com exemplo do formato “comeu menos — atenção / ok / ok”. ATENÇÃO: o sinal cocô usa Firme/Mole/Líquido — já DECIDIDO na Régua §1 (líquido gera padrão vermelho); os resumos seguem essas opções, e “não vi” deixa de existir."],
    ["Legenda","ok · atenção · grave (ordem: comida · energia · cocô)","gap","O QUE É: a legenda fixa no topo do Histórico que ensina a ler os 3 indicadores de cada dia — os rótulos dos níveis (ok / atenção / grave) e a ordem fixa dos sinais (comida · energia · cocô). A copy já está praticamente definida no doc; falta só aprovar como strings de interface. FONTE: Handoff DEV Diário, seção D-009."],
    ["Dia sem registro","Sem registro neste dia","prop","Doc: esmaecido, “nunca como falha”."],
    ["CTA","Ver mais registros",""]]},
@@ -442,7 +442,7 @@ const DATA = [
    ["Copies dos demais marcos","(aniversário · tempo de convívio · primeiro registro · primeira semana completa · 30 dias)","gap","O QUE É: cada marco tem um modal celebratório e um card no Movimento — só o de 100 dias tem copy pronta (o modelo está neste card, acima). FALTA: escrever no mesmo tom os 5 restantes: aniversário do cão, tempo de convívio (“X anos com você”), primeiro registro, primeira semana completa e 30 dias. TRAVAS: celebra, nunca compara (sem ranking); streak suave, sem punição por quebra; cão em memorial não recebe marco festivo. FONTE: Compêndio do Diário, seção D-005."]]},
  {id:"T-032-A", nome:"Círculo da Semana (preenchimento)", node:"715-551", itens:[
    ["Título","Preencha o círculo da semana",""],
-   ["Instrução","Marque como você sente que foi a semana cuidando do {nome}. Partindo da semana passada — só ajuste o que mudou.","","Pré-preenchimento confirmado (D11)."],
+   ["Instrução","Marque como você sente que foi a semana cuidando do {nome}.","prop","REVOGADO o pré-preenchimento: o Handoff DEV Diário registra DECIDIDO (31/07) — SEM pré-preenchimento, a roda começa VAZIA toda semana (inércia não é constância). A frase “Partindo da semana passada — só ajuste o que mudou” cai do mockup. A nota anterior deste item citava D11 como confirmação — superada pela decisão de 31/07."],
    ["Progresso","{n} de 8 áreas respondidas",""],
    ["Dimensões","Alimentação · Exercício · Saúde · Afeto · Socialização · Estímulo · Ambiente · Descanso",""],
    ["Salvamento parcial","Salve agora e continue quando quiser nesta semana. [Salvar progresso]",""]]},
@@ -451,7 +451,7 @@ const DATA = [
    ["Subtítulo","Veja a evolução da sua percepção de cuidado ao longo das semanas.",""],
    ["Métricas","{n}% · Equilíbrio geral nesta semana · +{n} pontos vs. semana passada",""],
    ["Seção — Nome e regra","O que mudou essa semana","","DEFINIDO (Thiago, 30/07): substitui “Destaques da semana” do mockup. Geração por comparação aritmética semana atual vs. anterior, área por área — nunca causa, nunca conduta, nunca afirmação sobre necessidade do cão. Só aparece com as DUAS semanas completas (8 de 8, mesma condição do delta); fora disso, exibe a copy de borda. Três cards por direção — subiram, desceram, seguiram iguais: a soma é sempre 8, card sem itens não renderiza, nenhum card usa cor de alerta (queda não é erro)."],
-   ["CTA","Ver círculo da semana",""],
+   ["CTA","Preencher a roda desta semana / Ver a roda desta semana","prop","DECIDIDO (Handoff, 31/07): CTA em DOIS estados — semana pendente = “Preencher a roda desta semana”; semana preenchida = “Ver a roda desta semana”. O “Ver círculo da semana” do mockup cai."],
    ["Card — subiram","↗ Você sentiu melhora em [áreas].","","“Você sentiu” devolve a autoria ao tutor: é ele relatando a própria percepção, não o app medindo o cão. Alta e queda são espelhadas de propósito — alta não soa elogio, queda não soa bronca."],
    ["Card — desceram","↘ Você sentiu queda em [áreas].",""],
    ["Card — seguiram iguais","= [áreas] seguiram como na semana passada.",""],
@@ -466,7 +466,7 @@ const DATA = [
    ["Marco","(tom de celebração — uma por marco)","gap","O QUE É: a push opcional que avisa o marco no dia (categoria Diário, respeita opt-out). Uma frase por marco, tom de celebração — pode derivar da copy do modal de cada marco (item “Copies dos demais marcos”, card T-031). Nunca dispara para cão em memorial. FONTE: Compêndio, D-005 (“notificação opcional de marco, tom de celebração”)."],
    ["Lembrete do Círculo","(suave, semanal, opt-out — nunca cobrança)","gap","O QUE É: a push semanal, no fecho de semana, convidando a preencher o Círculo. TRAVA: convite, nunca cobrança (“lembrete que gera culpa é veneno e produz desinstalação” — Compêndio). Proposta de partida: “Como foi a semana de vocês? O círculo do [nome] tá esperando.” FONTE: Compêndio, D-006 / T-032-A."],
    ["Ciclo de solicitação","aprovada · não aprovada · precisa de ajustes (app + e-mail)","gap","O QUE É: as 3 notificações (app + e-mail cada) do ciclo de solicitação de comunidade. O CONTEÚDO de cada uma já está definido no doc — aprovada: comunica aprovação + próximo passo de 30 novos membros em 30 dias; não aprovada: motivo + pode reapresentar após 30 dias; ajustes: o pedido específico da curadoria. FALTA só redigir as frases finais. FONTE: “Abertura de Nova Comunidade”, tabela do Passo 8."],
-   ["Comunidade ativada","(atingiu 30 novos membros)","gap","O QUE É: a push ao fundador quando a comunidade atinge 30 novos membros e ativa sozinha. Par da tela T-036 (“Comunidade ativada! Parabéns…”) — a push pode ser a versão de uma linha da mesma copy. FONTE: “Abertura de Nova Comunidade”, Passo 9."]]}
+   ["Comunidade ativada","(atingiu 30 novos membros)","gap","O QUE É: a push ao fundador quando a comunidade atinge 30 novos membros e ativa sozinha. Par da tela T-036 (“Comunidade ativada! Parabéns…”) — a push pode ser a versão de uma linha da mesma copy. ATENÇÃO: o doc prevê notificação na DECISÃO da curadoria; a push na ATIVAÇÃO é decisão nova, a documentar (ver item Ativação no checklist DEV-4)."]]}
 ]},
 {fluxo:"Fundamentos visuais — tokens (QA global)", cls:"f-design", desc:"Valores canônicos extraídos do Figma. ORDEM OBRIGATÓRIA: 1º Rodrigo zera as divergências na origem (card abaixo) → 2º Dano implementa o tema como constantes e dá baixa → 3º repuxar as telas já afetadas. Enquanto houver divergência aberta, o aviso no topo fica laranja e o agente do Dano opera sob o Contrato (card Aplicação).", telas:[
  {id:"TOKENS", nome:"Tipografia e cores", itens:[
@@ -541,7 +541,7 @@ const DATA = [
   ["D4 · Contato direto","Adoção SEM botão “Tenho interesse”/intermediação: o interessado vê os contatos do anunciante e fala direto. ATENÇÃO: o Handoff de Adoção §3.4 ainda descreve o botão — vale D4 (decisão mais recente); atualizar o Handoff.","tar"],
   ["D3 · Selo profissional automático","AUTOMÁTICO na autodeclaração — sem análise de documentos, sem fila. Eventos com os nomes OFICIAIS: professional_badge_started e professional_badge_activated (renomeados em 31/07).","tar"],
   ["D14 · Redirect direto · A DOCUMENTAR","Sem escopo definido — aplicado ao pé da letra apaga T-030, T-034 e T-036, telas aprovadas. NÃO implementar até sair a lista de quais fluxos redirecionam.","tar"],
-  ["D1 · Duas entradas · A DOCUMENTAR","Não implementável como está: falta registrar QUAIS são as duas entradas reativadas. Aguardar especificação.","tar"],
+  ["D1 · Micro-ações reativadas — RESOLVIDO","As duas entradas de D1 são as micro-ações sociais da T-011: “Vivi isso também” e “Me ajudou” (Responder sempre existiu) — o próprio painel já as registra no card T-011 do Fluxo 3. Implementável; falta só levar a decisão a documento.","tar"],
   ["D11 · Confirmação destrutiva · A DOCUMENTAR","Sem fonte documental. O que existe documentado é outra coisa: ações sensíveis são SOLICITADAS pelo moderador e executadas só pelo admin_internal (Moderação §8). Registrar D11 antes de implementar.","tar"],
   ["T-032-B · Resumo semanal — CORRIGIDO","TRÊS cards agrupados por direção (subiram · desceram · seguiram iguais); a soma dos ITENS (8 áreas do Círculo — não dias) é sempre 8; card sem itens não renderiza. Só gera com as DUAS semanas completas (8/8); fora disso, exibir a copy de borda correspondente (4 variantes aprovadas). Semana fecha domingo.","tar"],
   ["D2 · Selo “Vem do Diário” · A DOCUMENTAR","Mantido por decisão do Léo (aval verbal do advogado). Nenhum documento nomeia o selo nem registra o aval — registrar ambos. T-011-A confirma o post do Diário distinguível no feed.","tar"],
