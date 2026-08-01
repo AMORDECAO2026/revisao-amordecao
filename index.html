@@ -891,7 +891,7 @@ function renderItem(fi,ti,ii,it,ex){
   if(e.impl && e.implPor) badges += `<span class="badge" style="background:var(--verde-esc);color:#fff">✅ IMPLEMENTADO por ${escapeHtml(e.implPor)}${e.implEm?` em ${new Date(e.implEm).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})}`:""}</span> `;
   const nC = (cmts[id]||[]).length;
   div.innerHTML = `
-    <div class="el">${el}</div>
+    <div class="el">${escapeHtml(el)}</div>
     <div class="meio">
       ${badges?`<div>${badges}</div>`:""}
       <div class="copy">${escapeHtml(txt)}</div>
@@ -1096,6 +1096,17 @@ window.exportar = function(tipo){
       });
     });
     if(implDev) out += `## 🚧 A IMPLEMENTAR — textos aprovados que ainda não existem no produto\n\n${implDev}\n`;
+    let regras = "";
+    DATA.forEach((fl,fi)=>{ if(!String(fl.fluxo).startsWith("Regras de implementação")) return;
+      fl.telas.forEach((t,ti)=>{ let l="";
+        t.itens.forEach((it,ii)=>{ const id=uid(fi,ti,ii); if(ocultos.has(id)) return; const e=estado[id];
+          l += `- [${e?.st==="ap"?"x":" "}] **${it[0]}** — ${it[1]}${e?.st==="ap"&&e.revisor?` _(feito por ${e.revisor})_`:""}\n`;
+          (cmts[id]||[]).forEach(c=>{ l+=`  - 💬 ${c.autor}: ${c.texto}\n`; });
+        });
+        if(l) regras += `### ${t.id} — ${t.nome}\n${l}\n`;
+      });
+    });
+    if(regras) out += `## ✅ REGRAS DE IMPLEMENTAÇÃO — checklist do DEV\n\nRegra de leitura: itens com “A DOCUMENTAR” no rótulo NÃO devem ser implementados a partir deste relatório — aguardam registro em documento. Os demais valem como especificação. Marcar Feito no painel ao implementar cada um.\n\n${regras}`;
     nomeArq="instrucoes_dev.md";
   }
   if(tipo==="design"){
@@ -1119,6 +1130,17 @@ window.exportar = function(tipo){
       });
     });
     if(extrasTar) out += `\n## Tarefas criadas no painel\n${extrasTar}`;
+    let fund = "";
+    DATA.forEach((fl,fi)=>{ if(!String(fl.fluxo).startsWith("Fundamentos")) return;
+      fl.telas.forEach((t,ti)=>{ let l="";
+        t.itens.forEach((it,ii)=>{ if((it[2]||"")!=="tar") return; const id=uid(fi,ti,ii); if(ocultos.has(id)) return; const e=estado[id];
+          l += `- [${e?.st==="ap"?"x":" "}] **${it[0]}** — ${it[1]}${e?.st==="ap"&&e.revisor?` _(feito por ${e.revisor})_`:""}\n`;
+          (cmts[id]||[]).forEach(c=>{ l+=`  - 💬 ${c.autor}: ${c.texto}\n`; });
+        });
+        if(l) fund += `\n### ${t.nome}\n${l}`;
+      });
+    });
+    if(fund) out += `\n## Fundamentos visuais — tokens e divergências (Rodrigo corrige na origem)${fund}`;
     nomeArq="tarefas_design.md";
   }
   if(tipo==="juridico"){
@@ -1209,6 +1231,9 @@ document.addEventListener("click", async (ev)=>{
     a.textContent = novo;
   } else alert("Não foi possível renomear (chave de admin inválida?).");
 });
+// Fecho de aba/troca de app: descarrega gravações pendentes do debounce (melhor esforço)
+addEventListener("pagehide", ()=>{ Object.keys(timers).forEach(id=>{ if(timers[id]){ clearTimeout(timers[id]); timers[id]=null; gravarAgora(id); } }); });
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden"){ Object.keys(timers).forEach(id=>{ if(timers[id]){ clearTimeout(timers[id]); timers[id]=null; gravarAgora(id); } }); } });
 function iniciar(){ carregar(); assinar(); }
 if(revisor && papel){
   document.getElementById("quem").innerHTML = `revisando como: <b class="p-${papel}">${escapeHtml(revisor)} (${papel})</b>`;
