@@ -299,7 +299,13 @@ const DATA = [
    ["Seção de notificações","Notificações — Push · E-mail","prop","No Figma chama-se “Privacidade”, mas o conteúdo é notificação. Falta categoria Diário."],
    ["Sair","Sair da conta",""],
    ["Excluir conta","Excluir conta","prop","No Figma está “Deletar a conta”. Proposta pt-BR."],
-   ["Confirmação de exclusão","(modal de confirmação antes de excluir)","gap","O QUE É: o modal que abre ao tocar “Excluir conta”. Precisa de: título, texto dizendo o que se perde (cães cadastrados, Diário, comunidades, posts) e que a ação é definitiva, botão de confirmar e de cancelar. Não existe em documento nenhum — copy a criar do zero, com revisão jurídica leve (LGPD). Proposta inicial: “Excluir sua conta? Seus cães, seu Diário e suas conversas serão apagados de forma definitiva.” + [Excluir de vez] [Cancelar]."]]}
+   ["Confirmação de exclusão","(modal de confirmação antes de excluir)","gap","O QUE É: o modal que abre ao tocar “Excluir conta”. Precisa de: título, texto dizendo o que se perde (cães cadastrados, Diário, comunidades, posts) e que a ação é definitiva, botão de confirmar e de cancelar. Não existe em documento nenhum — copy a criar do zero, com revisão jurídica leve (LGPD). Proposta inicial: “Excluir sua conta? Seus cães, seu Diário e suas conversas serão apagados de forma definitiva.” + [Excluir de vez] [Cancelar]."]]},
+ {id:"T-008", nome:"Home logada · Movimento", node:"731-1423", itens:[
+   ["Abas (segmented control)","Movimento · Comunidades","","Mesma HomeLoggedScreen da T-007, alternância por segmented control. Comentário do Dano (05/08): o estado desabilitado de “Comunidades” aparece verde — conferir a cor de estado com o Rodrigo."],
+   ["Card do Diário","(reusa o card da T-007: resumo de ontem + “E hoje, como ele tá?” + Abrir o Diário)","gap","O QUE É: o card do Diário exibido no feed Movimento. CONFERIR NO FIGMA se é o mesmo componente da T-007 ou variação. O CTR deste card é métrica do Compêndio (ver checklist DEV-6)."],
+   ["Card de marco","Hoje celebramos {n} dias de Diário do {nome} 💚","","Componente que vive nesta tela (ex-frame T-031); copy aprovada no card T-031 do Fluxo 5. Demais marcos: gap no card T-031."],
+   ["Posts das comunidades no feed","({comunidade} · {tempo} — post leva à thread na T-011.1)","gap","O QUE É: como o post de comunidade aparece no feed agregador — precisa do metadado de origem e do caminho para a thread. Copy exata a conferir no Figma (tela nunca teve extração de copy — validar tudo aqui)."],
+   ["Regra da tela","Não recebe post direto — criar conteúdo é sempre pela T-024 (botão +).","","Especificação de Telas, T-008."]]}
 ]},
 {fluxo:"Fluxo 3 — Comunidades", desc:"Uso da comunidade, posts, threads e o ciclo completo de solicitação de comunidade nova.", telas:[
  {id:"T-011", nome:"Comunidade interna", node:"5-164", itens:[
