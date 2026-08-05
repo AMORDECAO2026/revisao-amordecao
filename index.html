@@ -103,6 +103,13 @@
     <button data-f="implok">✅ Implementados</button>
     <a href="https://drive.google.com/drive/folders/1Xmr2VoAeo476945SUvpWEjrO22zfp8Z1?usp=drive_link" target="_blank" rel="noopener" style="border:1px solid var(--borda);border-radius:20px;padding:4px 12px;font-size:12px;text-decoration:none;color:var(--azul);font-weight:700;background:#fff">📁 Documentos do projeto</a>
   </div>
+  <div class="filtros" id="filtrosResp">
+    <span style="font-size:11px;color:#999;font-weight:700;align-self:center">RESPONSÁVEL:</span>
+    <button data-r="todos" class="on">Todos</button>
+    <button data-r="design">🎨 Design <span id="cDesign"></span></button>
+    <button data-r="dev">💻 Tecnologia <span id="cDev"></span></button>
+    <button data-r="produto">📦 Produto <span id="cProd"></span></button>
+  </div>
 </header>
 <div id="semaforo" style="display:none"></div>
 <main id="app"><p style="color:#5F6368">Carregando revisão…</p></main>
@@ -610,6 +617,7 @@ async function adminAcao(acao, alvo){
   return data === true;
 }
 let filtroAtivo = "todas";
+let filtroResp = "todos";
 let filtroTexto = "";
 const app = document.getElementById("app");
 const timers = {};
@@ -789,6 +797,23 @@ function ligarThread(container, id){
 }
 
 // ===== render =====
+// Quem precisa agir neste item AGORA: "design" | "dev" (Tecnologia) | "produto" | "" (nada pendente)
+function respDe(fi, it, e){
+  const tipo = it[2]||"", rot = String(it[0]||"");
+  if(tipo==="jur") return "";
+  if(e?.impl) return e.implPor ? "" : "dev";            // fila 🚧 sem baixa = Tecnologia
+  const done = !!(e?.st);
+  const fluxo = String(DATA[fi]?.fluxo||"");
+  if(fluxo.startsWith("Regras de implementação"))
+    return done ? "" : (rot.includes("A DOCUMENTAR") ? "produto" : "dev");
+  if(fluxo.startsWith("Fundamentos"))
+    return done ? "" : (rot.startsWith("Dano") ? "dev" : "design");
+  if(fi===0)
+    return (done || tipo!=="tar") ? "" : "design";
+  if(done) return e.st==="aj" ? "dev" : "";             // ajustada = Tecnologia aplica DE→PARA
+  return "produto";                                      // sem veredito (inclui gap/prop) = Produto decide/escreve
+}
+function passaResp(fi,it,e){ return filtroResp==="todos" || respDe(fi,it,e)===filtroResp; }
 function passaFiltro(id,it){
   const st = estado[id]?.st || "";
   const tipo = it[2]||"";
@@ -814,10 +839,11 @@ function render(){
       let rendered = 0;
       // Itens da base que ESTE usuário pode ver (admin enxerga os ocultos; o resto não)
       const baseVis = tela.itens.map((it,ii)=>({it,ii})).filter(({ii})=> isAdmin || !ocultos.has(uid(fi,ti,ii)));
-      const visiveis = baseVis.filter(({it,ii})=>passaFiltro(uid(fi,ti,ii),it));
+      const visiveis = baseVis.filter(({it,ii})=>passaFiltro(uid(fi,ti,ii),it) && passaResp(fi,it,estado[uid(fi,ti,ii)]));
       const listaEx = extras[fi+"|"+ti]||[];
       const exPassa = listaEx.filter(ex=>{
         const eX = estado["X|"+ex.id]; const stX = eX?.st || "";
+        if(!passaResp(fi,[ex.rotulo,ex.texto,ex.tipo],eX)) return false;
         if(filtroAtivo==="pend") return !stX;
         if(filtroAtivo==="ap") return stX==="ap";
         if(filtroAtivo==="aj") return stX==="aj";
@@ -827,8 +853,8 @@ function render(){
         return true;
       });
       // Card some quando nada dele é visível para este usuário neste filtro
-      if(filtroAtivo!=="todas" && !visiveis.length && !exPassa.length && !q) return;
-      if(filtroAtivo==="todas" && !q && !baseVis.length && !listaEx.length) return;
+      if((filtroAtivo!=="todas" || filtroResp!=="todos") && !visiveis.length && !exPassa.length && !q) return;
+      if(filtroAtivo==="todas" && filtroResp==="todos" && !q && !baseVis.length && !listaEx.length) return;
       const card = document.createElement("div"); card.className="tela"; card.dataset.key=fi+"-"+ti;
       const s = statsCard(fi,ti);
       const idTela = "TELA|"+fi+"|"+ti;
@@ -844,7 +870,7 @@ function render(){
       ligarThread(notas, idTela);
       card.appendChild(notas);
       const corpo = document.createElement("div"); corpo.className="tela-corpo";
-      (filtroAtivo==="todas" ? baseVis : visiveis).forEach(({it,ii})=>{
+      (filtroAtivo==="todas" && filtroResp==="todos" ? baseVis : visiveis).forEach(({it,ii})=>{
         if(!bate(it[0], it[1])) return;
         rendered++;
         corpo.appendChild(renderItem(fi,ti,ii,it));
@@ -862,7 +888,7 @@ function render(){
         if(ev.target.closest(".bt-notas")){ notas.classList.toggle("aberta"); card.classList.add("aberta"); return; }
         card.classList.toggle("aberta");
       };
-      if(filtroAtivo!=="todas" || q || abertas.has(fi+"-"+ti)) card.classList.add("aberta");
+      if(filtroAtivo!=="todas" || filtroResp!=="todos" || q || abertas.has(fi+"-"+ti)) card.classList.add("aberta");
       sec.appendChild(card);
     });
     if(sec.querySelector(".tela")) app.appendChild(sec);
@@ -889,6 +915,8 @@ function renderItem(fi,ti,ii,it,ex){
   }
   if(e.impl && !e.implPor) badges += `<span class="badge" style="background:var(--laranja);color:#fff">🚧 A IMPLEMENTAR — na fila do dev</span> `;
   if(e.impl && e.implPor) badges += `<span class="badge" style="background:var(--verde-esc);color:#fff">✅ IMPLEMENTADO por ${escapeHtml(e.implPor)}${e.implEm?` em ${new Date(e.implEm).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})}`:""}</span> `;
+  const rsp = respDe(fi, it, e);
+  if(rsp) badges += `<span class="badge" style="background:${rsp==="design"?"var(--azul)":rsp==="dev"?"var(--laranja)":"#7B1FA2"};color:#fff">⏳ ${rsp==="design"?"DESIGN":rsp==="dev"?"TECNOLOGIA":"PRODUTO"}</span> `;
   const nC = (cmts[id]||[]).length;
   div.innerHTML = `
     <div class="el">${escapeHtml(el)}</div>
@@ -1013,6 +1041,16 @@ function atualizarContadores(){
   document.getElementById("nPe").textContent=tot-ap-aj;
   document.getElementById("prog").textContent=(ap+aj)+" / "+tot;
   document.getElementById("barra").style.width = tot? (100*(ap+aj)/tot)+"%" : "0%";
+  let rD=0,rV=0,rP=0;
+  const conta = (r)=>{ if(r==="design")rD++; else if(r==="dev")rV++; else if(r==="produto")rP++; };
+  DATA.forEach((fl,fi)=>fl.telas.forEach((t,ti)=>t.itens.forEach((it,ii)=>{
+    const id=uid(fi,ti,ii); if(ocultos.has(id)) return;
+    conta(respDe(fi,it,estado[id]));
+  })));
+  Object.entries(extras).forEach(([ck,lista])=>{ const fx=+ck.split("|")[0];
+    lista.forEach(x=>conta(respDe(fx,[x.rotulo,x.texto,x.tipo],estado["X|"+x.id]))); });
+  const setC=(id,n)=>{ const el=document.getElementById(id); if(el) el.textContent = n?`(${n})`:"(0)"; };
+  setC("cDesign",rD); setC("cDev",rV); setC("cProd",rP);
   atualizarSemaforo();
 }
 function atualizarSemaforo(){
@@ -1036,6 +1074,11 @@ document.getElementById("filtros").onclick = (ev)=>{
   const b = ev.target.closest("button"); if(!b) return;
   document.querySelectorAll("#filtros button").forEach(x=>x.classList.remove("on"));
   b.classList.add("on"); filtroAtivo = b.dataset.f; render();
+};
+document.getElementById("filtrosResp").onclick = (ev)=>{
+  const b = ev.target.closest("button"); if(!b) return;
+  document.querySelectorAll("#filtrosResp button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); filtroResp = b.dataset.r; render();
 };
 
 // ===== relatórios =====
