@@ -1134,11 +1134,15 @@ window.exportar = function(tipo){
       });
     });
     if(extrasDev) out += `## Itens criados no painel\n\n${extrasDev}`;
-    let implDev = "";
+    let implDev = "", implTok = "";
     DATA.forEach((fl,fi)=>fl.telas.forEach((t,ti)=>t.itens.forEach((it,ii)=>{
       const id = uid(fi,ti,ii); const e = estado[id];
-      if(e?.impl && !e?.implPor && !ocultos.has(id)){
-        const textoFinal = (e.st==="aj" && (e.novo||"").trim()) ? e.novo.trim() : it[1];
+      if(!(e?.impl && !e?.implPor) || ocultos.has(id)) return;
+      if((it[2]||"")==="tar") return; // tarefas (checklist do DEV, design, higiene do Figma) têm seções próprias — não são strings de UI
+      const textoFinal = (e.st==="aj" && (e.novo||"").trim()) ? e.novo.trim() : it[1];
+      if(String(fl.fluxo).startsWith("Fundamentos")){
+        implTok += `- **${it[0]}** = ${textoFinal}\n`;
+      } else {
         implDev += `- **${t.id} · ${it[0]}** — CRIAR NO PRODUTO (não existe ainda):\n  - TEXTO FINAL: "${textoFinal}"\n`;
       }
     })));
@@ -1147,24 +1151,25 @@ window.exportar = function(tipo){
       const t = DATA[fi]?.telas[ti]; if(!t) return;
       lista.forEach(x=>{
         const e = estado["X|"+x.id];
-        if(e?.impl){
+        if(e?.impl && !e?.implPor && x.tipo!=="tar"){
           const textoFinal = (e.st==="aj" && (e.novo||"").trim()) ? e.novo.trim() : x.texto;
           implDev += `- **${t.id} · ${x.rotulo}** (criado no painel) — CRIAR NO PRODUTO:\n  - TEXTO FINAL: "${textoFinal}"\n`;
         }
       });
     });
+    if(implTok) out += `## 🎨 TOKENS DO TEMA — implementar como CONSTANTES únicas e referenciá-las em todo o app (dar baixa ✔ no painel, item a item)\n\nNÃO são strings de interface: são os valores canônicos de fonte, cor, espaçamento e raio aprovados pelo design. Implementar como tema/constantes; nunca copiar px/hex soltos.\n\n${implTok}\n`;
     if(implDev) out += `## 🚧 A IMPLEMENTAR — textos aprovados que ainda não existem no produto\n\n${implDev}\n`;
     let regras = "";
     DATA.forEach((fl,fi)=>{ if(!String(fl.fluxo).startsWith("Regras de implementação")) return;
       fl.telas.forEach((t,ti)=>{ let l="";
         t.itens.forEach((it,ii)=>{ const id=uid(fi,ti,ii); if(ocultos.has(id)) return; const e=estado[id];
-          l += `- [${e?.st==="ap"?"x":" "}] **${it[0]}** — ${it[1]}${e?.st==="ap"&&e.revisor?` _(feito por ${e.revisor})_`:""}\n`;
+          l += `- [${e?.implPor?"x":" "}] **${it[0]}** — ${it[1]}${e?.implPor?` _(baixa: ${e.implPor})_`:""}\n`;
           (cmts[id]||[]).forEach(c=>{ l+=`  - 💬 ${c.autor}: ${c.texto}\n`; });
         });
         if(l) regras += `### ${t.id} — ${t.nome}\n${l}\n`;
       });
     });
-    if(regras) out += `## ✅ REGRAS DE IMPLEMENTAÇÃO — checklist do DEV\n\nRegra de leitura: itens com “A DOCUMENTAR” no rótulo NÃO devem ser implementados a partir deste relatório — aguardam registro em documento. Os demais valem como especificação. Marcar Feito no painel ao implementar cada um.\n\n${regras}`;
+    if(regras) out += `## ✅ REGRAS DE IMPLEMENTAÇÃO — checklist do DEV\n\nRegra de leitura: [x] = IMPLEMENTADA (baixa ✔ do dev no painel); [ ] = a implementar. O “Feito” que aparece no painel é a validação da regra pelo Produto — NÃO significa implementada. Itens com “A DOCUMENTAR” no rótulo não devem ser implementados a partir deste relatório (aguardam registro em documento); os demais valem como especificação. Dar baixa ✔ no painel ao implementar cada um.\n\n${regras}`;
     nomeArq="instrucoes_dev.md";
   }
   if(tipo==="design"){
