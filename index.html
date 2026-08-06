@@ -1067,10 +1067,19 @@ function atualizarSemaforo(){
   if(!itensD){ el.style.display="none"; return; }
   let abertas = 0;
   itensD.forEach((it,ii)=>{ if(estado[uid(fiD,tiD,ii)]?.st!=="ap") abertas++; });
+  // Tokens (cards TOKENS dos Fundamentos) todos com veredito = valores canônicos travados no painel
+  let tokTot = 0, tokOk = 0;
+  DATA.forEach((fl,fi)=>fl.telas.forEach((t,ti)=>{ if(t.id==="TOKENS") t.itens.forEach((it,ii)=>{ tokTot++; if(estado[uid(fi,ti,ii)]?.st) tokOk++; }); }));
+  const tokensOk = tokTot>0 && tokOk===tokTot;
   el.style.display = "block";
-  if(abertas>0){
+  if(tokensOk){
+    el.className = "sem-ok";
+    el.textContent = abertas>0
+      ? `✓ Tokens aprovados — o painel é a fonte oficial dos valores. Dano: implemente o tema pelas constantes dos cards Fundamentos e dê baixa; o Contrato do Agente segue OBRIGATÓRIO em toda puxada (o Figma ainda tem ${abertas} ajuste${abertas>1?"s":""} de higiene aberto${abertas>1?"s":""} — manutenção do Rodrigo, não bloqueia).`
+      : "✓ Tokens aprovados e Figma sem divergências — pipeline totalmente limpo. Dano: tema pelas constantes do painel, baixa item a item.";
+  } else if(abertas>0){
     el.className = "sem-warn";
-    el.textContent = `⚠ Fonte (Figma) com ${abertas} divergência${abertas>1?"s":""} aberta${abertas>1?"s":""} de ${itensD.length} — telas puxadas do Figma podem sair do padrão. Dano: cole o Contrato do Agente no Claude antes de qualquer puxada (Fundamentos visuais → Aplicação). Ordem: Rodrigo zera a origem → Dano implementa o tema → repuxar as telas afetadas.`;
+    el.textContent = `⚠ Fonte (Figma) com ${abertas} divergência${abertas>1?"s":""} aberta${abertas>1?"s":""} de ${itensD.length} e tokens ainda sem veredito completo (${tokOk}/${tokTot}) — telas puxadas podem sair do padrão. Dano: cole o Contrato do Agente no Claude antes de qualquer puxada (Fundamentos visuais → Aplicação).`;
   } else {
     el.className = "sem-ok";
     el.textContent = "✓ Fonte (Figma) sem divergências abertas — pipeline liberado. Próximo passo: Dano implementa o tema e dá baixa; depois, repuxar as telas afetadas.";
