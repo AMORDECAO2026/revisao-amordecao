@@ -10,7 +10,7 @@
   :root{ --verde:#0F7B6C; --verde-esc:#0A5F53; --pink:#C2185B; --amarelo:#FFD43B; --amarelo-soft:#FFF3BF; --azul:#1976D2; --laranja:#D9730D; --cinza:#787774; --fundo:#F7F6F4; --card:#FFFFFF; --borda:#E9E9E7; --txt:#191919; }
   *{box-sizing:border-box;} body{margin:0;font-family:'Inter',-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:var(--fundo);color:var(--txt);}
   header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:2px solid var(--txt);padding:10px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
-  header h1{font-family:'Source Serif 4',serif;font-size:18px;letter-spacing:-.01em;margin:0;flex:1;min-width:200px;} header h1 small{font-family:'Inter',sans-serif;color:var(--cinza);font-weight:400;display:block;font-size:11px;letter-spacing:0;}
+  header h1{font-family:'Source Serif 4',serif;font-size:18px;letter-spacing:-.01em;margin:0;flex:1;min-width:200px;display:flex;align-items:baseline;gap:7px;} header h1 small{font-family:'Inter',sans-serif;color:var(--cinza);font-weight:400;display:block;font-size:11px;letter-spacing:0;}
   header .lgo{margin-right:6px;} header .lgo mark{background:var(--amarelo);padding:0 7px;border-radius:6px;}
   .fg-item{font-size:12.5px;border-bottom:1px solid var(--borda);padding:9px 0;}
   .fg-h{color:var(--cinza);font-size:10.5px;font-weight:700;margin-right:6px;}
@@ -98,7 +98,7 @@
 </head>
 <body>
 <header>
-  <h1><span class="lgo"><mark>crivo</mark>.</span> Painel de Revisão — Amor de Cão<small>Sincronizado ao vivo para todo o time</small></h1>
+  <h1><span class="lgo"><mark>crivo</mark>.</span><span class="ttl">Painel de Revisão — Amor de Cão<small>Sincronizado ao vivo para todo o time</small></span></h1>
   <span class="conex" id="conex">conectando…</span>
   <div><div class="prog" id="prog">0 / 0</div><div class="bar"><i id="barra"></i></div></div>
   <div class="filtros" id="filtros">
