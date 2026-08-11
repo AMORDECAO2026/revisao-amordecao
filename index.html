@@ -4,26 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel de Revisão — Amor de Cão</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
 <style>
-  :root{ --verde:#7CB342; --verde-esc:#33691E; --pink:#C2185B; --amarelo:#F9A825; --azul:#1976D2; --laranja:#E65100; --cinza:#5F6368; --fundo:#FAFAF7; --card:#FFFFFF; --borda:#E4E4DE; }
-  *{box-sizing:border-box;} body{margin:0;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:var(--fundo);color:#1A1A1A;}
-  header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:2px solid var(--verde);padding:10px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
-  header h1{font-size:17px;margin:0;flex:1;min-width:200px;} header h1 small{color:var(--cinza);font-weight:400;display:block;font-size:11px;}
+  :root{ --verde:#0F7B6C; --verde-esc:#0A5F53; --pink:#C2185B; --amarelo:#FFD43B; --amarelo-soft:#FFF3BF; --azul:#1976D2; --laranja:#D9730D; --cinza:#787774; --fundo:#F7F6F4; --card:#FFFFFF; --borda:#E9E9E7; --txt:#191919; }
+  *{box-sizing:border-box;} body{margin:0;font-family:'Inter',-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:var(--fundo);color:var(--txt);}
+  header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:2px solid var(--txt);padding:10px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+  header h1{font-family:'Source Serif 4',serif;font-size:18px;letter-spacing:-.01em;margin:0;flex:1;min-width:200px;} header h1 small{font-family:'Inter',sans-serif;color:var(--cinza);font-weight:400;display:block;font-size:11px;letter-spacing:0;}
+  header .lgo{margin-right:6px;} header .lgo mark{background:var(--amarelo);padding:0 7px;border-radius:6px;}
+  .fg-item{font-size:12.5px;border-bottom:1px solid var(--borda);padding:9px 0;}
+  .fg-h{color:var(--cinza);font-size:10.5px;font-weight:700;margin-right:6px;}
+  .fg-novo{background:var(--amarelo);color:var(--txt);font-size:9.5px;font-weight:800;border-radius:4px;padding:1px 6px;margin-right:6px;}
+  .fg-ir{margin-top:5px;border:1px solid var(--borda);background:#fff;border-radius:6px;font-size:11px;font-weight:700;padding:3px 9px;cursor:pointer;color:var(--txt);}
+  .fg-ir:hover{background:var(--amarelo-soft);}
   .conex{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;background:#EEE;color:var(--cinza);}
-  .conex.on{background:#E6F4D9;color:var(--verde-esc);}
-  .prog{font-size:13px;font-weight:700;color:var(--verde-esc);white-space:nowrap;}
-  .bar{height:6px;background:#eee;border-radius:3px;width:140px;overflow:hidden;} .bar i{display:block;height:100%;background:var(--verde);width:0%;transition:width .3s;}
+  .conex.on{background:var(--amarelo-soft);color:#7A5D00;}
+  .prog{font-size:13px;font-weight:700;color:var(--txt);white-space:nowrap;}
+  .bar{height:6px;background:#E9E9E7;border-radius:3px;width:140px;overflow:hidden;} .bar i{display:block;height:100%;background:var(--amarelo);width:0%;transition:width .3s;}
   .filtros{display:flex;gap:6px;flex-wrap:wrap;}
   .filtros button{border:1px solid var(--borda);background:#fff;border-radius:20px;padding:4px 12px;font-size:12px;cursor:pointer;}
   .filtros button.on{background:#1A1A1A;color:#fff;border-color:#1A1A1A;}
   main{max-width:980px;margin:0 auto;padding:16px 20px 130px;}
-  .fluxo{margin-top:26px;} .fluxo>h2{font-size:20px;border-left:5px solid var(--verde);padding-left:10px;margin:0 0 4px;}
-  .fluxo.f-design>h2{border-color:var(--azul);}
+  .fluxo{margin-top:30px;} .fluxo>h2{font-family:'Source Serif 4',serif;font-size:22px;letter-spacing:-.01em;border-left:5px solid var(--amarelo);padding-left:10px;margin:0 0 4px;}
+  .fluxo.f-design>h2{border-color:var(--txt);}
   .fluxo>p{margin:0 0 12px 15px;color:var(--cinza);font-size:13px;}
   .tela{background:var(--card);border:1px solid var(--borda);border-radius:12px;margin-bottom:14px;overflow:hidden;}
   .tela-h{display:flex;align-items:center;gap:8px;padding:12px 14px;cursor:pointer;user-select:none;flex-wrap:wrap;}
   .tela-h:hover{background:#F5F5F0;}
-  .tela-h .tid{background:var(--verde-esc);color:#fff;font-size:11px;font-weight:700;border-radius:6px;padding:3px 8px;white-space:nowrap;}
+  .tela-h .tid{background:var(--txt);color:#fff;font-size:11px;font-weight:700;border-radius:6px;padding:3px 8px;white-space:nowrap;}
   .tela-h .tnome{font-weight:700;font-size:14px;flex:1;min-width:140px;}
   .tela-h .tstat{font-size:11px;color:var(--cinza);white-space:nowrap;}
   .tela-h .seta{transition:transform .2s;color:var(--cinza);} .tela.aberta .seta{transform:rotate(90deg);}
@@ -36,14 +44,14 @@
   .notas-tela h4{margin:0 0 6px;font-size:12px;color:var(--azul);}
   .item{display:flex;gap:12px;padding:10px 16px;border-bottom:1px solid #F0F0EA;align-items:flex-start;}
   .item:last-child{border-bottom:none;}
-  .item.ap{background:#F3FAEC;} .item.aj{background:#FFF8E8;}
+  .item.ap{background:#F4F4F0;} .item.aj{background:#FFF9E0;}
   .el{width:145px;flex-shrink:0;font-size:11px;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.02em;padding-top:4px;}
   .meio{flex:1;min-width:0;}
   .copy{font-size:14px;line-height:1.45;background:#F7F7F2;border:1px solid #ECECE4;border-radius:8px;padding:8px 12px;white-space:pre-wrap;}
   .item.jur .copy{border-left:4px solid var(--pink);}
   .item.gap .copy{border-style:dashed;color:var(--cinza);font-style:italic;}
   .badge{display:inline-block;font-size:10px;font-weight:800;border-radius:4px;padding:2px 6px;margin-bottom:4px;letter-spacing:.03em;}
-  .bd-jur{background:var(--pink);color:#fff;} .bd-gap{background:var(--amarelo);color:#fff;} .bd-obs{background:#E8EAF6;color:#3949AB;}
+  .bd-jur{background:var(--pink);color:#fff;} .bd-gap{background:var(--amarelo);color:var(--txt);} .bd-obs{background:#EFEFEA;color:#55534E;}
   .bd-quem{background:#ECEFF1;color:#37474F;font-weight:700;}
   .nota{font-size:11.5px;color:var(--cinza);margin-top:4px;}
   .edit{display:none;margin-top:8px;}
@@ -63,8 +71,8 @@
   .cmt-prev .pv b{cursor:pointer;color:var(--pink);margin-left:4px;}
   .btns{display:flex;flex-direction:column;gap:6px;flex-shrink:0;padding-top:2px;}
   .btns button{width:96px;border-radius:8px;border:1px solid var(--borda);background:#fff;padding:7px 0;font-size:12px;font-weight:700;cursor:pointer;}
-  .btns .b-ap.on{background:var(--verde);border-color:var(--verde);color:#fff;}
-  .btns .b-aj.on{background:var(--amarelo);border-color:var(--amarelo);color:#fff;}
+  .btns .b-ap.on{background:var(--txt);border-color:var(--txt);color:#fff;}
+  .btns .b-aj.on{background:var(--amarelo);border-color:var(--txt);color:var(--txt);}
   .btns .b-x{color:var(--cinza);font-weight:400;}
   .lock{font-size:11px;color:var(--pink);font-weight:700;width:96px;text-align:center;padding-top:6px;}
   .p-CEO{color:var(--pink);} .p-Copy{color:var(--verde-esc);} .p-Design{color:var(--azul);} .p-Dev{color:var(--laranja);}
@@ -81,16 +89,16 @@
   #login .l-c{padding:22px;}
   #login h2{margin:0 0 4px;font-size:18px;} #login p{margin:0 0 14px;color:var(--cinza);font-size:13px;}
   #login input,#login select{width:100%;font:inherit;font-size:14px;padding:10px;border:1px solid var(--borda);border-radius:8px;margin-bottom:10px;}
-  #login button{width:100%;background:var(--verde);color:#fff;border:none;border-radius:8px;padding:11px;font-size:14px;font-weight:800;cursor:pointer;}
+  #login button{width:100%;background:var(--amarelo);color:var(--txt);border:1.5px solid var(--txt);border-radius:10px;padding:11px;font-size:14px;font-weight:800;cursor:pointer;}
   #semaforo{padding:10px 20px;font-size:13px;font-weight:700;}
   #semaforo.sem-warn{background:#FFF3E0;color:#B26A00;border-bottom:2px solid var(--laranja);}
-  #semaforo.sem-ok{background:#E6F4D9;color:var(--verde-esc);border-bottom:2px solid var(--verde);}
+  #semaforo.sem-ok{background:#E8F2EF;color:var(--verde-esc);border-bottom:2px solid var(--verde);}
   @media(max-width:640px){ .item{flex-direction:column;gap:6px;} .el{width:auto;} .btns{flex-direction:row;} }
 </style>
 </head>
 <body>
 <header>
-  <h1>Painel de Revisão — Amor de Cão<small>Copy + tarefas de design · sincronizado ao vivo para todo o time</small></h1>
+  <h1><span class="lgo"><mark>crivo</mark>.</span> Painel de Revisão — Amor de Cão<small>Copy + tarefas de design · sincronizado ao vivo para todo o time</small></h1>
   <span class="conex" id="conex">conectando…</span>
   <div><div class="prog" id="prog">0 / 0</div><div class="bar"><i id="barra"></i></div></div>
   <div class="filtros" id="filtros">
@@ -120,16 +128,18 @@
   <span id="quem" style="color:#BBB;font-size:12px"></span>
   <span class="sp"></span>
   <button id="btnAdmin" style="background:#3a3a3a;color:#bbb">🔑</button>
-  <button style="background:var(--laranja);color:#fff" onclick="exportar('dev')">📋 DEV</button>
-  <button style="background:var(--azul);color:#fff" onclick="exportar('design')">🎨 DESIGN</button>
-  <button style="background:var(--pink);color:#fff" onclick="exportar('juridico')">⚖️ JURÍDICO</button>
+  <button style="background:#3a3a3a;color:#fff" onclick="verFigma()">🗨 Figma</button>
+  <button style="background:var(--amarelo);color:#191919" onclick="exportar('dev')">📋 DEV</button>
+  <button style="background:#fff;color:#191919" onclick="exportar('design')">🎨 DESIGN</button>
+  <button style="background:#787774;color:#fff" onclick="exportar('juridico')">⚖️ JURÍDICO</button>
+  <span style="color:#888;font-size:11px">feito com <b style="background:var(--amarelo);color:#191919;padding:0 5px;border-radius:4px">crivo</b>.</span>
 </footer>
 <dialog id="dlg">
   <div class="d-h"><b id="dlgT">Relatório</b><button onclick="document.getElementById('dlg').close()">✕</button></div>
   <pre id="dlgPre"></pre>
   <div class="d-f">
     <button style="background:#EEE" onclick="baixarTxt()">Baixar .md</button>
-    <button style="background:#7CB342;color:#fff" onclick="copiarTxt()">Copiar tudo</button>
+    <button style="background:#FFD43B;color:#191919" onclick="copiarTxt()">Copiar tudo</button>
   </div>
 </dialog>
 <dialog id="mover" style="border:none;border-radius:12px;max-width:420px;width:92%;padding:0">
@@ -141,6 +151,10 @@
       <button id="moverOk" style="border:none;background:var(--verde);color:#fff;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer">Mover</button>
     </div>
   </div>
+</dialog>
+<dialog id="dlgFig" style="max-width:640px;width:94%;padding:0;border:none;border-radius:12px">
+  <div class="d-h"><b>🗨 Comentários do Figma — mais recentes primeiro</b><button onclick="document.getElementById('dlgFig').close()">✕</button></div>
+  <div id="figLista" style="max-height:62vh;overflow:auto;padding:10px 16px"></div>
 </dialog>
 <dialog id="login">
   <div class="l-c">
@@ -1119,6 +1133,28 @@ document.getElementById("filtrosResp").onclick = (ev)=>{
   const b = ev.target.closest("button"); if(!b) return;
   document.querySelectorAll("#filtrosResp button").forEach(x=>x.classList.remove("on"));
   b.classList.add("on"); filtroResp = b.dataset.r; render();
+};
+
+// ===== feed cronológico dos comentários do Figma (lente — a casa continua sendo a thread do card) =====
+window.verFigma = function(){
+  const lista = [];
+  Object.entries(cmts).forEach(([id, arr])=>arr.forEach(c=>{ if(c.papel==="Figma") lista.push({id, c}); }));
+  lista.sort((a,b)=>String(b.c.hora).localeCompare(String(a.c.hora)));
+  const nomeDe = (id)=>{ const p=id.split("|"); const fi=+(p[0]==="TELA"?p[1]:p[0]), ti=+(p[0]==="TELA"?p[2]:p[1]); const t=DATA[fi]?.telas?.[ti]; return t?{rot:t.id+" · "+t.nome, fi, ti}:null; };
+  const box = document.getElementById("figLista");
+  box.innerHTML = lista.map(({id,c})=>{
+    const n = nomeDe(id);
+    const h = new Date(c.hora).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+    const novo = (Date.now()-new Date(c.hora).getTime()) < 48*3600*1000 ? '<span class="fg-novo">NOVO</span>' : '';
+    return `<div class="fg-item">${novo}<span class="fg-h">${h}</span>${escapeHtml(c.texto)}<br><button class="fg-ir" data-fi="${n?n.fi:''}" data-ti="${n?n.ti:''}">↦ ${n?escapeHtml(n.rot.length>64?n.rot.slice(0,62)+"…":n.rot):"(card não encontrado)"}</button></div>`;
+  }).join("") || "<p style='color:var(--cinza);font-size:13px'>Nenhum comentário do Figma ainda.</p>";
+  box.querySelectorAll(".fg-ir").forEach(b=>b.onclick=()=>{
+    document.getElementById("dlgFig").close();
+    const card = document.querySelector(`.tela[data-key="${b.dataset.fi}-${b.dataset.ti}"]`);
+    if(card){ card.classList.add("aberta"); card.scrollIntoView({behavior:"smooth", block:"start"}); }
+    else alert("O card está fora do filtro atual — volte para “Todas” e tente de novo.");
+  });
+  document.getElementById("dlgFig").showModal();
 };
 
 // ===== relatórios =====
