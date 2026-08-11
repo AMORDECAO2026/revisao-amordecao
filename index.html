@@ -210,7 +210,7 @@ const DATA = [
    ["Título","Digite o código",""],
    ["Apoio","Enviamos um código para {telefone}",""],
    ["Timer","Reenviar em {mm:ss}",""],
-   ["Erro","Código inválido. Tente novamente.",""],
+   ["Erro →","Movida para Mensagens do sistema · SIS-2 Erros.","","Re-hospedada com veredito e conversa preservados. Aprovar/editar LÁ — este marcador só preserva a numeração técnica dos itens abaixo."],
    ["Link pós-timer","Reenviar código","gap","O QUE É: quando o timer “Reenviar em 00:45” zera, ele vira um link clicável — este é o texto desse link. A sugestão “Reenviar código” já resolve; é só aprovar ou ajustar."],
    ["Botão de confirmação","Confirmar","gap","O QUE É: o botão pink abaixo da grade de dígitos, que habilita quando o código está completo. A spec prevê o botão mas ninguém definiu o rótulo. “Confirmar” é a sugestão; aprovar ou ajustar."]]},
  {id:"T-004", nome:"Identificação de perfil", node:"1-300", itens:[
@@ -283,8 +283,7 @@ const DATA = [
    ["Filtros","Todos ({n}) · Comunidades ({n}) · Adoção",""],
    ["Filtro Diário","Diário","gap","O QUE É: a notificação âncora do Diário precisa de categoria PRÓPRIA, com opt-out — exigência da Régua de Linguagem. Isso pede duas strings: esta aba de filtro na T-014 e o toggle correspondente em G-001. O rótulo “Diário” já resolve as duas; aprovar. FONTE: Compêndio do Diário, seção “Notificação âncora”."],
    ["Grupos","Hoje · Ontem · Esta semana · não lidas ({n})",""],
-   ["Fórmula","{nome} respondeu ao seu post em {comunidade}\n{nome} respondeu ao seu comentário em {comunidade}","","Regência unificada (“ao seu”)."],
-   ["Estado vazio","Por enquanto, nada por aqui.","prop","O QUE É: o que a central mostra quando o usuário não tem notificação nenhuma (usuário novo ou tudo lido). A frase ao lado é proposta minha — aprovar ou ajustar."]]},
+   ["Fórmula","{nome} respondeu ao seu post em {comunidade}\n{nome} respondeu ao seu comentário em {comunidade}","","Regência unificada (“ao seu”)."]]},
  {id:"SELOS", nome:"Copy do sistema de selos (Tese Operacional, Bloco 2)", itens:[
    ["Identificação (Camada 1)","Tutor · Adotante · Profissional · ONG","","Rótulos oficiais da Tese, escolhidos no cadastro (T-004)."],
    ["Profissões verificadas","Veterinário · Adestrador · Comportamentalista · Nutricionista canino · Criador responsável · Tosador · Pet sitter · Hotel canino · Hospedagem PetFriendly · Creche canina · Dog walker · Pet shop · Agência canina","","Substituem “Profissional” após verificação. Lista pode crescer."],
@@ -298,8 +297,7 @@ const DATA = [
    ["Seções","Conta (E-mail · Senha · Método de login) · Meus cães · Sobre (Termos de uso · Política de privacidade)",""],
    ["Seção de notificações","Notificações — Push · E-mail","prop","No Figma chama-se “Privacidade”, mas o conteúdo é notificação. Falta categoria Diário."],
    ["Sair","Sair da conta",""],
-   ["Excluir conta","Excluir conta","prop","No Figma está “Deletar a conta”. Proposta pt-BR."],
-   ["Confirmação de exclusão","(modal de confirmação antes de excluir)","gap","O QUE É: o modal que abre ao tocar “Excluir conta”. Precisa de: título, texto dizendo o que se perde (cães cadastrados, Diário, comunidades, posts) e que a ação é definitiva, botão de confirmar e de cancelar. Não existe em documento nenhum — copy a criar do zero, com revisão jurídica leve (LGPD). Proposta inicial: “Excluir sua conta? Seus cães, seu Diário e suas conversas serão apagados de forma definitiva.” + [Excluir de vez] [Cancelar]."]]},
+   ["Excluir conta","Excluir conta","prop","No Figma está “Deletar a conta”. Proposta pt-BR."]]},
  {id:"T-008", nome:"Home logada · Movimento", node:"731-1423", itens:[
    ["Abas (segmented control)","Movimento · Comunidades","","Mesma HomeLoggedScreen da T-007, alternância por segmented control. Comentário do Dano (05/08): o estado desabilitado de “Comunidades” aparece verde — conferir a cor de estado com o Rodrigo."],
    ["Card do Diário","(reusa o card da T-007: resumo de ontem + “E hoje, como ele tá?” + Abrir o Diário)","gap","O QUE É: o card do Diário exibido no feed Movimento. CONFERIR NO FIGMA se é o mesmo componente da T-007 ou variação. O CTR deste card é métrica do Compêndio (ver checklist DEV-6)."],
@@ -320,8 +318,7 @@ const DATA = [
  {id:"T-011.1", nome:"Detalhe do post (thread) — variantes A e B", node:"285-341", itens:[
    ["Header","Post na comunidade · {comunidade}",""],
    ["Campo de comentário","Conte como foi a sua experiência",""],
-   ["Responder resposta","@{usuario} (pré-preenchido no campo)",""],
-   ["Estado vazio","Sem respostas ainda",""]]},
+   ["Responder resposta","@{usuario} (pré-preenchido no campo)",""]]},
  {id:"T-024", nome:"Criar (botão +)", node:"682-861", itens:[
    ["Título","Escolha o que você quer fazer agora",""],
    ["Opções","Criar um post — Compartilhe um momento ou uma dúvida.\nCadastrar cão para adoção — Encontre um lar pra um cão que precisa.\nSolicitar criação de comunidade — Proponha uma nova comunidade no app.",""]]},
@@ -367,8 +364,7 @@ const DATA = [
    ["Header","Cães para adoção · {n} cães disponíveis",""],
    ["Seções","Perto de você · Cães disponíveis",""],
    ["CTA do rodapé","Tem um cão para adoção?\nAjude a encontrar um lar cheio de amor.\n[Cadastrar cão para adoção]",""],
-   ["Badge adotado","Adotado","prop","O Handoff prevê a MARCAÇÃO “adotado” (evento cao_marcado_adotado) — o badge VISUAL é decisão nova, a documentar (checklist DEV-2). Não existe no Figma."],
-   ["Estado vazio (filtros)","Nenhum cão encontrado com esses filtros. Tente ampliar a busca.","prop","Não existe no Figma. Proposta."]]},
+   ["Badge adotado","Adotado","prop","O Handoff prevê a MARCAÇÃO “adotado” (evento cao_marcado_adotado) — o badge VISUAL é decisão nova, a documentar (checklist DEV-2). Não existe no Figma."]]},
  {id:"T-017", nome:"Filtros de adoção", node:"13-634", itens:[
    ["Busca","Buscar por raça, porte...",""],
    ["Sexo","Macho · Fêmea · Tanto faz",""],
@@ -409,8 +405,7 @@ const DATA = [
    ["Pós-registro","Dia registrado",""],
    ["Marcos na tela","{n} dias de Diário com o {nome}\nO marco dos 30 dias tá chegando. Bonito de ver.",""],
    ["Links","Ver histórico · Círculo da semana",""],
-   ["Estado sem cão","Cadastre um cão para começar o Diário. [Adicionar um cão]","prop","Handoff prevê; texto não existe."],
-   ["Erro ao salvar","Não conseguimos salvar. Sua marcação foi mantida — tente de novo.","prop","Retry está documentado só para o histórico (T-028); para o registro (T-026) é decisão nova — ver item “Erro ao salvar” no checklist DEV. Texto não existe no Figma."]]},
+   ["Estado sem cão","Cadastre um cão para começar o Diário. [Adicionar um cão]","prop","Handoff prevê; texto não existe."]]},
  {id:"Leituras", nome:"Leituras automáticas v2 — 16 estados (Régua revisada e aprovada em 29/07/2026)", itens:[
    ["Status jurídico","APROVADA: o advogado revisou a v2 completa (16 estados) — pronta para implementação. Confirmado pelo Léo em 29/07/2026.","","Registrar o aval por escrito na Régua (a linha “aprovada pelo advogado” saiu do texto na revisão)."],
    ["E0 — Sem registro","Como foi o dia do [nome]?","","Substitui a instrução antiga “Toque nos sinais pra registrar…”."],
@@ -447,7 +442,7 @@ const DATA = [
    ["Resumos por dia (formato v2)","{resumo} — {atenção/ok/grave} / {ok} / {ok} — ex.: “comeu menos — atenção / ok / ok”","prop","Formato novo do Handoff v2: resumo + os 3 indicadores em linha, ordem comida · energia · cocô."],
    ["Demais resumos por sinal","(não comeu / mais quieto / apático / cocô diferente / não vi…)","gap","O QUE É: a frase curta de cada dia no Histórico. O padrão já existe para um caso: “Comeu menos do que o normal”. FALTA: a frase equivalente para cada opção restante dos 3 sinais (não comeu, mais quieto, apático, cocô diferente, não vi) e a regra para dia com mais de um sinal alterado. TRAVA: espelhar o registro, sem inferência (“Não comeu” ok; “ficou doente” proibido). FONTE: Handoff DEV Diário, seção D-009, com exemplo do formato “comeu menos — atenção / ok / ok”. ATENÇÃO: o sinal cocô usa Firme/Mole/Líquido — já DECIDIDO na Régua §1 (líquido gera padrão vermelho); os resumos seguem essas opções, e “não vi” deixa de existir."],
    ["Legenda","ok · atenção · grave (ordem: comida · energia · cocô)","gap","O QUE É: a legenda fixa no topo do Histórico que ensina a ler os 3 indicadores de cada dia — os rótulos dos níveis (ok / atenção / grave) e a ordem fixa dos sinais (comida · energia · cocô). A copy já está praticamente definida no doc; falta só aprovar como strings de interface. FONTE: Handoff DEV Diário, seção D-009."],
-   ["Dia sem registro","Sem registro neste dia","prop","Doc: esmaecido, “nunca como falha”."],
+   ["Dia sem registro →","Movida para Mensagens do sistema · SIS-3 Estados vazios.","","Re-hospedada com veredito e conversa preservados. Aprovar/editar LÁ — este marcador só preserva a numeração dos itens abaixo."],
    ["CTA","Ver mais registros",""]]},
  {id:"T-031", nome:"Marcos — modal (T-031) + card na T-008 Movimento", node:"731-1680", itens:[
    ["Modal do marco","100 dias de diário — {nome}\nVocê acompanhou o {nome} por 100 dias seguidos. Isso é presença de verdade.\n78 dias tranquilos — De 100 registros com tudo bem\n[Compartilhar agora] [Fechar]",""],
@@ -474,12 +469,6 @@ const DATA = [
    ["Borda — semana anterior pulada","A semana passada ficou em branco, então não dá pra comparar. Essa aqui vira seu novo ponto de partida.",""],
    ["Borda — semana anterior incompleta","A semana passada ficou pela metade, então não dá pra comparar. Essa aqui vira seu novo ponto de partida.","prop","A DEFINIR — único texto da seção ainda SEM aprovação do Thiago (criado porque “ficou em branco” seria falso numa semana parcial). Aprovar ou ajustar aqui mesmo."],
    ["Trava de linguagem","PROIBIDO nesta seção: atribuir causa (“você registrou mais atividades positivas”) · personificar a dimensão (“Ambiente pediu mais atenção”) · prescrever conduta (“continue com a mesma constância”).","","Os três exemplos são do mockup atual e viraram proibição no documento — dev não repetir. O sistema espelha e conta, nunca interpreta."]]},
- {id:"Push", nome:"Notificações do sistema", itens:[
-   ["Âncora do Diário","Como foi o dia do {nome} hoje?","","1×/dia, categoria Diário, opt-out. Nunca “você não registrou”."],
-   ["Marco","(tom de celebração — uma por marco)","gap","O QUE É: a push opcional que avisa o marco no dia (categoria Diário, respeita opt-out). Uma frase por marco, tom de celebração — pode derivar da copy do modal de cada marco (item “Copies dos demais marcos”, card T-031). Nunca dispara para cão em memorial. FONTE: Compêndio, D-005 (“notificação opcional de marco, tom de celebração”)."],
-   ["Lembrete do Círculo","(suave, semanal, opt-out — nunca cobrança)","gap","O QUE É: a push semanal, no fecho de semana, convidando a preencher o Círculo. TRAVA: convite, nunca cobrança (“lembrete que gera culpa é veneno e produz desinstalação” — Compêndio). Proposta de partida: “Como foi a semana de vocês? O círculo do [nome] tá esperando.” FONTE: Compêndio, D-006 / T-032-A."],
-   ["Ciclo de solicitação","aprovada · não aprovada · precisa de ajustes (app + e-mail)","gap","O QUE É: as 3 notificações (app + e-mail cada) do ciclo de solicitação de comunidade. O CONTEÚDO de cada uma já está definido no doc — aprovada: comunica aprovação + próximo passo de 30 novos membros em 30 dias; não aprovada: motivo + pode reapresentar após 30 dias; ajustes: o pedido específico da curadoria. FALTA só redigir as frases finais. FONTE: “Abertura de Nova Comunidade”, tabela do Passo 8."],
-   ["Comunidade ativada","(atingiu 30 novos membros)","gap","O QUE É: a push ao fundador quando a comunidade atinge 30 novos membros e ativa sozinha. Par da tela T-036 (“Comunidade ativada! Parabéns…”) — a push pode ser a versão de uma linha da mesma copy. ATENÇÃO: o doc prevê notificação na DECISÃO da curadoria; a push na ATIVAÇÃO é decisão nova, a documentar (ver item Ativação no checklist DEV-4)."]]}
 ]},
 {fluxo:"Fundamentos visuais — tokens (QA global)", cls:"f-design", desc:"Valores canônicos extraídos do Figma. ORDEM OBRIGATÓRIA: 1º Rodrigo zera as divergências na origem (card abaixo) → 2º Dano implementa o tema como constantes e dá baixa → 3º repuxar as telas já afetadas. Enquanto houver divergência aberta, o aviso no topo fica laranja e o agente do Dano opera sob o Contrato (card Aplicação).", telas:[
  {id:"TOKENS", nome:"Tipografia e cores", itens:[
@@ -594,6 +583,42 @@ const DATA = [
   ["2 · Nome do evento do selo","O Plano de Métricas usa professional_badge_completed (tabela Fase 1) E professional_badge_activated (lista canônica de eventos) para a mesma coisa. Recomendação: travar _activated — é o que está na lista que o dev copia e no Handoff de Adoção.","tar"],
   ["3 · Taxa de resposta na adoção","Plano de Métricas lista adocao_resposta_responsavel como métrica mensal × Handoff de Adoção §12: “não é mensurável e não deve constar de nenhum painel” (contato ocorre fora do app). Regra de adoção é do Handoff → retirar do Plano.","tar"],
   ["4 · Métrica-rei do hábito","Compêndio: “fração de registro orgânico” (% de registros) × Plano: % de tutores ativos com 3+ registros orgânicos/semana. Métrica é domínio do Plano → vale o Plano; alinhar o Compêndio.","tar"]]}
+]},
+{fluxo:"Mensagens do sistema — toasts, erros, estados e push", desc:"Casa única das mensagens que o app dispara em qualquer tela, organizadas por natureza (como o dev consome). Itens re-hospedados vieram dos cards de tela COM veredito, assinatura e conversa preservados — os badges dizem o status real. Tudo que começa com PROPOSTA é redação nova aguardando aprovação: nada disso está chancelado.", telas:[
+ {id:"SIS-1", nome:"Toasts de sucesso", itens:[
+  ["Post publicado (toast)","Publicado! Sua pergunta já está na comunidade.","prop","PROPOSTA (redação Claude, aguardando aprovação). Toast de 2–3s ao publicar da T-025/T-029; a T-030 segue como tela de confirmação nos fluxos que a usam."],
+  ["Comentário enviado (toast)","Comentário enviado.","prop","PROPOSTA (aguardando aprovação). Feedback imediato na thread; some sozinho."],
+  ["Anúncio publicado (toast)","Anúncio no ar! O {nome} já aparece na vitrine de adoção.","prop","PROPOSTA (aguardando aprovação). Após publicar na T-021."],
+  ["Alterações salvas (toast)","Alterações salvas.","prop","PROPOSTA (aguardando aprovação). Padrão para edições de perfil, cão e configurações."],
+  ["Cão adicionado (toast)","Prontinho — o {nome} já está no app.","prop","PROPOSTA (aguardando aprovação). Após salvar na T-013.1; tom da marca sem infantilizar."]]},
+ {id:"SIS-2", nome:"Erros", itens:[
+  ["Código OTP inválido","Código inválido. Tente novamente.","","Re-hospedada da T-003.1/.2 — veredito e conversa preservados."],
+  ["Erro ao salvar registro do Diário","Não conseguimos salvar. Sua marcação foi mantida — tente de novo.","prop","Re-hospedada da T-026 (veredito/conversa preservados; estava OCULTA no card de tela — reexibida aqui para a consolidação não nascer com buraco). Retry documentado só para T-028; para T-026 é decisão nova — ver checklist DEV."],
+  ["Sem internet (global)","Você está sem internet. Confira a conexão e tente de novo.","prop","PROPOSTA (aguardando aprovação). Sem promessa de fila offline — comportamento offline não está decidido em documento."],
+  ["Falha ao carregar conteúdo","Não conseguimos carregar. Puxe para atualizar.","prop","PROPOSTA (aguardando aprovação). Feeds e listas."],
+  ["Falha no upload de foto","A foto não subiu. Tente de novo — se seguir falhando, use uma imagem menor.","prop","PROPOSTA (aguardando aprovação). Posts, perfil do cão e anúncio de adoção."],
+  ["Sessão expirada","Sua sessão expirou. Entre de novo para continuar.","prop","PROPOSTA (aguardando aprovação). Redireciona ao login preservando o destino."]]},
+ {id:"SIS-3", nome:"Estados vazios", itens:[
+  ["Notificações — vazio","Por enquanto, nada por aqui.","prop","Re-hospedada da T-014 — veredito e conversa preservados."],
+  ["Thread sem respostas","Sem respostas ainda","","Re-hospedada da T-011.1 — veredito preservado."],
+  ["Adoção — filtros sem resultado","Nenhum cão encontrado com esses filtros. Tente ampliar a busca.","prop","Re-hospedada da T-016 — veredito preservado."],
+  ["Histórico — dia sem registro","Sem registro neste dia","prop","Re-hospedada da T-028 (estava OCULTA no card de tela — reexibida para a consolidação). Doc: esmaecido, nunca como falha."]]},
+ {id:"SIS-4", nome:"Carregamento", itens:[
+  ["Carregando (padrão)","Carregando…","prop","PROPOSTA (aguardando aprovação). Sem frase criativa em loading — velocidade percebida vale mais que graça."],
+  ["Enviando (ação em curso)","Enviando…","prop","PROPOSTA (aguardando aprovação). Botão desabilita e mostra progresso durante envio de post, foto ou anúncio."],
+  ["Primeira carga de feed","(sem texto — skeleton silencioso)","prop","PROPOSTA DE PADRÃO (aguardando aprovação): telas de feed usam skeleton sem frase; texto só se a espera passar de ~5s (aí entra o “Carregando…”)."]]},
+ {id:"SIS-5", nome:"Permissões e confirmações", itens:[
+  ["Excluir conta — modal","(modal de confirmação antes de excluir)","gap","Re-hospedada da G-001 — a copy ajustada/aprovada está no TEXTO NOVO deste item (veredito e conversa preservados). Revisão jurídica leve (LGPD) segue pendente com o advogado."],
+  ["Notificações negadas","Sem notificações, o lembrete do Diário não chega. Você pode ativar nos ajustes do celular.","prop","PROPOSTA (aguardando aprovação). Aparece no contexto (G-001/Diário), nunca como bloqueio."],
+  ["Acesso a fotos negado","Para adicionar fotos, libere o acesso à galeria nos ajustes do celular.","prop","PROPOSTA (aguardando aprovação). Posts, perfil e anúncio."],
+  ["Descartar rascunho — confirmação","Descartar o que você escreveu? [Descartar] [Continuar escrevendo]","prop","PROPOSTA (aguardando aprovação). Ao sair da T-025/T-029 com texto digitado."],
+  ["Sair da conta — confirmação","Sair da conta? [Sair] [Cancelar]","prop","PROPOSTA (aguardando aprovação). G-001."]]},
+ {id:"SIS-6", nome:"Push (notificações do sistema)", itens:[
+  ["Âncora do Diário","Como foi o dia do {nome} hoje?","","Re-hospedada do card Push (Fluxo 5) — veredito preservado. 1×/dia, categoria Diário, opt-out. Nunca “você não registrou”."],
+  ["Marco","(tom de celebração — uma por marco)","gap","Re-hospedada do card Push — a copy aprovada está no TEXTO NOVO. Push opcional do marco no dia (categoria Diário, opt-out); nunca em memorial. FONTE: Compêndio D-005."],
+  ["Lembrete do Círculo","(suave, semanal, opt-out — nunca cobrança)","gap","Re-hospedada do card Push — copy aprovada no TEXTO NOVO. Convite, nunca cobrança (“lembrete que gera culpa é veneno” — Compêndio D-006)."],
+  ["Ciclo de solicitação","aprovada · não aprovada · precisa de ajustes (app + e-mail)","gap","Re-hospedada do card Push — copy aprovada no TEXTO NOVO (pushes e e-mails). FONTE: Abertura de Nova Comunidade, Passo 8."],
+  ["Comunidade ativada","(atingiu 30 novos membros)","gap","Re-hospedada do card Push — copy aprovada no TEXTO NOVO. Par da T-036; push na ATIVAÇÃO é decisão nova — ver item Ativação no checklist DEV-4."]]}
 ]}
 ];
 
