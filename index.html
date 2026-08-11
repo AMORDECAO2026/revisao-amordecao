@@ -98,7 +98,7 @@
 </head>
 <body>
 <header>
-  <h1><span class="lgo"><mark>crivo</mark>.</span> Painel de Revisão — Amor de Cão<small>Copy + tarefas de design · sincronizado ao vivo para todo o time</small></h1>
+  <h1><span class="lgo"><mark>crivo</mark>.</span> Painel de Revisão — Amor de Cão<small>Sincronizado ao vivo para todo o time</small></h1>
   <span class="conex" id="conex">conectando…</span>
   <div><div class="prog" id="prog">0 / 0</div><div class="bar"><i id="barra"></i></div></div>
   <div class="filtros" id="filtros">
@@ -119,7 +119,6 @@
     <button data-r="produto">📦 Produto <span id="cProd"></span></button>
   </div>
 </header>
-<div id="semaforo" style="display:none"></div>
 <main id="app"><p style="color:#5F6368">Carregando revisão…</p></main>
 <footer>
   <span>✅ <span class="f-n" id="nAp">0</span></span>
@@ -131,7 +130,6 @@
   <button style="background:#3a3a3a;color:#fff" onclick="verFigma()">🗨 Figma</button>
   <button style="background:var(--amarelo);color:#191919" onclick="exportar('dev')">📋 DEV</button>
   <button style="background:#fff;color:#191919" onclick="exportar('design')">🎨 DESIGN</button>
-  <button style="background:#787774;color:#fff" onclick="exportar('juridico')">⚖️ JURÍDICO</button>
   <span style="color:#888;font-size:11px">feito com <b style="background:var(--amarelo);color:#191919;padding:0 5px;border-radius:4px">crivo</b>.</span>
 </footer>
 <dialog id="dlg">
@@ -1096,7 +1094,6 @@ function atualizarContadores(){
     lista.forEach(x=>conta(respDe(fx,[x.rotulo,x.texto,x.tipo],estado["X|"+x.id]))); });
   const setC=(id,n)=>{ const el=document.getElementById(id); if(el) el.textContent = n?`(${n})`:"(0)"; };
   setC("cDesign",rD); setC("cDev",rV); setC("cProd",rP);
-  atualizarSemaforo();
 }
 function atualizarSemaforo(){
   const el = document.getElementById("semaforo");
