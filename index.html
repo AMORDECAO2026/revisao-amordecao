@@ -13,8 +13,8 @@
   header h1{font-family:'Source Serif 4',serif;font-size:18px;letter-spacing:-.01em;margin:0;flex:1;min-width:200px;display:flex;align-items:baseline;gap:7px;} header h1 small{font-family:'Inter',sans-serif;color:var(--cinza);font-weight:400;display:block;font-size:11px;letter-spacing:0;}
   header .lgo{margin-right:6px;} header .lgo mark{background:var(--amarelo);padding:0 7px;border-radius:6px;}
   .fg-item{font-size:12.5px;border-bottom:1px solid var(--borda);padding:9px 0;}
-  .fg-h{color:var(--cinza);font-size:10.5px;font-weight:700;margin-right:6px;}
-  .fg-novo{background:var(--amarelo);color:var(--txt);font-size:9.5px;font-weight:800;border-radius:4px;padding:1px 6px;margin-right:6px;}
+  .fg-h{color:var(--cinza);font-size:11px;font-weight:700;margin-right:6px;}
+  .fg-novo{background:var(--amarelo);color:var(--txt);font-size:10.5px;font-weight:800;border-radius:4px;padding:1px 6px;margin-right:6px;}
   .fg-ir{margin-top:5px;border:1px solid var(--borda);background:#fff;border-radius:6px;font-size:11px;font-weight:700;padding:3px 9px;cursor:pointer;color:var(--txt);}
   .fg-ir:hover{background:var(--amarelo-soft);}
   .conex{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;background:#EEE;color:var(--cinza);}
@@ -45,21 +45,21 @@
   .item{display:flex;gap:12px;padding:10px 16px;border-bottom:1px solid #F0F0EA;align-items:flex-start;}
   .item:last-child{border-bottom:none;}
   .item.ap{background:#F4F4F0;} .item.aj{background:#FFF9E0;}
-  .el{width:145px;flex-shrink:0;font-size:11px;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.02em;padding-top:4px;}
+  .el{width:145px;flex-shrink:0;font-size:11.5px;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.02em;padding-top:4px;}
   .meio{flex:1;min-width:0;}
   .copy{font-size:14px;line-height:1.45;background:#F7F7F2;border:1px solid #ECECE4;border-radius:8px;padding:8px 12px;white-space:pre-wrap;}
   .item.jur .copy{border-left:4px solid var(--pink);}
   .item.gap .copy{border-style:dashed;color:var(--cinza);font-style:italic;}
-  .badge{display:inline-block;font-size:10px;font-weight:800;border-radius:4px;padding:2px 6px;margin-bottom:4px;letter-spacing:.03em;}
+  .badge{display:inline-block;font-size:10.5px;font-weight:700;border-radius:4px;padding:2px 6px;margin-bottom:4px;letter-spacing:.02em;}
   .bd-jur{background:var(--pink);color:#fff;} .bd-gap{background:var(--amarelo);color:var(--txt);} .bd-obs{background:#EFEFEA;color:#55534E;}
   .bd-quem{background:#ECEFF1;color:#37474F;font-weight:700;}
-  .nota{font-size:11.5px;color:var(--cinza);margin-top:4px;}
+  .nota{font-size:12px;color:var(--cinza);margin-top:4px;}
   .edit{display:none;margin-top:8px;}
   .item.editando .edit{display:block;}
   .edit textarea{width:100%;min-height:60px;font:inherit;font-size:14px;padding:8px 10px;border:2px solid var(--amarelo);border-radius:8px;background:#fff;}
   .thread{margin-top:8px;}
   .cmt{font-size:12.5px;background:#fff;border:1px solid var(--borda);border-radius:8px;padding:6px 10px;margin-bottom:4px;}
-  .cmt b{font-size:11px;} .cmt .hora{color:var(--cinza);font-size:10px;margin-left:6px;}
+  .cmt b{font-size:11.5px;} .cmt .hora{color:var(--cinza);font-size:11px;margin-left:6px;}
   .cmt-form{display:flex;gap:6px;margin-top:4px;}
   .cmt-form input.cmt-txt{flex:1;font:inherit;font-size:12.5px;padding:6px 10px;border:1px solid var(--borda);border-radius:8px;background:#fff;}
   .cmt-form button.cmt-send{border:none;background:#1A1A1A;color:#fff;border-radius:8px;padding:0 12px;font-size:12px;font-weight:700;cursor:pointer;}
@@ -93,7 +93,20 @@
   #semaforo{padding:10px 20px;font-size:13px;font-weight:700;}
   #semaforo.sem-warn{background:#FFF3E0;color:#B26A00;border-bottom:2px solid var(--laranja);}
   #semaforo.sem-ok{background:#E8F2EF;color:var(--verde-esc);border-bottom:2px solid var(--verde);}
-  @media(max-width:640px){ .item{flex-direction:column;gap:6px;} .el{width:auto;} .btns{flex-direction:row;} }
+  header.mini{padding:6px 20px;}
+  header.mini h1 small{display:none;}
+  header.mini .bar{display:none;}
+  @media(max-width:640px){
+    .item{flex-direction:column;gap:6px;} .el{width:auto;padding-top:0;}
+    .btns{flex-direction:row;flex-wrap:wrap;} .btns button{width:auto;flex:1;min-width:88px;}
+    header{padding:8px 12px;gap:6px;}
+    .filtros{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+    .filtros::-webkit-scrollbar{display:none;}
+    .filtros button,.filtros a,.filtros span{white-space:nowrap;flex:0 0 auto;}
+    footer{padding:8px 10px;gap:8px;font-size:12px;}
+    footer #quem{display:none;}
+    main{padding:12px 12px 110px;}
+  }
 </style>
 </head>
 <body>
@@ -258,9 +271,9 @@ const DATA = [
    ["Guest gate","(sem copy: visitante que toca em qualquer ação vai direto para o login)","","D14: redirect direto, sem modal."]]},
  {id:"T-007", nome:"Home logada · Comunidades", node:"731-1088", itens:[
    ["Saudação","Olá {tutor}, hoje tem {n} novas conversas nas suas comunidades",""],
-   ["Card Diário — resumo","Ontem o {nome} teve um dia tranquilo.",""],
-   ["Card Diário — convite","E hoje, como ele tá?","","Tom informal “tá” fixado no Compêndio."],
-   ["Card Diário — CTA","Abrir o Diário",""],
+   ["Card Diário — resumo →","Movido para T-008 · Home logada · Movimento.","","CORREÇÃO (11/08): o Card do Diário é componente do feed da T-008 (Movimento), não da aba Comunidades — Especificação de Telas, seção VI, e Handoff DEV do Diário. Veredito e conversa preservados no destino."],
+   ["Card Diário — convite →","Movido para T-008 · Home logada · Movimento.","","Idem — aprovar/editar no card T-008."],
+   ["Card Diário — CTA →","Movido para T-008 · Home logada · Movimento.","","Idem — aprovar/editar no card T-008."],
    ["Seletor","Diário do {nome} · Alterar o cão",""],
    ["Seções","Suas comunidades · Comunidades que você pode gostar",""],
    ["Ação nos cards","Participar","","D9: verbo único no app."],
@@ -312,10 +325,14 @@ const DATA = [
    ["Excluir conta","Excluir conta","prop","No Figma está “Deletar a conta”. Proposta pt-BR."]]},
  {id:"T-008", nome:"Home logada · Movimento", node:"731-1423", itens:[
    ["Abas (segmented control)","Movimento · Comunidades","","Mesma HomeLoggedScreen da T-007, alternância por segmented control. Comentário do Dano (05/08): o estado desabilitado de “Comunidades” aparece verde — conferir a cor de estado com o Rodrigo."],
-   ["Card do Diário","(reusa o card da T-007: resumo de ontem + “E hoje, como ele tá?” + Abrir o Diário)","gap","O QUE É: o card do Diário exibido no feed Movimento. CONFERIR NO FIGMA se é o mesmo componente da T-007 ou variação. O CTR deste card é métrica do Compêndio (ver checklist DEV-6)."],
+   ["Card do Diário — onde vive","Componente do FEED desta tela (T-008 Movimento). Topo do feed, prioridade alta quando não há registro do dia. Nunca renderiza dentro da T-026 (home do Diário) — lá a continuidade é só a linha discreta “Ontem: dia tranquilo”.","","Especificação de Telas (seção VI: “Feed da T-008”) + Handoff DEV do Diário: gatilho oportunista para quem abriu o app por outro motivo. Card dentro da T-026 vira pedágio antes do registro e fere a métrica-rei (registro orgânico)."],
    ["Card de marco","Hoje celebramos {n} dias de Diário do {nome} 💚","","Componente que vive nesta tela (ex-frame T-031); copy aprovada no card T-031 do Fluxo 5. Demais marcos: gap no card T-031."],
    ["Posts das comunidades no feed","({comunidade} · {tempo} — post leva à thread na T-011.1)","gap","O QUE É: como o post de comunidade aparece no feed agregador — precisa do metadado de origem e do caminho para a thread. Copy exata a conferir no Figma (tela nunca teve extração de copy — validar tudo aqui)."],
-   ["Regra da tela","Não recebe post direto — criar conteúdo é sempre pela T-024 (botão +).","","Especificação de Telas, T-008."]]}
+   ["Regra da tela","Não recebe post direto — criar conteúdo é sempre pela T-024 (botão +).","","Especificação de Telas, T-008."],
+   ["Card Diário — resumo","Ontem o {nome} teve um dia tranquilo.","","Re-hospedado da T-007 (11/08) com veredito e conversa preservados. ATENÇÃO DEV: o app hoje mostra “Ontem o {nome} um dia tranquilo” — falta o verbo TEVE."],
+   ["Card Diário — convite","E hoje, como ele tá?","","Re-hospedado da T-007 — veredito preservado. Tom informal “tá” fixado no Compêndio."],
+   ["Card Diário — CTA","Abrir o Diário","","Re-hospedado da T-007. ATENÇÃO DEV: CTA é ÂMBAR (token da marca), não rosa — o app está com a cor errada."],
+   ["Correções no build atual (QA 11/08)","1) Card do Diário renderizando DENTRO da T-026 — remover: na home do Diário o registro abre no topo, a zero toques; a continuidade é só a linha discreta.\n2) Confirmar que o card renderiza no topo do feed da T-008 (verificar se foi movido ou duplicado).\n3) CTA rosa → âmbar.\n4) Copy sem verbo → “Ontem o {nome} teve um dia tranquilo.”\n5) Ícone verde sobreposto à foto do cão e ao logo — asset/z-index quebrado.","tar","Achados na revisão do build (print do app, 11/08). Fontes: Especificação de Telas II e VI, Handoff DEV do Diário, Compêndio §4.3."]]}
 ]},
 {fluxo:"Fluxo 3 — Comunidades", desc:"Uso da comunidade, posts, threads e o ciclo completo de solicitação de comunidade nova.", telas:[
  {id:"T-011", nome:"Comunidade interna", node:"5-164", itens:[
@@ -1355,6 +1372,9 @@ document.addEventListener("click", async (ev)=>{
 // Fecho de aba/troca de app: descarrega gravações pendentes do debounce (melhor esforço)
 addEventListener("pagehide", ()=>{ Object.keys(timers).forEach(id=>{ if(timers[id]){ clearTimeout(timers[id]); timers[id]=null; gravarAgora(id); } }); });
 document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden"){ Object.keys(timers).forEach(id=>{ if(timers[id]){ clearTimeout(timers[id]); timers[id]=null; gravarAgora(id); } }); } });
+// Cabeçalho compacto após o início da rolagem (recupera ~40% de tela útil no celular)
+const hdrEl = document.querySelector("header");
+addEventListener("scroll", ()=>{ hdrEl.classList.toggle("mini", scrollY > 140); }, {passive:true});
 function iniciar(){ carregar(); assinar(); }
 if(revisor && papel){
   document.getElementById("quem").innerHTML = `revisando como: <b class="p-${papel}">${escapeHtml(revisor)} (${papel})</b>`;
