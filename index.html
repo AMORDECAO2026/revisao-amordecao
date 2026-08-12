@@ -393,7 +393,7 @@ const DATA = [
    ["Header","Cães para adoção · {n} cães disponíveis",""],
    ["Seções","Perto de você · Cães disponíveis",""],
    ["CTA do rodapé","Tem um cão para adoção?\nAjude a encontrar um lar cheio de amor.\n[Cadastrar cão para adoção]",""],
-   ["Badge adotado","Adotado","prop","O Handoff prevê a MARCAÇÃO “adotado” (evento cao_marcado_adotado) — o badge VISUAL é decisão nova, a documentar (checklist DEV-2). Não existe no Figma."]]},
+   ["Badge adotado","Adotado","prop","DECIDIDO (Thiago, 11/08): badge visual aprovado — selo sobre a foto, opacidade reduzida, sem curtir (regras completas no card DEV-2). Falta desenhar no Figma."]]},
  {id:"T-017", nome:"Filtros de adoção", node:"13-634", itens:[
    ["Busca","Buscar por raça, porte...",""],
    ["Sexo","Macho · Fêmea · Tanto faz",""],
@@ -559,14 +559,14 @@ const DATA = [
   ["Vermelho recorrente (E7a/E7b)","2 vermelhos em 7 dias NÃO consecutivos — mesmo sinal (E7a) ou sinais diferentes (E7b). Não é contador: é CONSULTA à janela de 7 dias no histórico persistido (T-028). Sem T-028 persistido, E7a/E7b não funcionam.","tar"],
   ["Flag de episódio","Por cão, 3 campos: episódio aberto / cor mais grave / ponte já oferecida + pergunta publicada. Episódio fecha com 2 dias verdes consecutivos. Sem isso, E2r, E2v, E5x-a e E5x-b não são implementáveis.","tar"],
   ["Precedência entre leituras","Tabela de precedência da Régua §2 (9 níveis) decide quando dois estados batem no mesmo dia. Registro parcial é a MENOR precedência; convite para completar NUNCA aparece em dia com vermelho. Sem registro retroativo no MVP; virada de dia à meia-noite, fuso do dispositivo.","tar"]]},
- {id:"DEV-2", nome:"Adoção — ciclo do badge Adotado (produto NOVO: documentar no Handoff antes de codar)", itens:[
-  ["Modal de encerramento · A DOCUMENTAR","Anunciante encerra o anúncio → modal “Esse cão foi adotado?” com DUAS saídas: “Foi adotado” e “Não está mais disponível”. Atenção: o Handoff atual diz “marcar como adotado a qualquer momento” — o gatilho pelo encerramento é decisão nova.","tar"],
-  ["Saída adotado · A DOCUMENTAR","“Foi adotado” dispara o evento cao_marcado_adotado (nome confere: Plano de Métricas e Handoff §12) e exibe o badge — o badge em si não está documentado.","tar"],
-  ["Saída silenciosa · A DOCUMENTAR","“Não está mais disponível” arquiva em silêncio: sem badge e FORA da métrica de desfecho.","tar"],
-  ["Janela de 48h · A DOCUMENTAR","Confirmação reversível por 48 horas, com desfazer visível ao anunciante; depois definitiva. Número novo, sem fonte.","tar"],
-  ["Visual do adotado · A DOCUMENTAR","T-016: selo “Adotado” sobre a foto, opacidade reduzida, sem ação de curtir. T-018: faixa “Esse cão já encontrou uma casa” e contatos OCULTOS. Nada disso está na Especificação de Telas.","tar"],
-  ["Permanência de 7 dias · A DOCUMENTAR","Visível por 7 dias no FIM da lista e fora dos filtros; depois arquiva. Número novo, sem fonte.","tar"],
-  ["Push de anúncio parado · A DOCUMENTAR","Aos 30 e 60 dias sem desfecho: push “O [nome] ainda está esperando?” com os dois caminhos. Números novos, sem fonte.","tar"],
+ {id:"DEV-2", nome:"Adoção — ciclo do badge Adotado (DECIDIDO 11/08: spec do painel vale como decisão; Handoff a atualizar)", itens:[
+  ["Modal de encerramento","Anunciante encerra o anúncio → modal “Esse cão foi adotado?” com DUAS saídas: “Foi adotado” e “Não está mais disponível”. DECIDIDO (Thiago, 11/08): o gatilho é o encerramento do anúncio — substitui o “marcar como adotado a qualquer momento” do Handoff v1.0, que será atualizado.","tar"],
+  ["Saída adotado","“Foi adotado” dispara o evento cao_marcado_adotado (Plano de Métricas e Handoff §12) e exibe o badge “Adotado”.","tar"],
+  ["Saída silenciosa","“Não está mais disponível” arquiva em silêncio: sem badge e FORA da métrica de desfecho.","tar"],
+  ["Janela de 48h","Confirmação reversível por 48 horas, com desfazer visível ao anunciante; depois definitiva. DECIDIDO (Thiago, 11/08).","tar"],
+  ["Visual do adotado","T-016: selo “Adotado” sobre a foto, opacidade reduzida, sem ação de curtir. T-018: faixa “Esse cão já encontrou uma casa” e contatos OCULTOS. DECIDIDO (Thiago, 11/08) — Especificação de Telas a atualizar.","tar"],
+  ["Permanência de 7 dias","Visível por 7 dias no FIM da lista e fora dos filtros (prova social); depois arquiva automaticamente. DECIDIDO (Thiago, 11/08).","tar"],
+  ["Push de anúncio parado","Aos 30 e 60 dias sem desfecho: push ao anunciante “O {nome} ainda está esperando?” com os dois caminhos de encerramento. DECIDIDO (Thiago, 11/08).","tar"],
   ["Trava de publicação (documentada)","Publicar anúncio exige WhatsApp E e-mail preenchidos e válidos — trava na PUBLICAÇÃO, não no cadastro (Handoff de Adoção). Esta vale desde já.","tar"]]},
  {id:"DEV-3", nome:"Decisões desta revisão (D1–D14 e correlatas)", itens:[
   ["D4 · Contato direto","Adoção SEM botão “Tenho interesse”/intermediação: o interessado vê os contatos do anunciante e fala direto. ATENÇÃO: o Handoff de Adoção §3.4 ainda descreve o botão — vale D4 (decisão mais recente); atualizar o Handoff.","tar"],
