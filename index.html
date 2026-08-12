@@ -17,8 +17,10 @@
   .fg-novo{background:var(--amarelo);color:var(--txt);font-size:10.5px;font-weight:800;border-radius:4px;padding:1px 6px;margin-right:6px;}
   .fg-ir{margin-top:5px;border:1px solid var(--borda);background:#fff;border-radius:6px;font-size:11px;font-weight:700;padding:3px 9px;cursor:pointer;color:var(--txt);}
   .fg-ir:hover{background:var(--amarelo-soft);}
-  .conex{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;background:#EEE;color:var(--cinza);}
-  .conex.on{background:var(--amarelo-soft);color:#7A5D00;}
+  .conex{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:.08em;border-radius:999px;padding:4px 13px;background:#EEE;color:var(--cinza);border:1px solid var(--borda);}
+  .conex.on{background:#fff;color:#0D0D0D;border-color:#0D0D0D;}
+  .conex.on::before{content:"";width:10px;height:10px;border-radius:50%;background:#E11D18;animation:liveBlink 1.6s ease-in-out infinite;}
+  @keyframes liveBlink{0%,100%{opacity:1}50%{opacity:.35}}
   .prog{font-size:13px;font-weight:700;color:var(--txt);white-space:nowrap;}
   .bar{height:6px;background:#E9E9E7;border-radius:3px;width:140px;overflow:hidden;} .bar i{display:block;height:100%;background:var(--amarelo);width:0%;transition:width .3s;}
   .filtros{display:flex;gap:6px;flex-wrap:wrap;}
@@ -796,7 +798,7 @@ function assinar(){
     })
     .subscribe((st)=>{
       const c=document.getElementById("conex");
-      if(st==="SUBSCRIBED"){ c.textContent="● ao vivo"; c.classList.add("on"); }
+      if(st==="SUBSCRIBED"){ c.textContent="LIVE"; c.classList.add("on"); }
       else { c.textContent="reconectando…"; c.classList.remove("on"); }
     });
 }
