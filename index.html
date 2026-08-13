@@ -28,9 +28,16 @@
   #btFiltros.ativo{background:var(--amarelo);}
   #bfResumo{font-weight:600;color:var(--cinza);}
   #btFiltros.ativo #bfResumo{color:var(--txt);}
-  .painel-filtros{display:none;position:absolute;top:100%;right:20px;background:#fff;border:1px solid var(--borda);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12);padding:14px 16px;z-index:70;max-width:min(92vw,620px);}
+  .painel-filtros{display:none;position:absolute;top:calc(100% + 6px);right:20px;background:#fff;border:1px solid var(--borda);border-radius:12px;box-shadow:0 12px 34px rgba(0,0,0,.14);padding:8px;z-index:70;width:min(88vw,258px);max-height:72vh;overflow:auto;}
   .painel-filtros.aberto{display:block;}
-  .painel-filtros .filtros+.filtros{margin-top:10px;padding-top:10px;border-top:1px solid var(--borda);}
+  .painel-filtros .filtros{flex-direction:column;align-items:stretch;gap:1px;flex-wrap:nowrap;}
+  .painel-filtros .filtros+.filtros{margin-top:8px;padding-top:8px;border-top:1px solid var(--borda);}
+  .painel-filtros .filtros button{text-align:left;border:none;background:transparent;border-radius:8px;padding:9px 11px;font-size:13.5px;font-weight:600;color:var(--txt);}
+  .painel-filtros .filtros button:hover{background:var(--soft-hover,#F4F4F0);}
+  .painel-filtros .filtros button.on{background:var(--txt);color:#fff;}
+  .painel-filtros .filtros>span{font-size:10.5px;letter-spacing:.08em;color:#9A9A93;font-weight:800;padding:6px 11px 2px;}
+  .painel-filtros .filtros a{border:none!important;background:transparent!important;border-radius:8px;padding:9px 11px!important;font-size:13.5px!important;text-align:left;}
+  .painel-filtros .filtros a:hover{background:#F4F4F0;}
   .filtros{display:flex;gap:6px;flex-wrap:wrap;}
   .filtros button{border:1px solid var(--borda);background:#fff;border-radius:20px;padding:4px 12px;font-size:12px;cursor:pointer;}
   .filtros button.on{background:#1A1A1A;color:#fff;border-color:#1A1A1A;}
@@ -127,6 +134,7 @@
   <button id="btFiltros" title="Filtrar">⚙ Filtros <span id="bfResumo"></span></button>
   <div class="painel-filtros" id="pf">
   <div class="filtros" id="filtros">
+    <span>STATUS</span>
     <button data-f="todas" class="on">Todas</button>
     <button data-f="pend">Pendentes</button>
     <button data-f="ap">Aprovadas</button>
@@ -137,7 +145,7 @@
     <a href="https://drive.google.com/drive/folders/1Xmr2VoAeo476945SUvpWEjrO22zfp8Z1?usp=drive_link" target="_blank" rel="noopener" style="border:1px solid var(--borda);border-radius:20px;padding:4px 12px;font-size:12px;text-decoration:none;color:var(--azul);font-weight:700;background:#fff">📁 Documentos do projeto</a>
   </div>
   <div class="filtros" id="filtrosResp">
-    <span style="font-size:11px;color:#999;font-weight:700;align-self:center">RESPONSÁVEL:</span>
+    <span>RESPONSÁVEL</span>
     <button data-r="todos" class="on">Todos</button>
     <button data-r="design">🎨 Design <span id="cDesign"></span></button>
     <button data-r="dev">💻 Tecnologia <span id="cDev"></span></button>
