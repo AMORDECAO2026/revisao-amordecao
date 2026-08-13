@@ -23,6 +23,14 @@
   @keyframes liveBlink{0%,100%{opacity:1}50%{opacity:.35}}
   .prog{font-size:13px;font-weight:700;color:var(--txt);white-space:nowrap;}
   .bar{height:6px;background:#E9E9E7;border-radius:3px;width:140px;overflow:hidden;} .bar i{display:block;height:100%;background:var(--amarelo);width:0%;transition:width .3s;}
+  #btFiltros{border:1.5px solid var(--txt);background:#fff;border-radius:999px;padding:5px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--txt);}
+  #btFiltros:hover{background:var(--amarelo-soft);}
+  #btFiltros.ativo{background:var(--amarelo);}
+  #bfResumo{font-weight:600;color:var(--cinza);}
+  #btFiltros.ativo #bfResumo{color:var(--txt);}
+  .painel-filtros{display:none;position:absolute;top:100%;right:20px;background:#fff;border:1px solid var(--borda);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12);padding:14px 16px;z-index:70;max-width:min(92vw,620px);}
+  .painel-filtros.aberto{display:block;}
+  .painel-filtros .filtros+.filtros{margin-top:10px;padding-top:10px;border-top:1px solid var(--borda);}
   .filtros{display:flex;gap:6px;flex-wrap:wrap;}
   .filtros button{border:1px solid var(--borda);background:#fff;border-radius:20px;padding:4px 12px;font-size:12px;cursor:pointer;}
   .filtros button.on{background:#1A1A1A;color:#fff;border-color:#1A1A1A;}
@@ -116,6 +124,8 @@
   <h1><span class="lgo"><mark>crivo</mark>.</span><span class="ttl">Painel de Revisão — Amor de Cão<small>Sincronizado ao vivo para todo o time</small></span></h1>
   <span class="conex" id="conex">conectando…</span>
   <div><div class="prog" id="prog">0 / 0</div><div class="bar"><i id="barra"></i></div></div>
+  <button id="btFiltros" title="Filtrar">⚙ Filtros <span id="bfResumo"></span></button>
+  <div class="painel-filtros" id="pf">
   <div class="filtros" id="filtros">
     <button data-f="todas" class="on">Todas</button>
     <button data-f="pend">Pendentes</button>
@@ -132,6 +142,7 @@
     <button data-r="design">🎨 Design <span id="cDesign"></span></button>
     <button data-r="dev">💻 Tecnologia <span id="cDev"></span></button>
     <button data-r="produto">📦 Produto <span id="cProd"></span></button>
+  </div>
   </div>
 </header>
 <main id="app"><p style="color:#5F6368">Carregando revisão…</p></main>
@@ -152,6 +163,7 @@
   <pre id="dlgPre"></pre>
   <div class="d-f">
     <button style="background:#EEE" onclick="baixarTxt()">Baixar .md</button>
+    <button style="background:#0D0D0D;color:#fff" onclick="copiarConfluence()" title="Copia com carimbo de origem e data — cole direto no Confluence, Notion ou wiki">📄 Copiar p/ Confluence</button>
     <button style="background:#FFD43B;color:#191919" onclick="copiarTxt()">Copiar tudo</button>
   </div>
 </dialog>
@@ -616,7 +628,15 @@ const DATA = [
   ["1 · Sequência do Diário","Handoff DEV Diário: sinal não marcado QUEBRA sequência × Régua v2.1: NÃO quebra. O próprio Handoff se declara subordinado à Régua → vale NÃO QUEBRA. Decisão: confirmar e corrigir o Handoff.","tar"],
   ["2 · Nome do evento do selo","O Plano de Métricas usa professional_badge_completed (tabela Fase 1) E professional_badge_activated (lista canônica de eventos) para a mesma coisa. Recomendação: travar _activated — é o que está na lista que o dev copia e no Handoff de Adoção.","tar"],
   ["3 · Taxa de resposta na adoção","Plano de Métricas lista adocao_resposta_responsavel como métrica mensal × Handoff de Adoção §12: “não é mensurável e não deve constar de nenhum painel” (contato ocorre fora do app). Regra de adoção é do Handoff → retirar do Plano.","tar"],
-  ["4 · Métrica-rei do hábito","Compêndio: “fração de registro orgânico” (% de registros) × Plano: % de tutores ativos com 3+ registros orgânicos/semana. Métrica é domínio do Plano → vale o Plano; alinhar o Compêndio.","tar"]]}
+  ["4 · Métrica-rei do hábito","Compêndio: “fração de registro orgânico” (% de registros) × Plano: % de tutores ativos com 3+ registros orgânicos/semana. Métrica é domínio do Plano → vale o Plano; alinhar o Compêndio.","tar"]]},
+ {id:"DEV-8", nome:"SLA de resposta e fila do moderador (a promessa de “não fica sem resposta”)", itens:[
+  ["Por que existe","A ponte do Diário leva o tutor preocupado à comunidade dizendo que “tem gente lá com experiência”. Se ninguém responde, a promessa quebra no pior momento. Hoje isso é sustentado por UMA pessoa (Tese 5.1) — ponto único de falha reconhecido pela própria Tese. Nada disso está implementado no app nem no BackOffice.","tar"],
+  ["Fila do moderador (documentado)","Fila T-011-MG, aba Perguntas, no BackOffice: lista as perguntas que precisam de atenção, ordenadas por tempo decorrido. Status alert da comunidade quando o SLA de 24h estoura em 3 perguntas na mesma semana (Moderação/BackOffice §12).","tar"],
+  ["Critério de entrada — DECIDIDO (11/08)","Entra na fila toda pergunta SEM NENHUMA resposta após 12h da publicação (metade do SLA de 24h, para dar margem de reação). Recebeu qualquer resposta → sai da fila, mesmo que a conversa continue. PRIORIDADE ALTA para perguntas na comunidade de saúde (Não Surta, Pergunta) e para as originadas da PONTE DO DIÁRIO — são as que carregam a promessa.","tar"],
+  ["Sinalização ao tutor — DECIDIDO (11/08): NÃO EXISTE","Nada no app público indica que a pergunta está sem resposta: sem contador de tempo, sem selo “aguardando”, sem “ninguém respondeu ainda”. Expor o silêncio transforma espera em atestado de abandono. A sinalização vive SÓ no BackOffice (cor e ordem na fila por tempo decorrido). Se um dia houver indicador público, será positivo (“perguntas respondidas em média em X horas”), nunca a exposição do vazio.","tar"],
+  ["“Chamar autoridade” — DECIDIDO (11/08)","Botão na fila do BackOffice que dispara PUSH + E-MAIL para as autoridades daquela comunidade, com link direto para a pergunta. Registra quem foi chamado e quando. Novo chamado para a mesma pergunta só depois de 6h (anti-spam). SEM escalonamento automático e SEM obrigação de resposta — autoridade é gente, não plantão.","tar"],
+  ["Resposta institucional — DECIDIDO (11/08)","Passadas mais 24h do chamado sem resposta, a pergunta sobe para resposta institucional: o moderador responde pela Comunidade Oficial, nem que seja para orientar a procurar um veterinário. A promessa é “não fica sem resposta” — não “resposta rápida de especialista”.","tar"],
+  ["Instrumentação","Evento post_without_reply_24h (Plano de Métricas) + tempo até a primeira resposta por comunidade. Ligar desde o dia 1: sem esse dado não há como saber se a promessa está sendo cumprida.","tar"]]}
 ]},
 {fluxo:"Mensagens do sistema — toasts, erros, estados e push", desc:"Casa única das mensagens que o app dispara em qualquer tela, organizadas por natureza (como o dev consome). Itens re-hospedados vieram dos cards de tela COM veredito, assinatura e conversa preservados — os badges dizem o status real. Tudo que começa com PROPOSTA é redação nova aguardando aprovação: nada disso está chancelado.", telas:[
  {id:"SIS-1", nome:"Toasts de sucesso", itens:[
@@ -1146,13 +1166,24 @@ function atualizarSemaforo(){
 document.getElementById("filtros").onclick = (ev)=>{
   const b = ev.target.closest("button"); if(!b) return;
   document.querySelectorAll("#filtros button").forEach(x=>x.classList.remove("on"));
-  b.classList.add("on"); filtroAtivo = b.dataset.f; render();
+  b.classList.add("on"); filtroAtivo = b.dataset.f; render(); resumoFiltros();
 };
 document.getElementById("filtrosResp").onclick = (ev)=>{
   const b = ev.target.closest("button"); if(!b) return;
   document.querySelectorAll("#filtrosResp button").forEach(x=>x.classList.remove("on"));
-  b.classList.add("on"); filtroResp = b.dataset.r; render();
+  b.classList.add("on"); filtroResp = b.dataset.r; render(); resumoFiltros();
 };
+// menu de filtros recolhível
+const pfEl = document.getElementById("pf"), btFil = document.getElementById("btFiltros");
+btFil.onclick = (e)=>{ e.stopPropagation(); pfEl.classList.toggle("aberto"); };
+document.addEventListener("click", (e)=>{ if(!pfEl.contains(e.target) && e.target!==btFil) pfEl.classList.remove("aberto"); });
+function resumoFiltros(){
+  const nomes = {todas:"", pend:"Pendentes", ap:"Aprovadas", aj:"Ajustadas", gap:"Faltando copy", impl:"🚧 Implementar", implok:"✅ Implementados"};
+  const resp = {todos:"", design:"Design", dev:"Tecnologia", produto:"Produto"};
+  const partes = [nomes[filtroAtivo]||"", resp[filtroResp]||""].filter(Boolean);
+  document.getElementById("bfResumo").textContent = partes.length ? "· " + partes.join(" · ") : "";
+  btFil.classList.toggle("ativo", partes.length>0);
+}
 
 // ===== feed cronológico dos comentários do Figma (lente — a casa continua sendo a thread do card) =====
 window.verFigma = function(){
@@ -1179,6 +1210,19 @@ window.verFigma = function(){
 // ===== relatórios =====
 let txtAtual = "", nomeArq = "relatorio.md";
 window.copiarTxt = ()=>navigator.clipboard.writeText(txtAtual).then(()=>alert("Copiado!"));
+window.copiarConfluence = ()=>{
+  const ag = new Date();
+  const carimbo =
+`> ⚠️ **CÓPIA — não edite esta página.**
+> **Fonte oficial:** painel de revisão — https://amordecao2026.github.io/revisao-amordecao/
+> **Gerado em:** ${ag.toLocaleDateString("pt-BR")} às ${ag.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}
+> Decisões mudam com frequência. Se esta data já passou de alguns dias, gere o relatório de novo no painel e substitua esta página inteira. Alterar a regra aqui **não** altera no painel — e cria duas versões da verdade.
+
+---
+
+`;
+  navigator.clipboard.writeText(carimbo + txtAtual).then(()=>alert("Copiado com carimbo de origem.\n\nNo Confluence: cole numa página em branco — ele converte o Markdown sozinho.\nSubstitua a página inteira a cada nova cópia, nunca edite por lá."));
+};
 window.baixarTxt = ()=>{ const b=new Blob([txtAtual],{type:"text/markdown"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=nomeArq; a.click(); };
 window.exportar = function(tipo){
   const d = new Date().toLocaleDateString("pt-BR");
