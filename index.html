@@ -44,6 +44,10 @@
   main{max-width:980px;margin:0 auto;padding:16px 20px 130px;}
   .fluxo{margin-top:30px;} .fluxo>h2{font-family:'Source Serif 4',serif;font-size:22px;letter-spacing:-.01em;border-left:5px solid var(--amarelo);padding-left:10px;margin:0 0 4px;}
   .fluxo.f-design>h2{border-color:var(--txt);}
+  .fluxo.f-arquivo{opacity:.72;}
+  .fluxo.f-arquivo:hover{opacity:1;}
+  .fluxo.f-arquivo>h2{font-size:18px;border-color:#CFCFC8;color:#6A6A63;}
+  .fluxo.f-arquivo>h2::before{content:"📁 ";font-size:14px;}
   .fluxo>p{margin:0 0 12px 15px;color:var(--cinza);font-size:13px;}
   .tela{background:var(--card);border:1px solid var(--borda);border-radius:12px;margin-bottom:14px;overflow:hidden;}
   .tela-h{display:flex;align-items:center;gap:8px;padding:12px 14px;cursor:pointer;user-select:none;flex-wrap:wrap;}
@@ -166,7 +170,6 @@
   <button id="btnAdmin" style="background:#3a3a3a;color:#bbb">🔑</button>
   <button style="background:#3a3a3a;color:#fff" onclick="verFigma()">🗨 Figma</button>
   <button style="background:var(--amarelo);color:#191919" onclick="exportar('dev')">📋 DEV</button>
-  <button style="background:#fff;color:#191919" onclick="exportar('design')">🎨 DESIGN</button>
   <span style="color:#888;font-size:11px">feito com <b style="background:var(--amarelo);color:#191919;padding:0 5px;border-radius:4px">crivo</b>.</span>
 </footer>
 <dialog id="dlg">
@@ -215,7 +218,7 @@ const FIGMA = "https://www.figma.com/design/V0Ol2lDC5Xp1ibGmdj9xNT/Aplicativo?no
 
 // tipo: "" normal | "jur" travada | "gap" falta copy | "prop" proposta nova | "tar" tarefa de design
 const DATA = [
-{fluxo:"Tarefas do Design", cls:"f-design", desc:"Correções e criações pendentes no Figma. Marque ✓ Feito ao concluir; use os comentários para dúvidas.", telas:[
+{fluxo:"Arquivo · Design — decisões registradas", cls:"f-design", arquivo:true, desc:"Registro histórico do trabalho de design (o time de design passou a trabalhar direto no Figma). Fica aqui para consulta: é onde estão as decisões já tomadas e o motivo de cada uma. Também é a caixa de entrada dos comentários do Figma que o robô não conseguiu mapear.", telas:[
  {id:"SELOS", nome:"Sistema de Selos do perfil (Tese, Bloco 2) — em desenho: sections Selos do perfil, Gamificação e Selos de profissão já existem no Figma", itens:[
   ["Camada 1 — Identificação","Desenhar o selo de identificação (Tutor / Adotante / Profissional / ONG) no perfil do tutor e junto ao nome nas interações (posts, respostas, comentários)","tar","A própria Tese registra: sistema ainda não implementado no frontend — o Bloco 2 é a única fonte da regra."],
   ["Selos de profissão","Desenhar os 13 selos de profissão verificada que substituem o genérico “Profissional”: Veterinário, Adestrador, Comportamentalista, Nutricionista canino, Criador responsável, Tosador, Pet sitter, Hotel canino, Hospedagem PetFriendly, Creche canina, Dog walker, Pet shop, Agência canina","tar"],
@@ -524,7 +527,7 @@ const DATA = [
    ["Borda — semana anterior incompleta","A semana passada ficou pela metade, então não dá pra comparar. Essa aqui vira seu novo ponto de partida.","prop","A DEFINIR — único texto da seção ainda SEM aprovação do Thiago (criado porque “ficou em branco” seria falso numa semana parcial). Aprovar ou ajustar aqui mesmo."],
    ["Trava de linguagem","PROIBIDO nesta seção: atribuir causa (“você registrou mais atividades positivas”) · personificar a dimensão (“Ambiente pediu mais atenção”) · prescrever conduta (“continue com a mesma constância”).","","Os três exemplos são do mockup atual e viraram proibição no documento — dev não repetir. O sistema espelha e conta, nunca interpreta."]]},
 ]},
-{fluxo:"Fundamentos visuais — tokens (QA global)", cls:"f-design", desc:"Valores canônicos extraídos do Figma. ORDEM OBRIGATÓRIA: 1º Rodrigo zera as divergências na origem (card abaixo) → 2º Dano implementa o tema como constantes e dá baixa → 3º repuxar as telas já afetadas. Enquanto houver divergência aberta, o aviso no topo fica laranja e o agente do Dano opera sob o Contrato (card Aplicação).", telas:[
+{fluxo:"Arquivo · Fundamentos visuais — tokens do app", cls:"f-design", arquivo:true, desc:"Valores canônicos do app (fonte, cores, espaçamentos, raios), aprovados pelo design e usados pelo dev como CONSTANTES — continuam saindo no relatório do DEV. As divergências do Figma foram todas resolvidas; ficam registradas aqui com o motivo de cada decisão.", telas:[
  {id:"TOKENS", nome:"Tipografia e cores", itens:[
   ["Família de fonte","Work Sans — família única do app","prop","Única família encontrada nas 4 telas analisadas."],
   ["Título de tela (Title 1)","Work Sans SemiBold 20px · #151515","prop","Style nomeado “Title 1”. Visto em Login e T-016."],
@@ -926,8 +929,11 @@ function passaFiltro(id,it){
 function render(){
   const abertas = new Set(Array.from(document.querySelectorAll(".tela.aberta")).map(c=>c.dataset.key));
   app.innerHTML = "";
-  DATA.forEach((fl,fi)=>{
-    const sec = document.createElement("section"); sec.className="fluxo "+(fl.cls||"");
+  // ordem de exibição: seções de arquivo por último (os ids continuam sendo o índice real no DATA)
+  const ordem = DATA.map((fl,fi)=>fi).sort((a,b)=> (DATA[a].arquivo?1:0) - (DATA[b].arquivo?1:0));
+  ordem.forEach((fi)=>{
+    const fl = DATA[fi];
+    const sec = document.createElement("section"); sec.className="fluxo "+(fl.cls||"")+(fl.arquivo?" f-arquivo":"");
     sec.innerHTML = `<h2>${fl.fluxo}</h2><p>${fl.desc}</p>`;
     fl.telas.forEach((tela,ti)=>{
       const q = filtroTexto.trim().toLowerCase();
