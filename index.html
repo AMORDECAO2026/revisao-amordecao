@@ -95,6 +95,11 @@
   .p-CEO{color:var(--pink);} .p-Copy{color:var(--verde-esc);} .p-Design{color:var(--azul);} .p-Dev{color:var(--laranja);}
   footer{position:fixed;bottom:0;left:0;right:0;background:#1A1A1A;color:#fff;padding:10px 20px;display:flex;gap:12px;align-items:center;font-size:13px;z-index:60;flex-wrap:wrap;}
   footer .f-n{font-weight:800;} footer .sp{flex:1;}
+  .busca{display:flex;align-items:center;gap:7px;background:#fff;border-radius:999px;padding:5px 12px;min-width:min(46vw,320px);}
+  .busca span{font-size:13px;opacity:.6;}
+  .busca input{border:none;outline:none;background:transparent;font:inherit;font-size:13px;color:#191919;width:100%;padding:2px 0;}
+  .busca input::-webkit-search-cancel-button{display:none;}
+  .busca button{border:none;background:#EEE;color:#555;border-radius:50%;width:20px;height:20px;padding:0;font-size:11px;cursor:pointer;line-height:1;}
   footer button{border:none;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer;font-size:12px;}
   dialog{border:none;border-radius:12px;max-width:780px;width:92%;padding:0;}
   dialog .d-h{background:#1A1A1A;color:#fff;padding:12px 18px;display:flex;align-items:center;}
@@ -155,9 +160,7 @@
 </header>
 <main id="app"><p style="color:#5F6368">Carregando revisão…</p></main>
 <footer>
-  <span>✅ <span class="f-n" id="nAp">0</span></span>
-  <span>✏️ <span class="f-n" id="nAj">0</span></span>
-  <span>⏳ <span class="f-n" id="nPe">0</span></span>
+  <div class="busca"><span>🔍</span><input id="qBusca" type="search" placeholder="Buscar tela, texto ou regra…" autocomplete="off"><button id="qLimpar" title="Limpar busca" style="display:none">✕</button></div>
   <span id="quem" style="color:#BBB;font-size:12px"></span>
   <span class="sp"></span>
   <button id="btnAdmin" style="background:#3a3a3a;color:#bbb">🔑</button>
@@ -1129,9 +1132,8 @@ function atualizarContadores(){
   })));
   Object.values(extras).flat().forEach(x=>{ tot++; const st=estado["X|"+x.id]?.st; if(st==="ap")ap++; if(st==="aj")aj++; });
   ocultos.forEach(id=>{ if(!id.startsWith("X|")){ tot--; const st=estado[id]?.st; if(st==="ap")ap--; if(st==="aj")aj--; } });
-  document.getElementById("nAp").textContent=ap;
-  document.getElementById("nAj").textContent=aj;
-  document.getElementById("nPe").textContent=tot-ap-aj;
+  const _n=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;};
+  _n("nAp",ap); _n("nAj",aj); _n("nPe",tot-ap-aj);
   document.getElementById("prog").textContent=(ap+aj)+" / "+tot;
   document.getElementById("barra").style.width = tot? (100*(ap+aj)/tot)+"%" : "0%";
   let rD=0,rV=0,rP=0;
@@ -1181,6 +1183,20 @@ document.getElementById("filtrosResp").onclick = (ev)=>{
   document.querySelectorAll("#filtrosResp button").forEach(x=>x.classList.remove("on"));
   b.classList.add("on"); filtroResp = b.dataset.r; render(); resumoFiltros();
 };
+// busca
+const inpQ = document.getElementById("qBusca"), btQ = document.getElementById("qLimpar");
+let tQ = null;
+inpQ.oninput = ()=>{
+  btQ.style.display = inpQ.value ? "" : "none";
+  clearTimeout(tQ);
+  tQ = setTimeout(()=>{ filtroTexto = inpQ.value; render(); }, 220);
+};
+btQ.onclick = ()=>{ inpQ.value=""; btQ.style.display="none"; filtroTexto=""; render(); inpQ.focus(); };
+addEventListener("keydown", (e)=>{
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="f"){ e.preventDefault(); inpQ.focus(); inpQ.select(); }
+  if(e.key==="Escape" && document.activeElement===inpQ && inpQ.value){ btQ.click(); }
+});
+
 // menu de filtros recolhível
 const pfEl = document.getElementById("pf"), btFil = document.getElementById("btFiltros");
 btFil.onclick = (e)=>{ e.stopPropagation(); pfEl.classList.toggle("aberto"); };
