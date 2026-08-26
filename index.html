@@ -289,7 +289,7 @@ const DATA = [
    ["Título","Selecione suas comunidades","","Doc-mãe dizia “Escolha suas comunidades” — bater o martelo aqui."],
    ["Subtítulo","Com base no que você nos contou, separamos essas comunidades pra você.",""],
    ["Seções","Comunidade oficial / Comunidades pra você",""],
-   ["Descrições das comunidades","(vêm do backoffice — as do mockup são só representação)","gap","O QUE É: a linha curta sob o nome de cada comunidade neste card e na T-011 (ex. do mockup: “A fase de filhote, sem enlouquecer sozinho.”). FALTA: criar o campo “descrição curta” no backoffice e redigir as 7, derivadas dos manifestos oficiais. FONTE: doc “Descrições e Regras das 7 Comunidades-Semente” (Drive) — cada manifesto de ~400 caracteres vira uma linha, no mesmo tom. As frases do mockup servem de rascunho inicial."]]}
+   ["Descrições das comunidades","Amor de Cão Oficial — Comunidade oficial para trocas, dúvidas e novidades.\nFilhote não vem com manual — A fase de filhote, sem enlouquecer sozinho.\nSenta, Pô! Bom Garoto — Adestrar no reforço positivo, sem gritaria.\nNão Surta, Pergunta — Pergunta de saúde com resposta de verdade.\nOrelha Nunca Mais — A causa firme contra maus-tratos, sem medo.\nAulas com o Cachaça — O que o cão nos ensina sobre amar e seguir.\nQuero Adotar. E Agora? — A conversa real pra quem ainda quer adotar.","prop","REGISTRADAS em 26/08 a partir do Figma (T-006), fechando o gap que dizia “vêm do backoffice, as do mockup são só representação”. Elas ESTÃO desenhadas e vão para o ar no lançamento — precisam de veredito. ATENÇÃO: o Figma mostra a Oficial + 6 temáticas; o projeto fala em SETE comunidades-semente. Conferir se a Oficial conta como uma das sete ou se falta uma. NOTA ANTERIOR: ","O QUE É: a linha curta sob o nome de cada comunidade neste card e na T-011 (ex. do mockup: “A fase de filhote, sem enlouquecer sozinho.”). FALTA: criar o campo “descrição curta” no backoffice e redigir as 7, derivadas dos manifestos oficiais. FONTE: doc “Descrições e Regras das 7 Comunidades-Semente” (Drive) — cada manifesto de ~400 caracteres vira uma linha, no mesmo tom. As frases do mockup servem de rascunho inicial."]]}
 ]},
 {fluxo:"Fluxo 2 — Home e perfis", desc:"Home pública e logada, perfis de tutor e cão, notificações, configurações.", telas:[
  {id:"T-002", nome:"Home pública (visitante)", node:"1-75", itens:[
@@ -371,16 +371,22 @@ const DATA = [
 {fluxo:"Fluxo 3 — Comunidades", desc:"Uso da comunidade, posts, threads e o ciclo completo de solicitação de comunidade nova.", telas:[
  {id:"T-011", nome:"Comunidade interna", node:"5-164", itens:[
    ["Header","{comunidade} · {n} membros · {n} ativos agora",""],
-   ["CTA não-membro","Participar","prop","No Figma está “Entrar na comunidade”. D9: verbo único."],
+   ["CTA não-membro","Entrar na comunidade","","DECIDIDO (Thiago, 26/08) na varredura Figma × painel: prevalece “Entrar na comunidade”, que é o que está desenhado no Figma e já implementado no app. A proposta anterior do painel era “Participar” — cai. Atenção: “Participar” continua sendo o verbo dos cards de comunidade sugerida na T-007; são botões diferentes, em telas diferentes. NOTA ANTERIOR: ","No Figma está “Entrar na comunidade”. D9: verbo único."],
    ["Seção fixados","Comece por aqui · Fixado",""],
    ["Moderadores","Moderadores da comunidade",""],
    ["Ordenação","Organizar por: · Mais recentes","prop","No Figma está “ORGANIZAR POR:” em caixa alta."],
    ["Micro-ações","Vivi isso também · Me ajudou · Responder","","D1: reativadas."],
-   ["Contador","Ver comentários ({n})","","Padronizado."],
-   ["Selo de origem","Vem do Diário do {nome}","","D2: mantido (aval do advogado a registrar)."]]},
+   ["Contador","Ver comentários ({n})","","Padronizado. CONFIRMADO (Thiago, 26/08): “Ver” com V MAIÚSCULO. O Figma tem as duas grafias na mesma tela — duas com v minúsculo e duas com V maiúsculo. Corrigir para maiúscula em todas."],
+   ["Selo de origem","Vem do Diário do {nome}","","D2: mantido e LIBERADO para implementação (Thiago, 25/08). Grafia com “Diário” em maiúscula — Thiago alinhou a T-011-A à T-030 em 26/08."],
+   ["CTA membro","Sair da comunidade","","REGISTRADO em 26/08 a partir do app — não estava no painel nem no Figma. É o par do “Entrar na comunidade”: ocupa o lugar dele para quem já é membro."],
+   ["Gerenciar (acesso à moderação)","Gerenciar","","REGISTRADO em 26/08 a partir do app, onde JÁ ESTÁ IMPLEMENTADO — não existe no Figma. É o único ponto de entrada da moderação: abre o BackOffice por deep link autenticado, escopado à comunidade (Handoff DEV Moderação/BackOffice §2 e §3). VISÍVEL apenas para moderador principal, co-moderador e autoridade-moderadora; usuário comum, membro sem permissão e visitante NÃO veem. Controle por permissão no backend, não apenas ocultação no front-end."],
+   ["Nova publicação","Nova publicação","","REGISTRADO em 26/08 a partir do app — não estava no painel nem no Figma. Botão de criar post dentro da comunidade, além do FAB “+” da barra. Em comunidade EM CONSTRUÇÃO deve aparecer só para moderador e co-moderadores, conforme a decisão de 13/08 (membro comum só publica depois de ativa)."],
+   ["Estado vazio da comunidade","Seja o primeiro a começar a conversa aqui\nQue tal puxar a primeira conversa? Compartilhe uma dúvida ou conquista do seu cão.","","REGISTRADO em 26/08 a partir do app — não estava no painel nem no Figma. Aparece quando a comunidade não tem nenhum post. Convite, sem cobrança."],
+   ["🔴 Erro de concordância no app","“1 ativos agora” deve ser “1 ativo agora”","tar","ENCONTRADO em 26/08 no app. O contador não flexiona no singular. Regra: 1 → “1 ativo agora”; 2 ou mais → “{n} ativos agora”. Vale igualmente para membros: 1 → “1 membro”."]]},
  {id:"T-011.1", nome:"Detalhe do post (thread) — variantes A e B", node:"285-341", itens:[
    ["Header","Post na comunidade · {comunidade}",""],
    ["Campo de comentário","Conte como foi a sua experiência",""],
+   ["Contador da thread","{n} respostas","","REGISTRADO em 26/08 na varredura Figma × painel — o contador da thread não estava no painel. É diferente do “Ver comentários ({n})” da T-011: aquele fica no card do post no feed, este fica dentro da thread. No Figma o número aparece repetido em cada resposta; deve aparecer UMA vez, no post original."],
    ["Responder resposta","@{usuario} (pré-preenchido no campo)",""]]},
  {id:"T-024", nome:"Criar (botão +)", node:"682-861", itens:[
    ["Título","Escolha o que você quer fazer agora",""],
@@ -390,6 +396,8 @@ const DATA = [
    ["Destino","Onde quer postar? · Alterar",""],
    ["Tipos","Tipo de post: Pergunta · Relato · Dica · Experiência",""],
    ["Placeholder","Descreva sua dúvida com contexto. Isso ajuda outros tutores a responderem melhor.",""],
+   ["Cão relacionado — opção de adicionar","Cão relacionado: {cão 1} · {cão 2} · Adicionar um novo cão","","REGISTRADO em 26/08 na varredura Figma × painel. O seletor lista os cães do tutor e traz “Adicionar um novo cão” como última opção — leva à T-013.1 sem sair do fluxo de criação do post. Não estava no painel."],
+   ["🔴 Grafia da comunidade na T-025","No Figma está “Não surta, pergunta”; o nome correto é “Não Surta, Pergunta”","tar","ENCONTRADO em 26/08 na varredura Figma × painel. A T-006 e o convite da ponte (T-026-C) usam “Não Surta, Pergunta” com maiúsculas; só a T-025 está tudo em minúsculo. É nome próprio de comunidade — corrigir no Figma."],
    ["Anexos e cão","Adicionar foto · Adicionar vídeo · Cão relacionado",""],
    ["CTA","Publicar na comunidade",""]]},
  {id:"T-030", nome:"Confirmação de publicação", node:"772-508", itens:[
